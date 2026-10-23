@@ -1,10 +1,12 @@
 .venv/
 __pycache__/
 *.pyc
-out/
+out/*
+!out/sample_rfp_real/
+out/sample_rfp_real/checkpoints/
 samples/real/
-eval/history.jsonl
 docs/proposal/preview/
 .pytest_cache/
 *.egg-info/
 node_modules/
+site/

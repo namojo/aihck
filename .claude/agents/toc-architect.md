@@ -27,7 +27,7 @@ model: opus
 ## 검증 방법
 
 ```bash
-RFPHARNESS_LLM=anthropic python -m rfpharness review samples/sample_rfp.pdf --from toc --to toc
+RFPHARNESS_LLM=claude-code python -m rfpharness review samples/sample_rfp.pdf --from toc --to toc
 python -c "import json;d=json.load(open('out/sample_rfp/checkpoints/toc.json'));print(sum(c['points'] for c in d['scoring'] if not c['parent']), len(d['unmapped_requirement_ids']))"
 ```
 

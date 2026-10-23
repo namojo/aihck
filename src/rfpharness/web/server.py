@@ -55,7 +55,7 @@ class Job:
             report = pipe.run(fresh=True)
             (self.out / "run.log").write_text(format_summary(report), encoding="utf-8")
             self.emit({"type": "done", "summary": report.summary.model_dump(), "llm_mode": self.llm.mode,
-                       "llm_calls": self.llm.usage.calls, "tokens": [self.llm.usage.input_tokens, self.llm.usage.output_tokens]})
+                       "llm_calls": self.llm.usage.calls, "tokens": [self.llm.usage.input_tokens, self.llm.usage.output_tokens], "cost_usd": round(self.llm.usage.cost_usd, 2)})
         except Exception as e:  # noqa: BLE001
             self.error = f"{type(e).__name__}: {e}"
             self.emit({"type": "error", "message": self.error})

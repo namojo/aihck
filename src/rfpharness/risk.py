@@ -239,21 +239,25 @@ def match_rule_text(rule: dict, text: str) -> bool:
 
 # ---------------- LLM 보강 ----------------
 def enrich_with_llm(doc: Document, findings: list[RiskFinding], llm: LLM, progress=None) -> list[RiskFinding]:
-    if llm.mode != "anthropic":
+    if llm.mode == "mock":
         return findings
     system = load_prompt("risk")
     raw, offsets = _full_text(doc)
     text = raw.replace("\n", " ")
     out: list[RiskFinding] = []
     extra: list[RiskFinding] = []
-    for i, f in enumerate(findings):
+
+    def judge(f: RiskFinding) -> RiskJudgement:
         pos = text.find(f.quote[:40])
         ctx = text[max(0, pos - 600): pos + len(f.quote) + 600] if pos >= 0 else doc.page_text(f.page)
         user = (
             f"## 규칙\n{f.rule_id} {f.title}\n기본 심각도: {f.severity}\n기준값: {f.threshold or '-'}\n근거: {f.basis or '-'}\n\n"
             f"## 의심 조항 (p.{f.page})\n{f.quote}\n추출값: {f.extracted_value or '-'}\n\n## 앞뒤 문맥\n{ctx}"
         )
-        j = llm.parse(stage="risk", system=system, user=user, schema=RiskJudgement, mock_fn=lambda f=f: RiskJudgement(severity=f.severity, why=f.why, negotiation_point=f.negotiation_point))
+        return llm.parse(stage="risk", system=system, user=user, schema=RiskJudgement, mock_fn=lambda f=f: RiskJudgement(severity=f.severity, why=f.why, negotiation_point=f.negotiation_point))
+
+    judgements = llm.map(judge, findings)
+    for i, (f, j) in enumerate(zip(findings, judgements)):
         f.severity = j.severity
         f.why = j.why or f.why
         f.negotiation_point = j.negotiation_point or f.negotiation_point

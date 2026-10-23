@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RFP Compass — RFP 자동 검토 에이전트</title>
+<meta name="description" content="300쪽 제안요청서를 넣으면 요구사항 추적표, 배점 기준 목차 초안, 위험 조항 경고, 제안서 초안 커버리지가 나오는 해커톤 프로젝트">
+<style>
+:root{--navy:#1B2A49;--navy2:#2E4A7D;--accent:#E8622A;--bg:#F4F6FA;--line:#DDE3EC;--text:#1F2937;--muted:#6B7280}
+*{box-sizing:border-box}body{margin:0;font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--text);background:var(--bg);line-height:1.6}
+.hero{background:var(--navy);color:#fff;padding:64px 24px 56px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.eyebrow{font-size:13px;letter-spacing:.08em;opacity:.7}
+h1{font-size:44px;margin:8px 0 6px;font-weight:800}h1 span{color:var(--accent)}
+.lead{font-size:19px;opacity:.9;max-width:720px;margin:0 0 26px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 20px;border-radius:10px;font-weight:700;text-decoration:none;font-size:15px}
+.btn.primary{background:var(--accent);color:#fff}.btn.ghost{border:1px solid rgba(255,255,255,.5);color:#fff}
+section{padding:44px 0}h2{font-size:24px;margin:0 0 18px;color:var(--navy)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h3{margin:0 0 6px;font-size:17px;color:var(--navy2)}.card p{margin:0;color:var(--muted);font-size:14px}
+.card a{color:var(--navy);font-weight:700;text-decoration:none}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.shots figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.shots img{display:block;width:100%;height:auto}.shots figcaption{padding:10px 14px;font-size:13px;color:var(--muted)}
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.step b{display:block;font-size:15px;color:var(--navy)}.step small{color:var(--muted)}
+.step.llm{border-color:var(--accent)}.step.llm small{color:var(--accent)}
+pre{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;overflow:auto;font-size:13px}
+footer{color:var(--muted);font-size:13px;padding:30px 0 50px;text-align:center}
+@media(max-width:800px){h1{font-size:32px}.shots{grid-template-columns:1fr}.flow{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">사내 해커톤 아이디어 · 2026</div>
+  <h1>RFP <span>Compass</span></h1>
+  <p class="lead">300쪽 제안요청서를 넣으면 <b>요구사항 추적표 · 배점 기준 목차 초안 · 위험 조항 경고 · 제안서 초안 커버리지</b>가 나온다. 모든 결과에 원문 인용과 쪽 번호가 붙는다.</p>
+  <div class="cta">
+    <a class="btn primary" href="demo/">데모 대시보드 열기</a>
+    <a class="btn ghost" href="proposal/">아이디어 기획서 (웹)</a>
+    <a class="btn ghost" href="proposal/proposal.pdf">기획서 PDF</a>
+    <a class="btn ghost" href="https://github.com/namojo/aihck">GitHub 저장소</a>
+  </div>
+</div></header>
+
+<section><div class="wrap">
+  <h2>여섯 단계, LLM은 셋에서만</h2>
+  <div class="flow">
+    <div class="step"><b>parse</b><small>PDF → 표·섹션 (코드)</small></div>
+    <div class="step llm"><b>extract</b><small>요구사항 구조화 (Claude)</small></div>
+    <div class="step llm"><b>toc</b><small>배점표 탐지 + 연결</small></div>
+    <div class="step llm"><b>risk</b><small>규칙 20개 + LLM 보강</small></div>
+    <div class="step llm"><b>coverage</b><small>초안 ↔ 요구사항</small></div>
+    <div class="step"><b>export</b><small>xlsx · docx · html (코드)</small></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>데모 화면</h2>
+  <div class="shots">
+    <figure><img src="proposal/img/screen-2-requirements.png" alt="요구사항 추적표"><figcaption>요구사항 추적표. 본문에 숨은 요구사항을 "본문" 배지로 구분하고, 행을 누르면 원문 쪽이 열린다.</figcaption></figure>
+    <figure><img src="proposal/img/screen-3-risks.png" alt="위험 조항"><figcaption>위험 조항. 추출값(지체상금률 0.25%/일)과 기준값(0.125%/일)을 나란히 보여 주고 협상 포인트를 단다.</figcaption></figure>
+    <figure><img src="proposal/img/screen-4-toc.png" alt="배점 기준 목차"><figcaption>배점 기준 목차 초안. 배점 비중에 비례한 분량과 각 장이 답할 요구사항 ID.</figcaption></figure>
+    <figure><img src="proposal/img/screen-4b-coverage.png" alt="초안 커버리지"><figcaption>제안서 초안 커버리지. 필수 요구사항 누락을 맨 위에 센다.</figcaption></figure>
+  </div>
+  <p style="margin-top:14px"><a href="demo/demo.webm">녹화본(webm) 보기</a> · <a href="demo/sample_rfp.pdf">데모에 쓴 가상 RFP(PDF)</a> · <a href="demo/traceability.xlsx">요구사항 추적표 .xlsx</a> · <a href="demo/toc_draft.docx">목차 초안 .docx</a></p>
+</div></section>
+
+<section><div class="wrap">
+  <h2>직접 돌려 보기</h2>
+<pre>git clone https://github.com/namojo/aihck && cd aihck
+uv venv .venv && . .venv/bin/activate && uv pip install -e ".[dev]"
+python samples/make_sample_rfp.py
+RFPHARNESS_LLM=claude-code python -m rfpharness review samples/sample_rfp.pdf --draft samples/draft_proposal.md   # Claude Code 구독으로 실행
+RFPHARNESS_LLM=mock python -m rfpharness review samples/sample_rfp.pdf                                            # 네트워크 없이
+python -m rfpharness serve --port 8787                                                                           # 데모 웹 UI</pre>
+  <div class="grid">
+    <div class="card"><h3>하네스 설계</h3><p>왜 결정적 코드가 흐름을 쥐고 LLM은 읽기·판단만 맡는지. <a href="https://github.com/namojo/aihck/blob/main/docs/harness-design.md">docs/harness-design.md</a></p></div>
+    <div class="card"><h3>재구현 스펙</h3><p>Codex 등 다른 에이전트가 처음부터 다시 만들 수 있는 입출력 계약과 수용 기준. <a href="https://github.com/namojo/aihck/blob/main/docs/SPEC.md">docs/SPEC.md</a></p></div>
+    <div class="card"><h3>위험 규칙 20개</h3><p>지체상금률, 하자담보, 과업 변경, 지식재산권… 규칙마다 기준값·근거·협상 포인트·예문. <a href="https://github.com/namojo/aihck/blob/main/rules/risk_rules.yaml">rules/risk_rules.yaml</a></p></div>
+    <div class="card"><h3>3분 데모 대본</h3><p>심사장에서 말할 문장과 예상 질문. <a href="https://github.com/namojo/aihck/blob/main/docs/demo-script.md">docs/demo-script.md</a></p></div>
+  </div>
+</div></section>
+<footer>데모 데이터는 가상의 기관·사업이다. 법령 기준값은 팀이 최신 조문으로 확인한다. · RFP Compass</footer>
+</body>
+</html>

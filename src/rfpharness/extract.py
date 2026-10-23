@@ -234,26 +234,35 @@ def extract_requirements(doc: Document, llm: LLM, progress=None) -> list[Require
     all_reqs: list[Requirement] = []
     prose_counter = [0]
     sections = [s for s in doc.sections if s.text.strip() or s.table_ids]
-    for i, sec in enumerate(sections):
+    jobs: list[tuple[Section, str, list[Table]]] = []
+    for sec in sections:
         for text, tables in _chunks_for_section(doc, sec):
-            if not text.strip() and not tables:
-                continue
-            result = llm.parse(
-                stage="extract",
-                system=system,
-                user=_render_user(sec, text, tables),
-                schema=ExtractionResult,
-                mock_fn=lambda sec=sec, text=text, tables=tables: mock_extract(doc, sec, text, tables, prose_counter),
-            )
-            for r in result.requirements:
-                if not r.section:
-                    r.section = sec.heading
-                if not _quote_found(doc, r, sec):
-                    r.flags.append("quote_not_found")
-                    r.confidence = min(r.confidence, 0.3)
-            all_reqs.extend(result.requirements)
+            if text.strip() or tables:
+                jobs.append((sec, text, tables))
+    done = [0]
+
+    def run(job: tuple[Section, str, list[Table]]) -> list[Requirement]:
+        sec, text, tables = job
+        result = llm.parse(
+            stage="extract",
+            system=system,
+            user=_render_user(sec, text, tables),
+            schema=ExtractionResult,
+            mock_fn=lambda: mock_extract(doc, sec, text, tables, prose_counter),
+        )
+        for r in result.requirements:
+            if not r.section:
+                r.section = sec.heading
+            if not _quote_found(doc, r, sec):
+                r.flags.append("quote_not_found")
+                r.confidence = min(r.confidence, 0.3)
+        done[0] += 1
         if progress:
-            progress("extract", i + 1, len(sections))
+            progress("extract", done[0], len(jobs))
+        return result.requirements
+
+    for reqs_part in llm.map(run, jobs):
+        all_reqs.extend(reqs_part)
     reqs = renumber_prose(dedupe(all_reqs))
     log.info("extracted %d requirements (%d table, %d prose)", len(reqs), sum(r.source == "table" for r in reqs), sum(r.source == "prose" for r in reqs))
     return reqs

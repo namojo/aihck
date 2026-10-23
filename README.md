@@ -13,6 +13,7 @@
 | `docs/proposal/` | 해커톤 아이디어 기획서(md · A4 HTML · PDF) |
 | `docs/SPEC.md` | 다른 에이전트(Codex 등)가 재구현·검증할 때 쓰는 상세 스펙 |
 | `docs/demo-script.md`, `docs/demo/` | 3분 데모 스크립트, 스크린샷·녹화본 |
+| `scripts/build_site.py`, `.github/workflows/pages.yml` | GitHub Pages 정적 사이트 조립과 배포 |
 
 ## 빠른 시작
 
@@ -23,7 +24,9 @@ RFPHARNESS_LLM=mock python -m rfpharness review samples/sample_rfp.pdf --draft s
 python -m rfpharness serve --port 8787      # http://127.0.0.1:8787 → "샘플 RFP로 시작"
 ```
 
-실제 Claude를 쓰려면 `ANTHROPIC_API_KEY`를 두거나 `ant auth login` 뒤 `RFPHARNESS_LLM=anthropic`(기본값)으로 돌린다. 모델 기본값은 `claude-opus-5-5`, `RFPHARNESS_MODEL`로 바꾼다.
+실제 Claude를 쓰는 방법은 둘이다. **API 키 없이** Claude Code 구독으로 돌리려면 `claude` CLI가 로그인된 상태에서 `RFPHARNESS_LLM=claude-code`(또는 기본 `auto`)로 실행한다. 파이프라인이 `claude -p --json-schema`를 서브프로세스로 불러 구조화 출력을 받는다. API 키가 있으면 `ANTHROPIC_API_KEY`를 두고 `RFPHARNESS_LLM=anthropic`. 모델 기본값은 `claude-opus-5-5`, `RFPHARNESS_MODEL`로 바꾼다. LLM 호출은 4개씩 병렬(`RFPHARNESS_CONCURRENCY`).
+
+배포된 사이트: https://namojo.github.io/aihck/ (기획서, 데모 대시보드, 녹화본). `python scripts/build_site.py`로 `site/`를 만들고 `gh-pages` 브랜치로 올린다.
 
 ## 설계 한 장
 

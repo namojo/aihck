@@ -76,7 +76,9 @@ ReviewReport  { summary{...건수와 llm_mode, stage_seconds}, document_meta, re
 - `python -m rfpharness review <pdf> [--draft] [--out] [--from] [--to] [--fresh] [--llm anthropic|mock] [--model]`, `parse <pdf> [--show-tables]`, `serve [--host] [--port] [--llm]`.
 
 ### 2.8 llm 게이트웨이
-- `LLM(mode, model).parse(stage, system, user, schema, mock_fn, max_tokens=16000) → schema 인스턴스`.
+- `LLM(mode, model).parse(stage, system, user, schema, mock_fn, max_tokens=16000) → schema 인스턴스`. `LLM.map(fn, items)`는 mock이면 순차, 아니면 스레드 풀(기본 4)로 순서를 보존해 실행.
+- 모드 `auto`(기본): `ANTHROPIC_API_KEY`/`ANTHROPIC_AUTH_TOKEN` → anthropic, `claude` CLI가 PATH에 있으면 claude-code, 아니면 mock.
+- claude-code 모드: `claude -p --output-format json --model <model> --system-prompt <system> --json-schema <schema.model_json_schema()> --no-session-persistence --disallowedTools <도구 전부>`를 빈 임시 디렉터리에서 실행하고 프롬프트는 stdin으로 넘긴다. 응답 JSON의 `structured_output`(없으면 `result`를 JSON 파싱)을 스키마로 검증. 실패·시간 초과(600초) 1회 재시도 후 mock 대체. `usage`·`total_cost_usd`를 누적한다. API 키 없이 Claude 구독으로 동작하는 것이 목적이다.
 - anthropic 모드: `client.messages.parse(model, max_tokens, system, messages=[user], output_format=schema)`. 검증 실패 1회 재시도, 429는 retry-after 후 1회 재시도, 인증 실패는 mock으로 내려가며 로그. `stop_reason == "refusal"`은 오류. 사용량(호출 수, 토큰) 누적.
 - mock 모드: `mock_fn()` 반환.
 
@@ -99,7 +101,7 @@ ReviewReport  { summary{...건수와 llm_mode, stage_seconds}, document_meta, re
 2. `RFPHARNESS_LLM=mock python -m rfpharness review samples/sample_rfp.pdf --draft samples/draft_proposal.md --fresh` 요약이 "요구사항 50건 — 표 44 · 본문 6", "배점 항목 6개(합 90점)", "위험 조항 20건"(R13이 2곳에서 걸려 규칙 19종·20건), 커버리지 "누락 15 (필수 누락 14)"에 가깝다. 수치가 ±2 안이면 통과.
 3. `python eval/run_eval.py out/sample_rfp/report.json` 종료 코드 0.
 4. `python -m rfpharness serve` → 브라우저에서 "샘플 RFP로 시작" → 결과 탭 4개 표시, 행 클릭 시 원문 하이라이트, 엑셀·워드 다운로드.
-5. (실제 모드) 같은 명령을 `RFPHARNESS_LLM=anthropic`으로 돌려 `eval/run_eval.py --record`. 재현율 0.9 이상이 목표이며 미달 시 `requirement-extractor` 에이전트 원칙에 따라 프롬프트를 한 가지만 바꾸고 재측정.
+5. (실제 모드) 같은 명령을 `RFPHARNESS_LLM=claude-code`(또는 `anthropic`)로 돌려 `eval/run_eval.py --record`. 재현율 0.9 이상이 목표이며 미달 시 `requirement-extractor` 에이전트 원칙에 따라 프롬프트를 한 가지만 바꾸고 재측정.
 
 ## 5. 재구현 시 흔한 실수
 

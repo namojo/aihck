@@ -28,7 +28,7 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--from", dest="start", default="parse", choices=STAGES)
     r.add_argument("--to", dest="stop", default="export", choices=STAGES)
     r.add_argument("--fresh", action="store_true", help="체크포인트 무시하고 처음부터")
-    r.add_argument("--llm", choices=["anthropic", "mock"], help="RFPHARNESS_LLM 환경변수 대신 지정")
+    r.add_argument("--llm", choices=["auto", "claude-code", "anthropic", "mock"], help="RFPHARNESS_LLM 환경변수 대신 지정")
     r.add_argument("--model", help="RFPHARNESS_MODEL 대신 지정")
 
     p = sub.add_parser("parse", help="파싱 결과만 확인")
@@ -38,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser("serve", help="데모 웹 UI")
     s.add_argument("--host", default="127.0.0.1")
     s.add_argument("--port", type=int, default=8787)
-    s.add_argument("--llm", choices=["anthropic", "mock"])
+    s.add_argument("--llm", choices=["auto", "claude-code", "anthropic", "mock"])
 
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s", stream=sys.stderr)
@@ -67,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     llm = LLM(mode=args.llm, model=args.model) if (args.llm or args.model) else LLM()
     pipe = Pipeline(args.pdf, out, draft=args.draft, llm=llm, progress=_progress)
     report = pipe.run(start=args.start, stop=args.stop, fresh=args.fresh)
-    (out / "run.log").write_text(format_summary(report) + f"\n\nLLM calls: {llm.usage.calls}, tokens in/out: {llm.usage.input_tokens}/{llm.usage.output_tokens}\n", encoding="utf-8")
+    (out / "run.log").write_text(format_summary(report) + f"\n\nLLM calls: {llm.usage.calls}, tokens in/out: {llm.usage.input_tokens}/{llm.usage.output_tokens}, cost ${llm.usage.cost_usd:.2f}, llm seconds {llm.usage.seconds:.0f}\n", encoding="utf-8")
     print(format_summary(report))
     return 0
 

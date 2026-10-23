@@ -85,18 +85,24 @@ def check_coverage(reqs: list[Requirement], draft_path: str | Path, llm: LLM, pr
     items: list[CoverageItem] = []
     batches = [reqs[i: i + BATCH] for i in range(0, len(reqs), BATCH)]
     valid = {p.id for p in paras}
-    for bi, batch in enumerate(batches):
+    done = [0]
+
+    def judge(batch: list[Requirement]) -> CoverageJudgement:
         req_text = "\n".join(f"- {r.id} | {r.title} | {r.category} | {r.obligation} | {r.quote[:160]}" for r in batch)
         j = llm.parse(stage="coverage", system=system, user=f"## 요구사항\n{req_text}\n\n## 제안서 초안 문단\n{para_text}", schema=CoverageJudgement,
-                      mock_fn=lambda batch=batch: mock_judge(batch, paras))
+                      mock_fn=lambda: mock_judge(batch, paras))
+        done[0] += 1
+        if progress:
+            progress("coverage", done[0], len(batches))
+        return j
+
+    for j in llm.map(judge, batches):
         for it in j.items:
             it.evidence_paragraph_ids = [pid for pid in it.evidence_paragraph_ids if pid in valid]
             if it.status != "missing" and not it.evidence_paragraph_ids:
                 it.status = "partial"
                 it.gap_note = (it.gap_note or "") + " (근거 문단 id 확인 불가)"
         items.extend(j.items)
-        if progress:
-            progress("coverage", bi + 1, len(batches))
     by_id = {r.id: r for r in reqs}
     judged = {it.requirement_id for it in items}
     for r in reqs:

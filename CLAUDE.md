@@ -14,7 +14,7 @@
 uv venv .venv && . .venv/bin/activate && uv pip install -e ".[dev]"
 python samples/make_sample_rfp.py                 # 가상 RFP PDF 생성 → samples/sample_rfp.pdf
 RFPHARNESS_LLM=mock python -m rfpharness review samples/sample_rfp.pdf --draft samples/draft_proposal.md
-python -m rfpharness review samples/sample_rfp.pdf  # 실제 Claude 호출 (ANTHROPIC_API_KEY 또는 ant auth login)
+python -m rfpharness review samples/sample_rfp.pdf  # 실제 Claude 호출. 기본 auto: API 키가 있으면 SDK, 없으면 claude CLI(구독), 둘 다 없으면 mock
 pytest -q                                          # 규칙 엔진·파서·파이프라인(mock) 테스트
 python eval/run_eval.py out/sample_rfp/report.json # 골든셋 대비 재현율/정밀도
 ```
@@ -39,7 +39,8 @@ parse → extract → score/toc → risk → coverage → export
 ## 지켜야 할 원칙
 
 - **원문 인용 없는 결과는 없다.** 요구사항·위험 조항 모두 `quote`와 `page`를 가진다. 심사위원이 "그 조항 어디 있어요?"라고 물으면 페이지를 바로 연다.
-- **LLM 호출은 `llm.py`를 통해서만.** 모델 기본값 `claude-opus-5-5`, 구조화 출력은 pydantic 스키마, `RFPHARNESS_LLM=mock`이면 네트워크 없이 결정적 결과를 낸다. 테스트는 mock으로만 돈다.
+- **LLM 호출은 `llm.py`를 통해서만.** 모델 기본값 `claude-opus-5-5`, 구조화 출력은 pydantic 스키마. 모드는 `claude-code`(Claude Code CLI를 서브프로세스로 호출, API 키 없이 구독으로 실행), `anthropic`(SDK), `mock`(네트워크 없이 결정적 결과). 기본 `auto`는 키 → CLI → mock 순으로 고른다. 테스트는 mock으로만 돈다.
+- **LLM 호출은 병렬이다.** `LLM.map()`이 스레드 풀(`RFPHARNESS_CONCURRENCY`, 기본 4)로 extract 청크·risk 조항·coverage 배치를 돌린다. 순서는 보존된다. mock은 순차.
 - **규칙과 LLM은 이중 판정.** 위험 조항은 규칙이 "어디"를, LLM이 "왜·얼마나"를 맡는다. 둘 중 하나만으로 결론 내지 않는다.
 - **스키마가 계약이다.** `schemas.py`를 바꾸면 `export.py`, `eval/`, 대시보드가 같이 바뀐다. 필드 추가는 Optional로.
 - **법령 수치는 규칙 파일에만.** 지체상금률·하자보수 기간 같은 기준은 코드가 아니라 `rules/risk_rules.yaml`의 `threshold`에 두고 `basis`에 근거를 적는다. 팀이 최신 법령으로 확인한 뒤 값을 바꾼다.

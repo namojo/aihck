@@ -8,7 +8,7 @@ description: RFP PDF 한 건을 처음부터 끝까지 검토해 요구사항 �
 ## 절차
 
 1. 인자를 확인한다. PDF 경로가 없으면 `samples/sample_rfp.pdf`를 쓸지 묻는다. `--draft`가 있으면 커버리지 단계를 포함한다.
-2. 실행 모드를 정한다. `ANTHROPIC_API_KEY`가 있거나 `ant auth status`가 활성 프로필을 보이면 `anthropic`, 아니면 `mock`으로 돌리고 결과 요약에 "mock 모드"라고 명시한다.
+2. 실행 모드를 정한다. 기본 `auto`는 API 키가 있으면 `anthropic`, `claude` CLI가 있으면 `claude-code`(구독으로 실행), 둘 다 없으면 `mock`이다. 결과 요약에 실제 모드를 명시한다.
 3. 기존 체크포인트가 있으면 재사용 여부를 사용자에게 한 줄로 묻지 않고 재사용한다. 사용자가 "처음부터"라고 하면 `--fresh`.
    ```bash
    RFPHARNESS_LLM=<mode> python -m rfpharness review <pdf> [--draft <md>] [--fresh] --out out/<name>

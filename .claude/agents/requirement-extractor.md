@@ -28,7 +28,7 @@ model: opus
 ## 검증 방법
 
 ```bash
-RFPHARNESS_LLM=anthropic python -m rfpharness review samples/sample_rfp.pdf --from extract --to extract
+RFPHARNESS_LLM=claude-code python -m rfpharness review samples/sample_rfp.pdf --from extract --to extract
 python eval/run_eval.py out/sample_rfp/report.json      # 재현율·정밀도, 놓친 id 목록
 ```
 

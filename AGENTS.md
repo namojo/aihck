@@ -12,6 +12,7 @@
 uv venv .venv && . .venv/bin/activate && uv pip install -e ".[dev]"
 python samples/make_sample_rfp.py                                   # 가상 RFP PDF
 RFPHARNESS_LLM=mock python -m rfpharness review samples/sample_rfp.pdf --draft samples/draft_proposal.md
+RFPHARNESS_LLM=claude-code python -m rfpharness review samples/sample_rfp.pdf --draft samples/draft_proposal.md   # Claude 구독(claude CLI)으로 실제 실행
 pytest -q                                                           # 84개 테스트, 네트워크 불필요
 python eval/run_eval.py out/sample_rfp/report.json                 # 골든셋 대비 재현율·정밀도
 python -m rfpharness serve --port 8787                              # 데모 웹 UI (http://127.0.0.1:8787)
@@ -21,7 +22,7 @@ python -m rfpharness serve --port 8787                              # 데모 웹
 
 1. `pytest -q`가 전부 통과한다.
 2. mock 모드 `review`가 샘플 RFP에서 표 요구사항 44건, 본문 요구사항 6건, 위험 규칙 19종 적중·R08 미적중, 배점 합 90점을 낸다 (`eval/run_eval.py` 종료 코드 0).
-3. 실제 모드(`RFPHARNESS_LLM=anthropic`)에서는 같은 골든셋으로 요구사항 재현율 0.9 이상, 위험 탐지율 0.9 이상을 목표로 한다. 측정값은 `eval/history.jsonl`에 기록한다.
+3. 실제 모드(`RFPHARNESS_LLM=claude-code` 또는 `anthropic`)에서는 같은 골든셋으로 요구사항 재현율 0.9 이상, 위험 탐지율 0.9 이상을 목표로 한다. 측정값은 `eval/history.jsonl`에 기록한다.
 4. `out/<name>/`에 `report.json`, `traceability.xlsx`, `toc_draft.docx`, `dashboard.html`이 생기고 대시보드는 오프라인에서 열린다.
 5. `serve`에서 "샘플 RFP로 시작"을 누르면 6단계 진행이 보이고 결과 4개 탭이 뜬다. 표의 행을 클릭하면 원문 쪽이 열리고 인용문이 하이라이트된다.
 
@@ -29,5 +30,6 @@ python -m rfpharness serve --port 8787                              # 데모 웹
 
 - 스키마(`src/rfpharness/schemas.py`)가 계약이다. 필드 추가는 Optional로, 바꾸면 `export.py`·`eval/`·`web/app.html`을 같이 본다.
 - 법령 수치는 `rules/risk_rules.yaml`에만 둔다. 규칙을 추가하면 `examples.hit`/`examples.miss`를 반드시 넣는다(테스트가 자동 검사).
-- LLM 호출은 `llm.py`를 통해서만. 다른 모델 제공자로 바꾸려면 `LLM.parse()` 하나만 교체하면 된다(입력: system, user, pydantic 스키마 / 출력: 스키마 인스턴스).
+- LLM 호출은 `llm.py`를 통해서만. 백엔드 셋: `claude-code`(`claude -p --json-schema` 서브프로세스, API 키 불필요), `anthropic`(SDK), `mock`. 다른 제공자(예: Codex CLI)를 붙이려면 `_parse_claude_code()`와 같은 모양의 메서드 하나를 추가하면 된다(입력: system, user, pydantic 스키마 / 출력: 스키마 인스턴스).
+- 정적 사이트는 `python scripts/build_site.py`로 `site/`에 조립되고 `.github/workflows/pages.yml`이 main 푸시 때 gh-pages 브랜치로 배포한다.
 - `samples/`의 RFP는 가상 데이터다. 실제 RFP는 `samples/real/`(git 제외)에 둔다.
