@@ -47,6 +47,9 @@ def main() -> int:
 
     # 데모 대시보드(오프라인 단일 HTML) + 녹화본
     dash = ROOT / a.report / "dashboard.html"
+    if not dash.exists():
+        # 지정한 결과 폴더가 없으면 대시보드 없이 배포하지 않는다. 데모 링크가 깨지기 때문이다.
+        raise SystemExit(f"대시보드가 없다: {dash}. 먼저 `python -m rfpharness review ... --out {a.report}`를 실행할 것")
     (SITE / "demo").mkdir()
     if dash.exists():
         (SITE / "demo" / "index.html").write_text(with_webfont(dash.read_text(encoding="utf-8")), encoding="utf-8")

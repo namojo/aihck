@@ -43,6 +43,16 @@ export ─▶ report.json · traceability.xlsx · toc_draft.docx · dashboard.ht
 
 원칙: 결정적 코드가 흐름을 쥐고 LLM은 읽기·판단만 맡는다. 모든 결과는 원문 인용과 쪽 번호를 가진다. 규칙과 LLM은 이중 판정이다. 자세한 설명은 `CLAUDE.md`(Claude Code용)와 `AGENTS.md`(도구 중립), `docs/harness-design.md`를 본다.
 
+## 실측 (샘플 RFP, claude-code 모드)
+
+| 지표 | 값 |
+| --- | --- |
+| 요구사항 재현율 / 정밀도 | 0.92 / 0.90 (표 44건 전부, 본문 7건) |
+| 위험 규칙 탐지율 | 19/19, 오탐 0 |
+| LLM 호출 | 67회, 약 5분(병렬 4), $4.23 상당 |
+
+자세한 관찰과 다음 개선 한 가지씩은 `eval/NOTES.md`에 있다. 사이트의 데모 대시보드는 이 실측 결과다.
+
 ## 고지
 
 `samples/`의 RFP는 가상의 기관·사업이다. 위험 규칙의 법령 수치(`rules/risk_rules.yaml`의 `threshold`, `basis`)는 팀이 최신 조문으로 확인한 뒤 쓴다.
