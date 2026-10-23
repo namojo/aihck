@@ -1,0 +1,36 @@
+[project]
+name = "rfpharness"
+version = "0.1.0"
+description = "RFP Compass — 제안요청서 자동 검토 에이전트 하네스"
+requires-python = ">=3.11"
+dependencies = [
+  "anthropic>=1.0",
+  "pdfplumber>=0.11",
+  "openpyxl>=3.1",
+  "python-docx>=1.1",
+  "pydantic>=2.6",
+  "pyyaml>=6.0",
+  "fastapi>=0.110",
+  "uvicorn>=0.29",
+  "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "reportlab>=4.0"]
+
+[project.scripts]
+rfpharness = "rfpharness.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+rfpharness = ["prompts/*.md", "web/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>RFP Compass 기획서</title>
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #fff; color: #111827;
+  font-family: Pretendard, 'Noto Sans KR', sans-serif; font-size: 10pt; line-height: 1.55; }
+svg text { font-family: Pretendard, 'Noto Sans KR', sans-serif; }
+.page { width: 210mm; height: 297mm; padding: 15mm 16mm 16mm; page-break-after: always; break-after: page;
+  overflow: hidden; position: relative; background: #fff; }
+.page:last-child { page-break-after: auto; break-after: auto; }
+.footer { position: absolute; bottom: 7mm; left: 16mm; right: 16mm; display: flex; justify-content: space-between;
+  font-size: 7.5pt; color: #6B7280; border-top: 1px solid #E5E7EB; padding-top: 1.5mm; }
+h1, h2, h3, p, ul, ol, table, figure { margin: 0; }
+p { margin-bottom: 2.2mm; }
+ul, ol { padding-left: 5mm; margin-bottom: 2.2mm; }
+li { margin-bottom: 0.8mm; }
+.sec-head { display: flex; align-items: center; gap: 3mm; margin-bottom: 2.5mm; }
+.sec-num { background: #1B2A49; color: #fff; width: 8.5mm; height: 8.5mm; border-radius: 50%; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; font-size: 11pt; flex: none; }
+.sec-head h2 { font-size: 15pt; color: #1B2A49; letter-spacing: -0.01em; }
+.sec-head .cont { font-size: 9pt; color: #6B7280; font-weight: 400; margin-left: 1mm; }
+.q { font-size: 9pt; color: #4B5563; margin-bottom: 4mm; border-left: 3px solid #D9622B; padding-left: 3mm; line-height: 1.5; }
+h3 { font-size: 11pt; color: #1B2A49; margin: 3.5mm 0 1.5mm; }
+h3:first-of-type { margin-top: 0; }
+table { border-collapse: collapse; width: 100%; font-size: 8.6pt; margin-bottom: 3mm; }
+th { background: #1B2A49; color: #fff; text-align: left; padding: 1.6mm 2.4mm; font-weight: 600; }
+td { border-bottom: 1px solid #E5E7EB; padding: 1.5mm 2.4mm; vertical-align: top; }
+tr:nth-child(even) td { background: #FAFAFB; }
+td.k, th.k { white-space: nowrap; }
+.callout { background: #F3F4F6; border-radius: 2.5mm; padding: 3.5mm 4.5mm; margin-bottom: 3mm; }
+.callout.accent { background: #FDF1EA; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+.three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4mm; }
+.card { border: 1px solid #E5E7EB; border-radius: 2.5mm; padding: 3.5mm 4mm; }
+.card h4 { margin: 0 0 1.5mm; font-size: 10pt; color: #1B2A49; }
+.card p { font-size: 8.8pt; color: #374151; margin: 0; }
+.tag { display: inline-block; font-size: 7.5pt; padding: 0.3mm 1.8mm; border-radius: 1mm; background: #E8EDF5; color: #1B2A49; font-weight: 600; margin-right: 1mm; }
+.tag.acc { background: #FDE8DC; color: #B44D1B; }
+.tag.teal { background: #DDF2EF; color: #1F6F66; }
+figure.screen { border: 1px solid #D1D5DB; border-radius: 2mm; overflow: hidden; margin-bottom: 3.5mm; background: #fff; }
+figure.screen svg { display: block; width: 100%; height: auto; }
+figure.screen .shots img { display: block; width: 100%; height: 92mm; object-fit: cover; object-position: top left; }
+figure.screen .shots.two img { height: 82mm; }
+figure.screen .shots.two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5mm; }
+figcaption { font-size: 8.3pt; color: #4B5563; padding: 1.4mm 2.5mm; background: #F9FAFB; border-top: 1px solid #E5E7EB; }
+.fig { margin-bottom: 3mm; }
+.fig svg { display: block; width: 100%; height: auto; }
+.fig .cap { font-size: 8pt; color: #6B7280; margin-top: 1mm; }
+pre { font-family: 'JetBrains Mono', 'D2Coding', Menlo, Consolas, monospace; font-size: 8.3pt; background: #F3F4F6;
+  border-radius: 2mm; padding: 3mm 4mm; line-height: 1.5; margin-bottom: 3mm; white-space: pre; overflow: hidden; }
+code { font-family: Menlo, Consolas, monospace; font-size: 8.5pt; background: #F3F4F6; padding: 0 1mm; border-radius: 0.8mm; }
+.small { font-size: 8.5pt; color: #4B5563; }
+.src { color: #6B7280; font-size: 8pt; }
+
+/* cover */
+.cover { background: #1B2A49; color: #fff; padding: 22mm 18mm 16mm; }
+.cover .kicker { font-size: 10pt; letter-spacing: 0.08em; color: #C7D2E5; text-transform: uppercase; }
+.cover h1 { font-size: 40pt; line-height: 1.1; margin: 6mm 0 3mm; letter-spacing: -0.02em; }
+.cover .sub { font-size: 15pt; color: #E5EAF3; margin-bottom: 10mm; font-weight: 500; }
+.cover .lead { font-size: 11pt; color: #E5EAF3; line-height: 1.7; max-width: 160mm; margin-bottom: 10mm; }
+.cover .box { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.2); border-radius: 3mm; padding: 5mm 6mm; margin-bottom: 5mm; }
+.cover .box h4 { margin: 0 0 2.5mm; font-size: 9.5pt; color: #C7D2E5; letter-spacing: 0.04em; }
+.cover table { font-size: 9.2pt; margin: 0; }
+.cover th { background: transparent; color: #C7D2E5; border-bottom: 1px solid rgba(255,255,255,0.25); padding: 1.5mm 2mm; }
+.cover td { border-bottom: 1px solid rgba(255,255,255,0.12); color: #F3F4F6; padding: 1.8mm 2mm; background: transparent !important; }
+.cover .roles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; }
+.cover .role { background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.35); border-radius: 2mm; padding: 3mm; font-size: 8.8pt; color: #E5EAF3; min-height: 20mm; }
+.cover .role b { display: block; color: #fff; margin-bottom: 1mm; }
+.cover .role span { color: #9FB0CC; }
+.cover .footer { color: #9FB0CC; border-top-color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<!-- ===================== 1. 표지 ===================== -->
+<section class="page cover">
+  <div class="kicker">사내 해커톤 아이디어 기획서 · 2026</div>
+  <h1>RFP Compass</h1>
+  <div class="sub">300쪽 제안요청서를 3시간 안에 읽는 제안 검토 에이전트</div>
+  <p class="lead">RFP PDF 한 개를 넣으면 <b>요구사항 추적표</b>, <b>배점 기준 목차 초안</b>, <b>위험 조항 경고</b>, <b>제안서 초안 커버리지</b>가 나온다.
+  모든 결과에는 원문 인용과 페이지 번호가 붙는다. 사람은 읽고 옮기는 대신 확인하고 결정한다.</p>
+
+  <div class="box">
+    <h4>심사 기준에 대한 답</h4>
+    <table>
+      <tr><th class="k" style="width:34mm">AI 활용 수준</th><td>LLM은 읽기·판단 세 단계만 맡고, 흐름·검증·출력은 결정적 코드가 쥔다. 결과는 구조화 출력(pydantic 스키마)으로 받고 원문 인용을 코드가 재검증한다.</td></tr>
+      <tr><th class="k">문제 해결 방식</th><td>위험 조항은 규칙 20개와 LLM의 이중 판정, 정확도는 골든셋 평가 루프로 올린다. 에이전트 7개가 단계별 품질을 나눠 맡는다.</td></tr>
+      <tr><th class="k">실제 업무 적용 가능성</th><td>산출물이 제안 팀이 지금 쓰는 엑셀·워드 형식이다. 사내 FabriX, Claude Enterprise 위에서 그대로 돌릴 수 있다.</td></tr>
+    </table>
+  </div>
+
+  <div class="box">
+    <h4>팀 구성(선정 후 기입)</h4>
+    <div class="roles">
+      <div class="role"><b>제안·영업 경험자</b>도메인 질문, 골든셋 작성, 발표<span><br>이름: </span></div>
+      <div class="role"><b>백엔드</b>PDF 파서, 파이프라인, 출력<span><br>이름: </span></div>
+      <div class="role"><b>AI 엔지니어</b>프롬프트, 스키마, 평가 루프<span><br>이름: </span></div>
+      <div class="role"><b>프런트</b>데모 화면, 녹화본, 리허설<span><br>이름: </span></div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h4>RFP 한 개를 넣으면 나오는 것</h4>
+    <svg viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto">
+      <g>
+        <rect x="0" y="0" width="210" height="150" rx="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.25)"/>
+        <text x="18" y="30" font-size="22" fill="#D9622B" font-weight="800">①</text>
+        <text x="50" y="30" font-size="14" fill="#fff" font-weight="700">요구사항 추적표</text>
+        <text x="18" y="58" font-size="11" fill="#C7D2E5">표 속 고유번호 요구사항 +</text>
+        <text x="18" y="76" font-size="11" fill="#C7D2E5">본문에 숨은 "~하여야 한다"</text>
+        <text x="18" y="100" font-size="11" fill="#C7D2E5">공공 SW 분류 11종 · 필수 여부</text>
+        <text x="18" y="118" font-size="11" fill="#C7D2E5">원문 인용 · 페이지</text>
+        <text x="18" y="140" font-size="10" fill="#9FB0CC">→ traceability.xlsx</text>
+      </g>
+      <g transform="translate(230,0)">
+        <rect x="0" y="0" width="210" height="150" rx="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.25)"/>
+        <text x="18" y="30" font-size="22" fill="#D9622B" font-weight="800">②</text>
+        <text x="50" y="30" font-size="14" fill="#fff" font-weight="700">위험 조항 경고</text>
+        <text x="18" y="58" font-size="11" fill="#C7D2E5">지체상금 · 하자보수 · 과업 변경</text>
+        <text x="18" y="76" font-size="11" fill="#C7D2E5">지재권 · 손해배상 · 대금 지급</text>
+        <text x="18" y="100" font-size="11" fill="#C7D2E5">추출값 vs 법령 기준값</text>
+        <text x="18" y="118" font-size="11" fill="#C7D2E5">왜 위험한지 · 협상 포인트</text>
+        <text x="18" y="140" font-size="10" fill="#9FB0CC">→ 규칙 20개 + LLM 이중 판정</text>
+      </g>
+      <g transform="translate(460,0)">
+        <rect x="0" y="0" width="210" height="150" rx="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.25)"/>
+        <text x="18" y="30" font-size="22" fill="#D9622B" font-weight="800">③</text>
+        <text x="50" y="30" font-size="14" fill="#fff" font-weight="700">배점 기준 목차 초안</text>
+        <text x="18" y="58" font-size="11" fill="#C7D2E5">평가 배점표를 읽어</text>
+        <text x="18" y="76" font-size="11" fill="#C7D2E5">배점 비중에 비례한 분량 배분</text>
+        <text x="18" y="100" font-size="11" fill="#C7D2E5">장마다 답할 요구사항 번호</text>
+        <text x="18" y="118" font-size="11" fill="#C7D2E5">두 문장짜리 작성 지침</text>
+        <text x="18" y="140" font-size="10" fill="#9FB0CC">→ toc_draft.docx</text>
+      </g>
+      <g transform="translate(690,0)">
+        <rect x="0" y="0" width="210" height="150" rx="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.25)"/>
+        <text x="18" y="30" font-size="22" fill="#D9622B" font-weight="800">④</text>
+        <text x="50" y="30" font-size="14" fill="#fff" font-weight="700">초안 커버리지</text>
+        <text x="18" y="58" font-size="11" fill="#C7D2E5">작성 중인 제안서 초안을 넣으면</text>
+        <text x="18" y="76" font-size="11" fill="#C7D2E5">요구사항마다 충족 · 부분 · 누락</text>
+        <text x="18" y="100" font-size="11" fill="#C7D2E5">근거 문단 연결</text>
+        <text x="18" y="118" font-size="11" fill="#C7D2E5">필수 누락을 맨 위에</text>
+        <text x="18" y="140" font-size="10" fill="#9FB0CC">→ 마감 전날의 "뭐 빠뜨렸지?"</text>
+      </g>
+    </svg>
+  </div>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>데모 데이터는 가상의 기관·사업이다 · 1 / 10</span></div>
+</section>
+
+<!-- ===================== 2. 문제 상황 ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">1</div><h2>AI로 해결하고자 하는 문제 상황</h2></div>
+  <p class="q">AI로 해결하고자 하는 문제 상황 또는 새롭게 시도해 보고 싶은 업무/서비스는 무엇인가요? 현재의 업무를 더 효율적으로 바꾸는 것부터, 지금까지 없던 새로운 업무 경험이나 서비스를 만드는 것까지 자유롭게 적어주세요.</p>
+
+  <h3>지금의 일</h3>
+  <p>공공·금융 제안을 할 때마다 제안 팀은 200~300쪽짜리 제안요청서(RFP)를 받는다. 제출까지는 보통 2~4주다. 그 첫 며칠은 여러 사람이 RFP를 나눠 읽고 요구사항을 엑셀로 옮기는 데 쓴다. 요구사항은 "SFR-001" 같은 고유번호가 붙은 표에도 있지만, 사업 개요나 추진 방향 문단 속에 "~하여야 한다" 형태로 숨어 있는 것도 많다. 표는 옮겨 적어도 문단 속 요구사항은 자주 빠진다.</p>
+
+  <div class="fig">
+    <svg viewBox="0 0 900 190" xmlns="http://www.w3.org/2000/svg">
+      <!-- stat tile 1 -->
+      <rect x="0" y="0" width="430" height="190" rx="10" fill="#F3F4F6"/>
+      <text x="24" y="40" font-size="13" fill="#6B7280" font-weight="600">RFP 1건 응답에 드는 시간과 사람</text>
+      <text x="24" y="100" font-size="56" fill="#1B2A49" font-weight="800">25<tspan font-size="22" font-weight="600" dx="4">시간</tspan></text>
+      <text x="215" y="100" font-size="34" fill="#9CA3AF" font-weight="300">×</text>
+      <text x="255" y="100" font-size="56" fill="#D9622B" font-weight="800">9<tspan font-size="22" font-weight="600" dx="4">명</tspan></text>
+      <!-- 9 person icons -->
+      <g fill="#D9622B">
+        <g transform="translate(24,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+        <g transform="translate(56,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+        <g transform="translate(88,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+        <g transform="translate(120,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+        <g transform="translate(152,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+        <g transform="translate(184,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+        <g transform="translate(216,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+        <g transform="translate(248,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+        <g transform="translate(280,120)"><circle cx="8" cy="8" r="8"/><path d="M-4 40 Q-4 22 8 22 Q20 22 20 40 Z"/></g>
+      </g>
+      <text x="24" y="178" font-size="11" fill="#6B7280">Loopio 2025 보고서, 1,544명 조사 (단일 출처)</text>
+      <!-- stat tile 2 -->
+      <rect x="450" y="0" width="450" height="190" rx="10" fill="#1B2A49"/>
+      <text x="474" y="40" font-size="13" fill="#C7D2E5" font-weight="600">2026년 공공 SW·ICT장비·정보보호 사업 수요</text>
+      <text x="474" y="100" font-size="50" fill="#fff" font-weight="800">6조 4,737<tspan font-size="22" font-weight="600" dx="4">억 원</tspan></text>
+      <text x="474" y="134" font-size="13" fill="#E5EAF3">제안 한 건 한 건이 이 시장의 입구다.</text>
+      <text x="474" y="178" font-size="11" fill="#9FB0CC">과학기술정보통신부 공공부문 SW·ICT장비·정보보호 수요예보</text>
+    </svg>
+  </div>
+
+  <h3>놓치면 생기는 일</h3>
+  <p>RFP 뒤쪽 계약 조건 장에는 수주 뒤 손실로 이어지는 조항이 있다. 지체상금률이 기준보다 높거나, 하자보수 기간이 3년이거나, "발주기관이 필요하다고 인정하는 경우 과업을 추가할 수 있다"는 문장이 그것이다. 제안 단계에서 보지 못하면 협상 테이블에 올리지 못한다. 제안 PM은 요구사항 표를 채우느라 바쁘고, 계약 조건을 읽는 사람은 따로 없는 경우가 많다.</p>
+
+  <div class="fig">
+    <svg viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#9CA3AF"/></marker></defs>
+      <!-- box 1 -->
+      <rect x="0" y="20" width="190" height="110" rx="8" fill="#F3F4F6"/>
+      <text x="95" y="56" font-size="15" fill="#1B2A49" font-weight="700" text-anchor="middle">RFP 300쪽</text>
+      <text x="95" y="80" font-size="11.5" fill="#4B5563" text-anchor="middle">요구사항 표 + 본문 문단</text>
+      <text x="95" y="98" font-size="11.5" fill="#4B5563" text-anchor="middle">+ 계약 조건 장</text>
+      <line x1="194" y1="75" x2="226" y2="75" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arr)"/>
+      <!-- box 2 accent -->
+      <rect x="230" y="20" width="220" height="110" rx="8" fill="#D9622B"/>
+      <text x="340" y="52" font-size="15" fill="#fff" font-weight="700" text-anchor="middle">놓친 조항</text>
+      <text x="340" y="74" font-size="11.5" fill="#FDE8DC" text-anchor="middle">지체상금률 1000분의 2.5</text>
+      <text x="340" y="92" font-size="11.5" fill="#FDE8DC" text-anchor="middle">하자보수 3년 · 과업 일방 변경</text>
+      <text x="340" y="110" font-size="11.5" fill="#FDE8DC" text-anchor="middle">본문 속 "~하여야 한다"</text>
+      <line x1="454" y1="75" x2="486" y2="75" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arr)"/>
+      <!-- box 3 -->
+      <rect x="490" y="20" width="170" height="110" rx="8" fill="#F3F4F6"/>
+      <text x="575" y="56" font-size="15" fill="#1B2A49" font-weight="700" text-anchor="middle">수주 · 계약</text>
+      <text x="575" y="80" font-size="11.5" fill="#4B5563" text-anchor="middle">협상 없이 조건 확정</text>
+      <text x="575" y="98" font-size="11.5" fill="#4B5563" text-anchor="middle">이미 늦은 시점</text>
+      <line x1="664" y1="75" x2="696" y2="75" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arr)"/>
+      <!-- box 4 -->
+      <rect x="700" y="20" width="200" height="110" rx="8" fill="#1B2A49"/>
+      <text x="800" y="52" font-size="15" fill="#fff" font-weight="700" text-anchor="middle">수주 뒤 손실</text>
+      <text x="800" y="74" font-size="11.5" fill="#C7D2E5" text-anchor="middle">지연 1일당 손실 2배</text>
+      <text x="800" y="92" font-size="11.5" fill="#C7D2E5" text-anchor="middle">무상 유지보수 2년</text>
+      <text x="800" y="110" font-size="11.5" fill="#C7D2E5" text-anchor="middle">범위 확대 · 누락 요구사항 재작업</text>
+    </svg>
+    <div class="cap">그림 1. 놓친 조항이 손실로 이어지는 흐름. 조항 내용은 가상 RFP에 심은 예시다.</div>
+  </div>
+
+  <h3>하고 싶은 일</h3>
+  <p>RFP PDF 한 개를 넣으면 <b>① 요구사항 추적표</b>(표와 본문의 요구사항을 공공 SW 분류 11종으로 나누고 필수 여부·원문·페이지를 붙임), <b>② 위험 조항 경고</b>(추출값과 기준값, 협상 포인트), <b>③ 배점 기준 목차 초안</b>(배점 비중에 비례한 분량과 답해야 할 요구사항 번호), <b>④ 제안서 초안 커버리지</b>(필수 요구사항 누락을 먼저 표시)가 나오게 한다. 사람은 읽고 옮기는 대신 확인하고 결정한다. 이것이 바꾸고 싶은 업무 경험이다.</p>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>2 / 10</span></div>
+</section>
+
+<!-- ===================== 3. AI 활용 방안 (1) ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">2</div><h2>AI 활용 방안 <span class="cont">(1/2) 파이프라인과 설계 원칙</span></h2></div>
+  <p class="q">제안한 아이디어를 실현하기 위해 AI를 어떻게 활용할 계획인가요? AI 활용방안과 이를 통해 문제를 해결하거나 새로운 변화를 만드는 방법을 구체적으로 작성해주세요.</p>
+
+  <h3>설계 원칙: 결정적 코드가 흐름을 쥐고, LLM은 읽기와 판단만 맡는다</h3>
+  <p>LLM에게 "이 RFP를 분석해 줘"라고 통째로 맡기면 결과가 매번 다르고 무엇을 놓쳤는지 알 수 없다. 그래서 파이프라인을 여섯 단계로 나누고, 단계 사이의 데이터 형식을 pydantic 스키마로 고정했다. LLM(Claude Opus 5.5 기본)은 그중 세 단계에서만 쓰고, 나머지는 코드가 한다. 각 단계는 체크포인트 파일을 남겨 실패한 단계부터 다시 돌릴 수 있다.</p>
+
+  <div class="fig">
+    <svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B7280"/></marker></defs>
+      <!-- inputs -->
+      <g>
+        <rect x="0" y="120" width="92" height="56" rx="6" fill="#fff" stroke="#9CA3AF" stroke-dasharray="4 3"/>
+        <text x="46" y="143" font-size="12" fill="#374151" text-anchor="middle" font-weight="600">RFP PDF</text>
+        <text x="46" y="162" font-size="10.5" fill="#6B7280" text-anchor="middle">300쪽, 표 40여 개</text>
+        <rect x="0" y="190" width="92" height="56" rx="6" fill="#fff" stroke="#9CA3AF" stroke-dasharray="4 3"/>
+        <text x="46" y="213" font-size="12" fill="#374151" text-anchor="middle" font-weight="600">제안서 초안</text>
+        <text x="46" y="232" font-size="10.5" fill="#6B7280" text-anchor="middle">md / docx (선택)</text>
+      </g>
+      <!-- stage boxes: x from 110, width 105, gap 15 -->
+      <g font-size="12">
+        <!-- parse -->
+        <rect x="110" y="110" width="105" height="130" rx="8" fill="#E8EDF5" stroke="#1B2A49"/>
+        <text x="162" y="136" fill="#1B2A49" text-anchor="middle" font-weight="700" font-size="14">parse</text>
+        <text x="162" y="158" fill="#374151" text-anchor="middle" font-size="10.5">페이지·표 추출</text>
+        <text x="162" y="174" fill="#374151" text-anchor="middle" font-size="10.5">섹션 분할</text>
+        <rect x="128" y="200" width="69" height="22" rx="11" fill="#1B2A49"/>
+        <text x="162" y="215" fill="#fff" text-anchor="middle" font-size="10.5" font-weight="600">코드</text>
+        <!-- extract -->
+        <rect x="230" y="110" width="105" height="130" rx="8" fill="#FDF1EA" stroke="#D9622B"/>
+        <text x="282" y="136" fill="#B44D1B" text-anchor="middle" font-weight="700" font-size="14">extract</text>
+        <text x="282" y="158" fill="#374151" text-anchor="middle" font-size="10.5">요구사항 구조화</text>
+        <text x="282" y="174" fill="#374151" text-anchor="middle" font-size="10.5">인용 재검증·병합</text>
+        <rect x="248" y="200" width="69" height="22" rx="11" fill="#D9622B"/>
+        <text x="282" y="215" fill="#fff" text-anchor="middle" font-size="10.5" font-weight="600">Claude</text>
+        <!-- toc -->
+        <rect x="350" y="110" width="105" height="130" rx="8" fill="#E8EDF5" stroke="#1B2A49"/>
+        <text x="402" y="136" fill="#1B2A49" text-anchor="middle" font-weight="700" font-size="14">toc</text>
+        <text x="402" y="158" fill="#374151" text-anchor="middle" font-size="10.5">배점표 인식</text>
+        <text x="402" y="174" fill="#374151" text-anchor="middle" font-size="10.5">분량 비례 목차</text>
+        <rect x="356" y="200" width="93" height="22" rx="11" fill="#1B2A49"/>
+        <text x="402" y="215" fill="#fff" text-anchor="middle" font-size="10" font-weight="600">코드+Claude</text>
+        <!-- risk -->
+        <rect x="470" y="110" width="105" height="130" rx="8" fill="#E8EDF5" stroke="#1B2A49"/>
+        <text x="522" y="136" fill="#1B2A49" text-anchor="middle" font-weight="700" font-size="14">risk</text>
+        <text x="522" y="158" fill="#374151" text-anchor="middle" font-size="10.5">규칙 20개 탐지</text>
+        <text x="522" y="174" fill="#374151" text-anchor="middle" font-size="10.5">LLM 보강 판정</text>
+        <rect x="476" y="200" width="93" height="22" rx="11" fill="#1B2A49"/>
+        <text x="522" y="215" fill="#fff" text-anchor="middle" font-size="10" font-weight="600">규칙+Claude</text>
+        <!-- coverage -->
+        <rect x="590" y="110" width="105" height="130" rx="8" fill="#FDF1EA" stroke="#D9622B"/>
+        <text x="642" y="136" fill="#B44D1B" text-anchor="middle" font-weight="700" font-size="14">coverage</text>
+        <text x="642" y="158" fill="#374151" text-anchor="middle" font-size="10.5">초안 문단 대조</text>
+        <text x="642" y="174" fill="#374151" text-anchor="middle" font-size="10.5">충족·부분·누락</text>
+        <rect x="608" y="200" width="69" height="22" rx="11" fill="#D9622B"/>
+        <text x="642" y="215" fill="#fff" text-anchor="middle" font-size="10.5" font-weight="600">Claude</text>
+        <!-- export -->
+        <rect x="710" y="110" width="105" height="130" rx="8" fill="#E8EDF5" stroke="#1B2A49"/>
+        <text x="762" y="136" fill="#1B2A49" text-anchor="middle" font-weight="700" font-size="14">export</text>
+        <text x="762" y="158" fill="#374151" text-anchor="middle" font-size="10.5">엑셀 4시트·워드</text>
+        <text x="762" y="174" fill="#374151" text-anchor="middle" font-size="10.5">HTML 대시보드</text>
+        <rect x="728" y="200" width="69" height="22" rx="11" fill="#1B2A49"/>
+        <text x="762" y="215" fill="#fff" text-anchor="middle" font-size="10.5" font-weight="600">코드</text>
+      </g>
+      <!-- arrows between stages -->
+      <g stroke="#6B7280" stroke-width="2" marker-end="url(#arr2)">
+        <line x1="94" y1="148" x2="108" y2="148"/>
+        <line x1="217" y1="175" x2="228" y2="175"/>
+        <line x1="337" y1="175" x2="348" y2="175"/>
+        <line x1="457" y1="175" x2="468" y2="175"/>
+        <line x1="577" y1="175" x2="588" y2="175"/>
+        <line x1="697" y1="175" x2="708" y2="175"/>
+        <line x1="817" y1="175" x2="830" y2="175"/>
+      </g>
+      <!-- draft arrow to coverage -->
+      <path d="M92 218 L100 218 Q104 218 104 222 L104 262 Q104 266 108 266 L642 266 L642 244" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+      <!-- outputs -->
+      <g>
+        <rect x="834" y="104" width="66" height="40" rx="6" fill="#2A9D8F"/>
+        <text x="867" y="129" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">.xlsx</text>
+        <rect x="834" y="152" width="66" height="40" rx="6" fill="#2A9D8F"/>
+        <text x="867" y="177" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">.docx</text>
+        <rect x="834" y="200" width="66" height="40" rx="6" fill="#2A9D8F"/>
+        <text x="867" y="225" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">.html</text>
+      </g>
+      <!-- schema band above -->
+      <rect x="110" y="40" width="705" height="48" rx="8" fill="#fff" stroke="#1B2A49" stroke-width="1.5"/>
+      <text x="462" y="60" font-size="12" fill="#1B2A49" text-anchor="middle" font-weight="700">단계 사이의 계약: pydantic 스키마 (schemas.py)</text>
+      <text x="462" y="78" font-size="10.5" fill="#4B5563" text-anchor="middle">Document → Requirement[] → TocResult → RiskFinding[] → CoverageResult → ReviewReport  ·  분류 11종, 필수 3값, severity 3값으로 강제</text>
+      <!-- checkpoint band below -->
+      <rect x="110" y="290" width="705" height="44" rx="8" fill="#F3F4F6"/>
+      <text x="462" y="309" font-size="12" fill="#1B2A49" text-anchor="middle" font-weight="700">체크포인트: out/&lt;rfp&gt;/checkpoints/&lt;stage&gt;.json</text>
+      <text x="462" y="326" font-size="10.5" fill="#4B5563" text-anchor="middle">단계마다 저장. --from &lt;stage&gt;로 재개. 데모 직전에는 export만 다시 돌린다.</text>
+      <!-- legend -->
+      <rect x="110" y="356" width="14" height="14" rx="3" fill="#E8EDF5" stroke="#1B2A49"/><text x="130" y="368" font-size="11" fill="#374151">결정적 코드 (매번 같은 결과)</text>
+      <rect x="330" y="356" width="14" height="14" rx="3" fill="#FDF1EA" stroke="#D9622B"/><text x="350" y="368" font-size="11" fill="#374151">Claude 구조화 출력 (읽기·판단)</text>
+      <rect x="570" y="356" width="14" height="14" rx="3" fill="#2A9D8F"/><text x="590" y="368" font-size="11" fill="#374151">제안 팀이 지금 쓰는 파일 형식</text>
+    </svg>
+    <div class="cap">그림 2. 여섯 단계 파이프라인. LLM은 extract, risk 보강, coverage 세 곳과 toc의 연결 단계에서만 쓴다.</div>
+  </div>
+
+  <table>
+    <tr><th class="k" style="width:22mm">단계</th><th>하는 일</th><th class="k" style="width:30mm">LLM 사용</th></tr>
+    <tr><td class="k"><b>parse</b></td><td>pdfplumber로 페이지 텍스트와 표를 뽑고 제목 패턴(Ⅰ. / 1. / 가.)으로 섹션을 나눈다. 머리말·쪽번호는 반복 줄 탐지로 제거한다.</td><td>없음</td></tr>
+    <tr><td class="k"><b>extract</b></td><td>섹션 단위로 Claude에 보내 요구사항을 받는다. 인용문이 실제 페이지에 있는지 코드가 재검증하고, 중복은 코드가 병합한다.</td><td>구조화 출력</td></tr>
+    <tr><td class="k"><b>toc</b></td><td>배점 열 합이 60~100인 표를 코드가 먼저 배점표로 고른다. 요구사항→배점 항목 연결만 Claude가 한다. 분량은 배점 비례로 계산한다.</td><td>연결 단계만</td></tr>
+    <tr><td class="k"><b>risk</b></td><td>규칙 20개(정규식+임계값)가 조항 위치와 값을 찾는다. Claude가 앞뒤 600자를 읽고 심각도·근거·협상 포인트를 쓴다.</td><td>보강 단계만</td></tr>
+    <tr><td class="k"><b>coverage</b></td><td>초안을 문단 id로 쪼개 넘기고, 근거는 문단 id로만 받는다. 필수 요구사항 누락을 따로 센다.</td><td>구조화 출력</td></tr>
+    <tr><td class="k"><b>export</b></td><td>엑셀(추적표·위험·배점-목차·커버리지), 워드(목차 초안), HTML 대시보드.</td><td>없음</td></tr>
+  </table>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>3 / 10</span></div>
+</section>
+
+<!-- ===================== 4. AI 활용 방안 (2) ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">2</div><h2>AI 활용 방안 <span class="cont">(2/2) 이중 판정, 평가 루프, 개발 하네스</span></h2></div>
+
+  <div class="two">
+    <div class="fig">
+      <h3>규칙 + LLM 이중 판정</h3>
+      <svg viewBox="0 0 440 300" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#6B7280"/></marker></defs>
+        <rect x="0" y="0" width="205" height="130" rx="8" fill="#E8EDF5" stroke="#1B2A49"/>
+        <text x="102" y="26" font-size="13" fill="#1B2A49" font-weight="700" text-anchor="middle">규칙 20개 → "어디"</text>
+        <text x="14" y="50" font-size="10.5" fill="#374151">정규식 + 임계값 (yaml)</text>
+        <text x="14" y="68" font-size="10.5" fill="#374151">지체상금률 &gt; 1000분의 1.25</text>
+        <text x="14" y="86" font-size="10.5" fill="#374151">하자담보 &gt; 1년 · 계약보증금 &gt; 10%</text>
+        <text x="14" y="104" font-size="10.5" fill="#374151">상한 조항 부재(absent) 판정</text>
+        <text x="14" y="122" font-size="10" fill="#6B7280">기준값과 근거 조문은 규칙 파일에만</text>
+        <rect x="235" y="0" width="205" height="130" rx="8" fill="#FDF1EA" stroke="#D9622B"/>
+        <text x="337" y="26" font-size="13" fill="#B44D1B" font-weight="700" text-anchor="middle">LLM → "왜 · 얼마나"</text>
+        <text x="249" y="50" font-size="10.5" fill="#374151">조항 앞뒤 600자를 읽는다</text>
+        <text x="249" y="68" font-size="10.5" fill="#374151">심각도 조정 + 그 이유</text>
+        <text x="249" y="86" font-size="10.5" fill="#374151">협상 포인트 한 문장</text>
+        <text x="249" y="104" font-size="10.5" fill="#374151">규칙 밖 위험은 "검토 권고"로 구분</text>
+        <text x="249" y="122" font-size="10" fill="#6B7280">구조화 출력(RiskJudgement)</text>
+        <line x1="102" y1="134" x2="190" y2="196" stroke="#6B7280" stroke-width="2" marker-end="url(#arr3)"/>
+        <line x1="337" y1="134" x2="250" y2="196" stroke="#6B7280" stroke-width="2" marker-end="url(#arr3)"/>
+        <rect x="40" y="200" width="360" height="100" rx="8" fill="#1B2A49"/>
+        <text x="220" y="226" font-size="13" fill="#fff" font-weight="700" text-anchor="middle">RiskFinding</text>
+        <text x="220" y="248" font-size="10.5" fill="#C7D2E5" text-anchor="middle">quote · page · severity · extracted_value · threshold</text>
+        <text x="220" y="266" font-size="10.5" fill="#C7D2E5" text-anchor="middle">why · negotiation_point · basis · source</text>
+        <text x="220" y="288" font-size="10.5" fill="#FDE8DC" text-anchor="middle">rule+llm = 확정  ·  llm = 검토 권고</text>
+      </svg>
+      <div class="cap">그림 3. 규칙 없이 LLM만 쓰면 매번 다른 답이, LLM 없이 규칙만 쓰면 "단어가 있다"는 사실만 나온다.</div>
+    </div>
+    <div class="fig">
+      <h3>골든셋 평가 루프(힐클라임)</h3>
+      <svg viewBox="0 0 440 300" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="arr4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1B2A49"/></marker></defs>
+        <circle cx="220" cy="150" r="98" fill="none" stroke="#1B2A49" stroke-width="2" stroke-dasharray="6 5"/>
+        <!-- nodes -->
+        <g>
+          <rect x="150" y="10" width="140" height="48" rx="24" fill="#1B2A49"/>
+          <text x="220" y="30" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">파이프라인 실행</text>
+          <text x="220" y="47" font-size="10" fill="#C7D2E5" text-anchor="middle">rfp-orchestrator</text>
+          <rect x="310" y="126" width="130" height="48" rx="24" fill="#2A9D8F"/>
+          <text x="375" y="146" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">측정</text>
+          <text x="375" y="163" font-size="10" fill="#DDF2EF" text-anchor="middle">eval-judge · 재현율·정밀도</text>
+          <rect x="150" y="242" width="140" height="48" rx="24" fill="#D9622B"/>
+          <text x="220" y="262" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">수정 한 가지</text>
+          <text x="220" y="279" font-size="10" fill="#FDE8DC" text-anchor="middle">담당 에이전트가 고친다</text>
+          <rect x="0" y="126" width="130" height="48" rx="24" fill="#fff" stroke="#1B2A49" stroke-width="1.5"/>
+          <text x="65" y="146" font-size="12" fill="#1B2A49" text-anchor="middle" font-weight="700">골든셋</text>
+          <text x="65" y="163" font-size="10" fill="#4B5563" text-anchor="middle">정답 요구사항 · 심은 위험</text>
+        </g>
+        <g stroke="#1B2A49" stroke-width="2" fill="none" marker-end="url(#arr4)">
+          <path d="M292 44 Q340 70 362 120"/>
+          <path d="M372 178 Q345 230 294 258"/>
+          <path d="M148 258 Q96 230 72 178"/>
+          <path d="M72 122 Q96 70 146 44"/>
+        </g>
+        <text x="220" y="140" font-size="11" fill="#374151" text-anchor="middle">지표가 떨어지면 원인을</text>
+        <text x="220" y="156" font-size="11" fill="#374151" text-anchor="middle">표 파싱 / 프롬프트로 가른다</text>
+        <text x="220" y="176" font-size="10.5" fill="#6B7280" text-anchor="middle">한 번에 두 가지를 바꾸지 않는다</text>
+      </svg>
+      <div class="cap">그림 4. 측정 없이 프롬프트를 두 번 연속 바꾸지 않는다. 이전 측정은 eval/history.jsonl에 쌓인다.</div>
+    </div>
+  </div>
+
+  <h3>AI를 쓰는 방식 네 가지</h3>
+  <div class="two" style="margin-bottom:3mm">
+    <div class="card"><h4>① 구조화 출력</h4><p>Claude Opus 5.5의 구조화 출력으로 요구사항·위험·커버리지를 pydantic 스키마 그대로 받는다. 분류는 11종 중 하나, 필수 여부는 must/should/may만 허용한다. 모델이 자유 문장으로 답할 여지를 없앴다.</p></div>
+    <div class="card"><h4>② 원문 인용 강제</h4><p>요구사항과 위험 조항은 모두 원문 인용과 페이지를 가진다. 인용문이 그 페이지에 실제로 있는지 코드가 확인하고 없으면 신뢰도를 낮춰 표시한다. "그 조항 어디 있어요?"에 페이지를 바로 연다.</p></div>
+    <div class="card"><h4>③ 이중 판정</h4><p>위험 조항은 규칙이 "어디"를, LLM이 "왜·얼마나"를 맡는다. 법령 기준값은 코드가 아니라 규칙 파일에 근거 조문과 함께 둔다. 팀이 데모 전에 최신 조문으로 확인한다.</p></div>
+    <div class="card"><h4>④ 평가 루프</h4><p>샘플 RFP의 정답 요구사항과 심어 둔 위험 조항으로 재현율·정밀도·탐지율을 매번 잰다. 떨어지면 원인을 가른 뒤 한 가지만 고치고 다시 잰다.</p></div>
+  </div>
+
+  <h3>개발 하네스: 서브에이전트 7개와 스킬 3개</h3>
+  <table>
+    <tr><th class="k" style="width:36mm">에이전트</th><th>역할과 지키는 원칙</th><th class="k" style="width:36mm">맡는 모듈</th></tr>
+    <tr><td class="k">rfp-orchestrator</td><td>여섯 단계 실행과 체크포인트 확인. 요구사항 0건·배점표 미발견은 성공이 아니라 조사 대상으로 본다.</td><td>pipeline.py, cli.py</td></tr>
+    <tr><td class="k">rfp-parser</td><td>표 행 수와 페이지 번호가 원본과 같은지 책임. 병합 셀 상속은 고유번호 열에는 적용하지 않는다.</td><td>parse.py</td></tr>
+    <tr><td class="k">requirement-extractor</td><td>표와 본문의 요구사항 추출. 인용 없는 결과는 버리고, 중복 병합은 코드가 한다.</td><td>extract.py</td></tr>
+    <tr><td class="k">toc-architect</td><td>배점표 인식과 분량 비례 목차. 연결 못 한 요구사항은 "기타 대응" 장에 모아 사라지지 않게 한다.</td><td>toc.py</td></tr>
+    <tr><td class="k">risk-auditor</td><td>규칙 파일 유지. 새 규칙에는 걸리는 예문과 안 걸리는 예문을 함께 넣는다.</td><td>risk.py, risk_rules.yaml</td></tr>
+    <tr><td class="k">coverage-checker</td><td>초안 대조. 근거는 문단 id로만 받고, 필수 누락을 맨 위에 센다.</td><td>coverage.py</td></tr>
+    <tr><td class="k">eval-judge</td><td>골든셋 측정과 이전 기록 비교. 개선 제안은 한 번에 하나.</td><td>eval/</td></tr>
+  </table>
+  <p class="small">스킬 <code>/rfp-review</code>(전체 실행과 요약), <code>/risk-rules</code>(규칙 추가 절차와 예문 테스트), <code>/demo-rehearsal</code>(3분 데모 점검표). 사내에서는 FabriX 또는 Claude Enterprise 위에서 같은 구조로 돌릴 수 있다.</p>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>4 / 10</span></div>
+</section>
+
+<!-- ===================== 5. 구현 기능 (1) ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">3</div><h2>48시간 동안 구현할 주요 기능 <span class="cont">(1/3) 기능과 화면</span></h2></div>
+  <p class="q">해커톤 2일 동안 구현해보고 싶은 주요 기능은 무엇인가요? 아이디어가 구현되면 사용자가 무엇을 하고, AI가 어떤 결과를 보여줄지 적어주세요.</p>
+
+  <table>
+    <tr><th class="k" style="width:34mm">기능</th><th style="width:46mm">사용자가 하는 일</th><th>AI가 보여 주는 것</th></tr>
+    <tr><td class="k"><b>① 요구사항 추적표</b></td><td>RFP PDF를 올린다</td><td>요구사항 목록(ID, 11종 분류, 필수 여부, 원문 인용, 페이지). 본문에서 찾은 요구사항은 "본문" 배지로 구분한다. 클릭하면 원문 페이지가 열린다.</td></tr>
+    <tr><td class="k"><b>② 위험 조항 경고</b></td><td>위험 카드를 연다</td><td>조항 원문, 추출값과 기준값(예: 지체상금률 0.25%/일 vs 기준 0.125%/일), 왜 위험한지, 협상 포인트, 근거 조문.</td></tr>
+    <tr><td class="k"><b>③ 배점 기준 목차 초안</b></td><td>제안서 총 분량을 입력한다</td><td>배점 항목별 장과 배정 분량, 각 장에서 답할 요구사항 번호, 두 문장짜리 작성 지침. 워드로 내려받는다.</td></tr>
+    <tr><td class="k"><b>④ 초안 커버리지</b></td><td>작성 중인 초안(md/docx)을 올린다</td><td>요구사항마다 충족·부분·누락과 근거 문단. 필수 요구사항 누락 건수를 맨 위에 빨간색으로 보여 준다.</td></tr>
+  </table>
+
+  <h3>화면 1. 업로드와 6단계 진행</h3>
+  <figure class="screen" data-src="img/screen-1-upload.png"><div class="shots"><img src="img/screen-1-upload.png" alt="img/screen-1-upload.png"></div>
+    <figcaption>화면 1(실제 데모 화면). 왼쪽에 RFP와 선택 입력(초안, 총 분량)을 올리고, 오른쪽에서 여섯 단계가 건수와 함께 진행된다. 끝난 단계는 체크포인트로 남는다.</figcaption>
+  </figure>
+
+  <h3>네 화면에 공통인 것</h3>
+  <div class="three">
+    <div class="card"><h4>원문으로 가는 버튼</h4><p>요구사항·위험 조항 어디서든 "PDF n쪽 열기"가 있다. AI 결과를 믿으라고 하지 않고 10초 안에 확인하게 한다.</p></div>
+    <div class="card"><h4>건수가 먼저, 목록은 그다음</h4><p>요구사항 47건·위험 6건·필수 누락 4건처럼 숫자를 먼저 보여 준다. 발표에서 말하는 숫자와 화면의 숫자가 같다(예시 수치).</p></div>
+    <div class="card"><h4>오프라인에서 열린다</h4><p>대시보드는 report.json 하나로 렌더되는 정적 HTML이다. 외부 CDN 없이 심사장 노트북에서 바로 연다.</p></div>
+  </div>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>5 / 10</span></div>
+</section>
+
+<!-- ===================== 6. 구현 기능 (2) 화면 2, 3 ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">3</div><h2>48시간 동안 구현할 주요 기능 <span class="cont">(2/3) 요구사항 추적표와 위험 조항</span></h2></div>
+
+  <h3>화면 2. 요구사항 추적표: 표 안 요구사항과 본문에 숨은 요구사항</h3>
+  <figure class="screen" data-src="img/screen-2-requirements.png"><div class="shots"><img src="img/screen-2-requirements.png" alt="img/screen-2-requirements.png"></div>
+    <figcaption>화면 2(실제 데모 화면). 표에 있던 요구사항(SFR, PER…)과 본문 문단에서 찾은 요구사항(REQ-P, "본문" 배지)이 한 표에 있다. 행을 누르면 오른쪽에 원문 페이지가 열린다.</figcaption>
+  </figure>
+
+  <h3>화면 3. 위험 조항 경고: 추출값과 기준값을 나란히</h3>
+  <figure class="screen" data-src="img/screen-3-risks.png"><div class="shots"><img src="img/screen-3-risks.png" alt="img/screen-3-risks.png"></div>
+    <figcaption>화면 3(실제 데모 화면). 왼쪽은 심각도순 목록, 오른쪽은 선택한 조항의 원문·추출값·기준값·이유·협상 포인트·근거 조문이다. 규칙에 걸리지 않은 LLM 단독 판단은 "검토 권고"로 구분한다.</figcaption>
+  </figure>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>6 / 10</span></div>
+</section>
+
+<!-- ===================== 7. 구현 기능 (3) 화면 4, 데모, 일정 ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">3</div><h2>48시간 동안 구현할 주요 기능 <span class="cont">(3/3) 목차·커버리지, 데모 흐름, 일정</span></h2></div>
+
+  <h3>화면 4. 배점 기준 목차 초안과 제안서 초안 커버리지</h3>
+  <figure class="screen" data-src="img/screen-4-toc-coverage.png"><div class="shots two"><img src="img/screen-4-toc.png" alt="img/screen-4-toc.png"><img src="img/screen-4b-coverage.png" alt="img/screen-4b-coverage.png"></div>
+    <figcaption>화면 4(실제 데모 화면). 왼쪽은 배점 비중에 비례한 분량과 연결 요구사항이 붙은 목차, 오른쪽은 초안 대조 결과다. 필수 요구사항 누락이 맨 위에 온다. 숫자는 예시다.</figcaption>
+  </figure>
+
+  <div class="two">
+    <div>
+      <h3>데모 흐름(3분)</h3>
+      <table>
+        <tr><th class="k" style="width:11mm">시각</th><th class="k" style="width:26mm">화면</th><th>말하는 것</th></tr>
+        <tr><td>0:00</td><td>업로드·진행</td><td>300쪽 RFP, 평균 25시간·9명이 읽던 일(Loopio 2025)</td></tr>
+        <tr><td>0:30</td><td>요구사항 추적표</td><td>본문에 숨은 요구사항을 찾았다. 하나를 눌러 원문 페이지를 연다</td></tr>
+        <tr><td>1:15</td><td>위험 조항</td><td>높음 등급 하나를 읽고 추출값과 기준값을 나란히 보여 준다</td></tr>
+        <tr><td>2:00</td><td>목차 초안</td><td>심사위원은 배점표 순서로 읽는다. 배점·분량·요구사항 번호</td></tr>
+        <tr><td>2:30</td><td>커버리지</td><td>필수 요구사항 누락 건수를 빨간색으로</td></tr>
+        <tr><td>2:50</td><td>다운로드</td><td>내일 아침 제안 PM 책상에 올라가는 엑셀·워드</td></tr>
+      </table>
+    </div>
+    <div class="fig">
+      <h3>48시간 계획</h3>
+      <svg viewBox="0 0 440 170" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="14" font-size="12" fill="#1B2A49" font-weight="700">Day 1</text>
+        <rect x="0" y="22" width="106" height="46" rx="5" fill="#E8EDF5"/><text x="53" y="41" font-size="10" fill="#1B2A49" text-anchor="middle" font-weight="600">가상 RFP · 골든셋</text><text x="53" y="56" font-size="9" fill="#4B5563" text-anchor="middle">표+본문+심은 위험</text>
+        <rect x="112" y="22" width="106" height="46" rx="5" fill="#E8EDF5"/><text x="165" y="41" font-size="10" fill="#1B2A49" text-anchor="middle" font-weight="600">파서</text><text x="165" y="56" font-size="9" fill="#4B5563" text-anchor="middle">pdfplumber · 섹션</text>
+        <rect x="224" y="22" width="106" height="46" rx="5" fill="#FDF1EA"/><text x="277" y="41" font-size="10" fill="#B44D1B" text-anchor="middle" font-weight="600">요구사항 추출</text><text x="277" y="56" font-size="9" fill="#4B5563" text-anchor="middle">구조화 출력 · 재검증</text>
+        <rect x="336" y="22" width="104" height="46" rx="5" fill="#E8EDF5"/><text x="388" y="41" font-size="10" fill="#1B2A49" text-anchor="middle" font-weight="600">규칙 엔진 20개</text><text x="388" y="56" font-size="9" fill="#4B5563" text-anchor="middle">예문 테스트 · 첫 측정</text>
+        <text x="0" y="96" font-size="12" fill="#1B2A49" font-weight="700">Day 2</text>
+        <rect x="0" y="104" width="106" height="46" rx="5" fill="#E8EDF5"/><text x="53" y="123" font-size="10" fill="#1B2A49" text-anchor="middle" font-weight="600">배점표 · 목차</text><text x="53" y="138" font-size="9" fill="#4B5563" text-anchor="middle">분량 비례 · 워드</text>
+        <rect x="112" y="104" width="106" height="46" rx="5" fill="#FDF1EA"/><text x="165" y="123" font-size="10" fill="#B44D1B" text-anchor="middle" font-weight="600">커버리지</text><text x="165" y="138" font-size="9" fill="#4B5563" text-anchor="middle">초안 대조 · 엑셀</text>
+        <rect x="224" y="104" width="106" height="46" rx="5" fill="#E8EDF5"/><text x="277" y="123" font-size="10" fill="#1B2A49" text-anchor="middle" font-weight="600">대시보드 UI</text><text x="277" y="138" font-size="9" fill="#4B5563" text-anchor="middle">화면 4장 · 오프라인</text>
+        <rect x="336" y="104" width="104" height="46" rx="5" fill="#DDF2EF"/><text x="388" y="123" font-size="10" fill="#1F6F66" text-anchor="middle" font-weight="600">리허설 2회</text><text x="388" y="138" font-size="9" fill="#4B5563" text-anchor="middle">녹화본 · 발표 자료</text>
+        <text x="0" y="166" font-size="9" fill="#6B7280">범위 밖: 스캔본 OCR, 실시간 협업 편집, 제안서 본문 자동 작성</text>
+      </svg>
+    </div>
+  </div>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>7 / 10</span></div>
+</section>
+
+<!-- ===================== 8. 사용자와 기대효과 (1) ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">4</div><h2>주요 사용자와 기대효과 <span class="cont">(1/2)</span></h2></div>
+  <p class="q">이 아이디어의 주요 사용자는 누구이며, 어떤 기대효과가 있나요? 고객 가치 창출, 오류 감소, 정보 접근성 개선, 업무효율 향상 등 기대하는 변화를 구체적으로 적어주세요.</p>
+
+  <h3>사용자</h3>
+  <div class="three" style="margin-bottom:4mm">
+    <div class="card"><span class="tag acc">1차</span><h4 style="margin-top:1.5mm">제안 PM · 제안서 작성자</h4><p>RFP를 받은 날 추적표와 목차 초안을 손에 쥔다. 읽고 옮기는 대신 확인하고 배분한다. 마감 전날 초안을 넣어 빠진 요구사항을 찾는다.</p></div>
+    <div class="card"><span class="tag">2차</span><h4 style="margin-top:1.5mm">사업관리(PMO) · 법무/계약 검토자</h4><p>위험 조항 목록을 원문·기준값·협상 포인트와 함께 받는다. 계약 조건을 제안 단계에서 협상 테이블에 올린다.</p></div>
+    <div class="card"><span class="tag teal">3차</span><h4 style="margin-top:1.5mm">영업</h4><p>입찰 참가 자격 요건과 위험 조항 등급을 보고 참여 여부를 하루 안에 결정한다. 참여하지 않을 사업에 제안 공수를 쓰지 않는다.</p></div>
+  </div>
+
+  <h3>기대효과(측정 전이므로 목표로 적는다)</h3>
+  <div class="fig">
+    <svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg">
+      <!-- quadrant -->
+      <rect x="0" y="0" width="445" height="160" rx="10" fill="#E8EDF5"/>
+      <text x="20" y="30" font-size="14" fill="#1B2A49" font-weight="700">업무 효율</text>
+      <text x="20" y="54" font-size="11" fill="#4B5563">지금: RFP 1차 검토에 며칠, 여러 명</text>
+      <text x="20" y="92" font-size="26" fill="#1B2A49" font-weight="800">3일 → 3시간 <tspan font-size="12" fill="#6B7280" font-weight="600">목표</tspan></text>
+      <text x="20" y="120" font-size="11" fill="#374151">1차 검토 시간. 사람은 확인과 결정에 시간을 쓴다.</text>
+      <text x="20" y="140" font-size="11" fill="#374151">위험 조항 검토가 "따로 하는 일"에서 "자동으로 나오는 일"로 바뀐다.</text>
+
+      <rect x="455" y="0" width="445" height="160" rx="10" fill="#FDF1EA"/>
+      <text x="475" y="30" font-size="14" fill="#B44D1B" font-weight="700">오류 감소</text>
+      <text x="475" y="54" font-size="11" fill="#4B5563">지금: 본문 속 요구사항 누락, 계약 조건 미검토</text>
+      <text x="475" y="92" font-size="26" fill="#B44D1B" font-weight="800">필수 누락 0건 <tspan font-size="12" fill="#6B7280" font-weight="600">목표</tspan></text>
+      <text x="475" y="120" font-size="11" fill="#374151">초안 커버리지로 제출 전에 잡는다.</text>
+      <text x="475" y="140" font-size="11" fill="#374151">위험 조항 20종을 제안 단계에서 식별해 협상 테이블에 올린다.</text>
+
+      <rect x="0" y="170" width="445" height="160" rx="10" fill="#F3F4F6"/>
+      <text x="20" y="200" font-size="14" fill="#1B2A49" font-weight="700">정보 접근성</text>
+      <text x="20" y="224" font-size="11" fill="#4B5563">지금: 요구사항과 조항이 300쪽 PDF 속에 묻혀 있다</text>
+      <text x="20" y="262" font-size="26" fill="#1B2A49" font-weight="800">원문 확인 10초 <tspan font-size="12" fill="#6B7280" font-weight="600">목표</tspan></text>
+      <text x="20" y="290" font-size="11" fill="#374151">모든 항목에 페이지와 원문 인용. 제안 팀 누구나, 법무도, 영업도 같은 표를 본다.</text>
+      <text x="20" y="310" font-size="11" fill="#374151">엑셀·워드로 나오므로 기존 제안 관리 체계에 그대로 들어간다.</text>
+
+      <rect x="455" y="170" width="445" height="160" rx="10" fill="#DDF2EF"/>
+      <text x="475" y="200" font-size="14" fill="#1F6F66" font-weight="700">고객 가치</text>
+      <text x="475" y="224" font-size="11" fill="#4B5563">지금: 배점표와 어긋난 목차, 평가자가 찾아 읽어야 하는 제안서</text>
+      <text x="475" y="262" font-size="26" fill="#1F6F66" font-weight="800">배점 순서대로 읽히는 제안서</text>
+      <text x="475" y="290" font-size="11" fill="#374151">배점 비중에 맞춘 분량과 요구사항 번호가 붙은 장 구성.</text>
+      <text x="475" y="310" font-size="11" fill="#374151">평가자가 "이 요구사항은 어디 있지?"를 찾지 않게 한다.</text>
+    </svg>
+    <div class="cap">그림 5. 기대효과 네 영역. 큰 글씨 수치는 해커톤 뒤 실제 제안 2~3건으로 측정해 바꿀 목표값이다.</div>
+  </div>
+
+  <table>
+    <tr><th class="k" style="width:26mm">영역</th><th style="width:60mm">지금</th><th>목표</th></tr>
+    <tr><td class="k">업무 효율</td><td>RFP 1차 검토에 며칠, 여러 명</td><td>1차 검토 3시간 이내. 사람은 확인과 결정에 시간을 쓴다</td></tr>
+    <tr><td class="k">오류 감소</td><td>본문 속 요구사항 누락, 계약 조건 미검토</td><td>필수 요구사항 누락 0건. 위험 조항을 제안 단계에서 협상 테이블에 올림</td></tr>
+    <tr><td class="k">정보 접근성</td><td>요구사항과 조항이 PDF 속에 묻힘</td><td>모든 항목에 페이지와 원문 인용. 누구나 10초 안에 원문 확인</td></tr>
+    <tr><td class="k">고객 가치</td><td>배점표와 어긋난 목차</td><td>배점 비중에 맞춘 목차로 평가자가 읽기 쉬운 제안서</td></tr>
+  </table>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>8 / 10</span></div>
+</section>
+
+<!-- ===================== 9. 사용자와 기대효과 (2) ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">4</div><h2>주요 사용자와 기대효과 <span class="cont">(2/2) 확산, 차별점, 위험과 대응</span></h2></div>
+
+  <h3>확산 경로</h3>
+  <div class="fig">
+    <svg viewBox="0 0 900 120" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="arr5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#9CA3AF"/></marker></defs>
+      <rect x="0" y="10" width="270" height="100" rx="8" fill="#1B2A49"/>
+      <text x="135" y="40" font-size="14" fill="#fff" font-weight="700" text-anchor="middle">① 클라이언트 제로</text>
+      <text x="135" y="62" font-size="11" fill="#C7D2E5" text-anchor="middle">7대 메가 프로세스 중 영업 프로세스</text>
+      <text x="135" y="80" font-size="11" fill="#C7D2E5" text-anchor="middle">사내 제안 팀이 다음 제안부터 엑셀·워드로 사용</text>
+      <text x="135" y="98" font-size="11" fill="#C7D2E5" text-anchor="middle">실제 제안 2~3건으로 목표값 측정</text>
+      <line x1="276" y1="60" x2="308" y2="60" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arr5)"/>
+      <rect x="315" y="10" width="270" height="100" rx="8" fill="#E8EDF5" stroke="#1B2A49"/>
+      <text x="450" y="40" font-size="14" fill="#1B2A49" font-weight="700" text-anchor="middle">② FabriX 에이전트화</text>
+      <text x="450" y="62" font-size="11" fill="#374151" text-anchor="middle">파이프라인 6단계를 에이전트 도구로 등록</text>
+      <text x="450" y="80" font-size="11" fill="#374151" text-anchor="middle">사내 문서 저장소·제안 관리 시스템과 연결</text>
+      <text x="450" y="98" font-size="11" fill="#374151" text-anchor="middle">규칙 파일을 법무 검토자가 직접 관리</text>
+      <line x1="591" y1="60" x2="623" y2="60" stroke="#9CA3AF" stroke-width="2" marker-end="url(#arr5)"/>
+      <rect x="630" y="10" width="270" height="100" rx="8" fill="#DDF2EF" stroke="#2A9D8F"/>
+      <text x="765" y="40" font-size="14" fill="#1F6F66" font-weight="700" text-anchor="middle">③ 고객 제공</text>
+      <text x="765" y="62" font-size="11" fill="#374151" text-anchor="middle">고객사 제안·구매 조직에 같은 흐름 제공</text>
+      <text x="765" y="80" font-size="11" fill="#374151" text-anchor="middle">발주 쪽에서는 "요구사항 누락 없는 RFP 작성"으로</text>
+      <text x="765" y="98" font-size="11" fill="#374151" text-anchor="middle">같은 추출기를 거꾸로 쓸 수 있다</text>
+    </svg>
+  </div>
+
+  <h3>차별점: 문서 요약이 아니라 제안 업무의 순서를 따른다</h3>
+  <table>
+    <tr><th class="k" style="width:38mm">비교 항목</th><th style="width:56mm">문서 요약 · 범용 Copilot</th><th>RFP Compass</th></tr>
+    <tr><td class="k">답하는 질문</td><td>"이 문서가 무슨 내용인가"</td><td>"무엇을 써야 하고, 무엇이 위험하고, 무엇이 빠졌나"</td></tr>
+    <tr><td class="k">목차</td><td>문서 구조를 따라 요약</td><td>평가 배점표 순서와 비중으로 제안서 목차를 짠다</td></tr>
+    <tr><td class="k">요구사항</td><td>표를 옮기거나 문단을 요약</td><td>표와 본문 요구사항을 11종 분류와 필수 여부로 구조화하고 원문 인용을 코드로 재검증</td></tr>
+    <tr><td class="k">위험 조항</td><td>"지체상금 조항이 있다"</td><td>추출값 vs 법령 기준값, 왜 위험한지, 협상 포인트. 규칙+LLM 이중 판정</td></tr>
+    <tr><td class="k">초안 대조</td><td>없음</td><td>요구사항마다 충족·부분·누락과 근거 문단. 필수 누락을 먼저 센다</td></tr>
+    <tr><td class="k">결과 형식</td><td>채팅 답변</td><td>제안 팀이 쓰는 엑셀 4시트·워드 목차·오프라인 대시보드</td></tr>
+  </table>
+
+  <h3>위험과 대응</h3>
+  <table>
+    <tr><th class="k" style="width:44mm">위험</th><th>대응</th></tr>
+    <tr><td class="k">참신함이 낮아 보인다</td><td>배점 기준 목차와 초안 대조를 데모의 중심에 둔다. 두 기능은 문서 요약 도구에 없다.</td></tr>
+    <tr><td class="k">LLM이 틀린다</td><td>모든 결과에 원문 인용과 페이지가 있어 사람이 10초 안에 확인한다. 인용문이 페이지에 없으면 코드가 표시한다. 규칙에 없는 LLM 단독 판단은 "검토 권고"로 구분한다.</td></tr>
+    <tr><td class="k">법령 기준값이 틀릴 수 있다</td><td>기준값은 규칙 파일에 근거 조문과 함께 두고, 팀이 데모 전에 최신 조문으로 확인한다. 화면에도 "확인 필요"를 표시한다.</td></tr>
+    <tr><td class="k">실제 RFP 사용</td><td>데모는 가상의 기관·사업으로 만든 RFP를 쓴다. 실제 문서는 조달청 나라장터 공개 자료만 쓰고 출처를 첫 장에 적는다.</td></tr>
+    <tr><td class="k">라이브 데모 실패</td><td>체크포인트에서 출력 단계만 다시 돌리는 명령과 같은 시나리오의 녹화본을 준비한다. 대시보드는 외부 CDN 없이 오프라인에서 연다.</td></tr>
+    <tr><td class="k">300쪽 처리 시간·비용</td><td>섹션 단위 호출과 체크포인트 재사용. 추출은 섹션별로 병렬 호출하고, 재실행 때는 바뀐 단계만 돌린다.</td></tr>
+  </table>
+
+  <div class="callout">
+    <b>한 문장으로.</b> RFP Compass는 제안 팀이 RFP를 받은 첫날 "무엇을 써야 하고, 무엇이 위험하고, 무엇이 빠졌는지"를 원문 페이지와 함께 손에 쥐게 한다. 사람은 읽고 옮기는 대신 확인하고 결정한다.
+  </div>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>9 / 10</span></div>
+</section>
+
+<!-- ===================== 10. 부록 ===================== -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">＋</div><h2>부록: 하네스 구조와 재현 방법</h2></div>
+
+  <h3>저장소 구조</h3>
+<pre>aihck/
+├── CLAUDE.md                 # 하네스 가이드: 원칙, 6단계, 작업 규칙
+├── .claude/
+│   ├── agents/               # 서브에이전트 7개 (orchestrator, parser, extractor,
+│   │                         #   toc-architect, risk-auditor, coverage-checker, eval-judge)
+│   └── skills/               # /rfp-review, /risk-rules, /demo-rehearsal
+├── src/rfpharness/
+│   ├── schemas.py            # 단계 사이의 계약 (pydantic)
+│   ├── parse.py → extract.py → toc.py → risk.py → coverage.py → export.py
+│   ├── llm.py                # Claude 호출 단일 창구 (구조화 출력, mock 모드)
+│   ├── pipeline.py / cli.py  # 체크포인트, --from &lt;stage&gt; 재개
+│   └── prompts/              # extract.md, toc.md, risk.md, coverage.md
+├── rules/risk_rules.yaml     # 위험 규칙 20개: 패턴, 기준값, 근거 조문, 예문
+├── samples/                  # 가상 RFP 생성기(make_sample_rfp.py), 제안서 초안
+├── eval/                     # 골든셋(정답 요구사항, 심은 위험), run_eval.py
+└── tests/                    # 규칙 예문 자동 검사, 파서, 파이프라인(mock)</pre>
+
+  <h3>재현 방법</h3>
+<pre>uv venv .venv &amp;&amp; . .venv/bin/activate &amp;&amp; uv pip install -e ".[dev]"
+python samples/make_sample_rfp.py                  # 가상 RFP PDF 생성
+RFPHARNESS_LLM=mock python -m rfpharness review \
+    samples/sample_rfp.pdf --draft samples/draft_proposal.md
+pytest -q &amp;&amp; python eval/run_eval.py out/sample_rfp/report.json</pre>
+  <p class="small">실제 Claude 호출은 <code>RFPHARNESS_LLM=anthropic</code>(기본값)으로 바꾸고 <code>ANTHROPIC_API_KEY</code> 또는 <code>ant auth login</code> 자격을 쓴다. mock 모드는 네트워크 없이 결정적 결과를 내며 테스트와 흐름 확인용이다.</p>
+
+  <h3>하네스가 "하네스"인 이유</h3>
+  <div class="two" style="margin-bottom:4mm">
+    <div class="card"><h4>모델을 바꿔도 구조는 남는다</h4><p>스키마, 규칙 파일, 골든셋, 체크포인트는 모델과 무관하다. 모델이 바뀌면 프롬프트 네 개와 측정 결과만 바뀐다. 같은 하네스를 다른 코딩 에이전트에서 다시 구현해 검증할 수 있다.</p></div>
+    <div class="card"><h4>사람이 끼어드는 지점이 정해져 있다</h4><p>골든셋 작성, 규칙 기준값 확인, 위험 조항의 최종 협상 판단, 커버리지 누락의 보완은 사람이 한다. 나머지는 코드와 모델이 한다. 어디서 사람이 보는지가 설계에 적혀 있다.</p></div>
+  </div>
+
+  <div class="callout accent">
+    <b>고지.</b> 데모 데이터는 가상의 기관·사업으로 만든 RFP다. 이 문서의 수치 중 출처 표기가 없는 것은 목표 또는 예시이며, 화면 4장은 mock 모드로 돌린 실제 데모 UI의 스크린샷이다. 법령 기준값(지체상금률, 하자담보 기간, 계약보증금 비율)은 팀이 데모 전에 최신 조문으로 확인한다.
+  </div>
+
+  <p class="src" style="margin-top:4mm">출처: Loopio, 2025 RFP Response Trends &amp; Benchmarks(1,544명 조사, 단일 출처) · 과학기술정보통신부, 2026년 공공부문 SW·ICT장비·정보보호 수요예보 · 소프트웨어사업 요구사항 분석·적용 가이드(요구사항 분류 11종) · 삼성전기 사내 해커톤 심사 기준 보도자료(2026-10-14)</p>
+  <div class="footer"><span>RFP Compass · 아이디어 기획서</span><span>10 / 10</span></div>
+</section>
+
+</body>
+</html>

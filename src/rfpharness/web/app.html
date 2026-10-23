@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RFP Compass</title>
+<style>
+:root{--navy:#1B2A49;--navy2:#2E4A7D;--accent:#E8622A;--bg:#F4F6FA;--card:#fff;--line:#DDE3EC;--text:#1F2937;--muted:#6B7280;
+ --high:#C0392B;--high-bg:#FDECEA;--med:#B7791F;--med-bg:#FFF6E0;--low:#4B5563;--low-bg:#EEF0F3;--ok:#1E7F4F;--ok-bg:#E6F4EC;}
+*{box-sizing:border-box}body{margin:0;font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+header{background:var(--navy);color:#fff;padding:14px 28px;display:flex;align-items:center;gap:16px}
+header .logo{width:30px;height:30px;border-radius:8px;background:var(--accent);display:grid;place-items:center;font-weight:800}
+header h1{font-size:18px;margin:0;font-weight:700}header .sub{opacity:.75;font-size:12px;margin-left:4px}
+header .mode{margin-left:auto;font-size:12px;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px}
+main{max-width:1280px;margin:0 auto;padding:22px 28px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:18px}
+h2{font-size:16px;margin:0 0 12px}h3{font-size:14px;margin:0 0 8px;color:var(--navy2)}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+button,.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;font-family:inherit}
+button.secondary{background:#fff;color:var(--navy);border:1px solid var(--navy)}button.accent{background:var(--accent)}
+button:disabled{opacity:.5;cursor:default}
+input[type=file]{font-size:12px}
+.dropzone{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted);flex:1;min-width:280px;background:#FAFBFD}
+.dropzone b{color:var(--navy);display:block;font-size:15px;margin-bottom:4px}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:14px}
+.step{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;position:relative}
+.step .n{font-size:11px;color:var(--muted)}.step .name{font-weight:700;margin:2px 0}.step .st{font-size:12px;color:var(--muted)}
+.step.running{border-color:var(--accent);box-shadow:0 0 0 2px rgba(232,98,42,.15)}.step.running .st{color:var(--accent)}
+.step.done{border-color:var(--ok)}.step.done .st{color:var(--ok)}.step.skipped{opacity:.5}
+.bar{height:6px;background:var(--line);border-radius:3px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.step.done .bar i{background:var(--ok);width:100%}
+.timer{font-variant-numeric:tabular-nums;font-size:26px;font-weight:800;color:var(--navy)}
+.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile .k{font-size:12px;color:var(--muted)}.tile .v{font-size:28px;font-weight:800;color:var(--navy);margin:2px 0}.tile .d{font-size:12px;color:var(--muted)}
+.tile.red .v{color:var(--high)}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:14px}
+.tab{padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:600;color:var(--muted)}
+.tab.active{color:var(--navy);border-color:var(--accent)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.chip{border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:12px;cursor:pointer;background:#fff}.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+select,input[type=search]{font-family:inherit;font-size:13px;padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:13px}th{background:#F0F3F8;text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);font-size:12px;color:var(--navy2);position:sticky;top:0}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}tr.clickable{cursor:pointer}tr.clickable:hover td{background:#F7F9FC}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;font-weight:700;white-space:nowrap}
+.b-table{background:#E8EEF8;color:var(--navy2)}.b-prose{background:#FDE7D8;color:#9A3D12}.b-must{background:#E6F4EC;color:var(--ok)}.b-should{background:#EEF0F3;color:#4B5563}.b-may{background:#EEF0F3;color:#6B7280}
+.b-high{background:var(--high-bg);color:var(--high)}.b-medium{background:var(--med-bg);color:var(--med)}.b-low{background:var(--low-bg);color:var(--low)}
+.b-covered{background:var(--ok-bg);color:var(--ok)}.b-partial{background:var(--med-bg);color:var(--med)}.b-missing{background:var(--high-bg);color:var(--high)}
+.b-cat{background:#F0F3F8;color:var(--navy2)}
+.quote{color:#374151}.muted{color:var(--muted);font-size:12px}
+.risk{border:1px solid var(--line);border-left:5px solid var(--low);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#fff}
+.risk.high{border-left-color:var(--high)}.risk.medium{border-left-color:var(--med)}
+.risk .head{display:flex;gap:10px;align-items:center;margin-bottom:6px}.risk .head b{font-size:15px}
+.risk .vals{display:flex;gap:10px;margin:8px 0;flex-wrap:wrap}.risk .val{background:#F7F9FC;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px}
+.risk .val b{display:block;font-size:14px;color:var(--navy)}.risk .val.bad b{color:var(--high)}
+.risk blockquote{margin:8px 0;padding:8px 12px;background:#FAFBFD;border-left:3px solid var(--line);font-size:13px}
+.risk .neg{background:var(--ok-bg);border-radius:8px;padding:8px 12px;font-size:13px;margin-top:6px}
+.toc .node{display:grid;grid-template-columns:60px 1fr 160px 90px;gap:12px;padding:10px 8px;border-bottom:1px solid var(--line);align-items:center}
+.toc .node.l2{padding-left:30px;background:#FAFBFD}.toc .num{font-weight:800;color:var(--navy)}.toc .ptsbar{height:10px;background:var(--line);border-radius:5px;overflow:hidden}.toc .ptsbar i{display:block;height:100%;background:var(--navy2)}
+.toc .guide{font-size:12px;color:var(--muted);margin-top:3px}.toc .ids{font-size:11px;color:var(--navy2);margin-top:3px}
+.cov-bars{display:flex;height:22px;border-radius:8px;overflow:hidden;margin:6px 0 14px;font-size:12px;color:#fff;font-weight:700}
+.cov-bars div{display:grid;place-items:center}.cov-bars .c{background:var(--ok)}.cov-bars .p{background:var(--med)}.cov-bars .m{background:var(--high)}
+.drawer{position:fixed;top:0;right:-560px;width:540px;height:100%;background:#fff;border-left:1px solid var(--line);box-shadow:-8px 0 30px rgba(0,0,0,.08);transition:right .25s;padding:20px 22px;overflow:auto;z-index:50}
+.drawer.open{right:0}.drawer pre{white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.6;background:#FAFBFD;padding:14px;border-radius:10px;border:1px solid var(--line)}
+.drawer mark{background:#FFE58A;padding:0 2px}
+.drawer .close{float:right}
+.alert{background:var(--high-bg);color:var(--high);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-weight:600}
+.hidden{display:none}
+footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
+@media (max-width:900px){.steps{grid-template-columns:repeat(3,1fr)}.tiles{grid-template-columns:repeat(2,1fr)}.drawer{width:100%;right:-100%}}
+</style>
+</head>
+<body>
+<header><div class="logo">R</div><h1>RFP Compass</h1><span class="sub">300쪽 제안요청서를 읽는 제안 검토 에이전트</span><span class="mode" id="mode">—</span></header>
+<main>
+  <section class="card" id="intake">
+    <h2>1. RFP 올리기</h2>
+    <div class="row">
+      <label class="dropzone"><b>RFP PDF를 선택하세요</b><span id="pdfName">PDF 1건 (나라장터 공고문, 제안요청서)</span><input type="file" id="pdf" accept="application/pdf" class="hidden"></label>
+      <label class="dropzone"><b>제안서 초안 (선택)</b><span id="draftName">.md 또는 .docx — 있으면 요구사항 커버리지를 대조합니다</span><input type="file" id="draft" accept=".md,.docx,.txt" class="hidden"></label>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button id="run" class="accent">검토 시작</button>
+      <button id="sample" class="secondary">샘플 RFP로 시작</button>
+      <label class="muted"><input type="checkbox" id="withDraft" checked> 샘플 초안 포함(커버리지)</label>
+      <span class="muted" id="hint"></span>
+    </div>
+  </section>
+
+  <section class="card hidden" id="progress">
+    <div class="row" style="justify-content:space-between"><h2 style="margin:0">2. 검토 진행</h2><div class="timer" id="timer">00:00.0</div></div>
+    <div class="steps" id="steps"></div>
+    <div class="muted" id="log" style="margin-top:10px"></div>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="tiles" id="tiles"></div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <h2 style="margin:0" id="rfpTitle"></h2>
+        <div class="row" id="downloads"></div>
+      </div>
+      <div class="tabs">
+        <div class="tab active" data-tab="req">요구사항 추적표</div>
+        <div class="tab" data-tab="risk">위험 조항</div>
+        <div class="tab" data-tab="toc">배점 기준 목차</div>
+        <div class="tab" data-tab="cov">초안 커버리지</div>
+      </div>
+      <div id="pane-req"></div>
+      <div id="pane-risk" class="hidden"></div>
+      <div id="pane-toc" class="hidden"></div>
+      <div id="pane-cov" class="hidden"></div>
+    </div>
+  </section>
+  <footer>RFP Compass · 결과의 모든 항목은 원문 인용과 쪽 번호를 가진다. 클릭하면 원문을 연다. 데모 데이터는 가상의 기관·사업이다.</footer>
+</main>
+<aside class="drawer" id="drawer"><button class="secondary close" onclick="closeDrawer()">닫기</button><h3 id="dTitle"></h3><div class="muted" id="dMeta"></div><pre id="dText"></pre></aside>
+
+<script>
+const EMBEDDED = /*__EMBEDDED_REPORT__*/null;
+const STAGES = [["parse","파싱","PDF → 페이지·표·섹션"],["extract","요구사항 추출","표 + 본문 숨은 요구사항"],["toc","배점·목차","배점표 → 목차 초안"],["risk","위험 조항","규칙 20개 + LLM"],["coverage","커버리지","초안 ↔ 요구사항"],["export","산출물","xlsx · docx · html"]];
+const CAT = {SFR:"기능",PER:"성능",SIR:"장비구성",INR:"인터페이스",DAR:"데이터",TER:"테스트",SER:"보안",QUR:"품질",COR:"제약",PMR:"사업관리",PSR:"지원"};
+const OB = {must:"필수",should:"권고",may:"선택"}, SEV={high:"높음",medium:"보통",low:"낮음"}, ST={covered:"충족",partial:"부분",missing:"누락"};
+let report=null, pages={}, jobId=null, t0=null, timerH=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function initSteps(){$("#steps").innerHTML=STAGES.map((s,i)=>`<div class="step" id="st-${s[0]}"><div class="n">${i+1}단계</div><div class="name">${s[1]}</div><div class="st">대기</div><div class="bar"><i></i></div><div class="muted" style="font-size:11px;margin-top:4px">${s[2]}</div></div>`).join("");}
+function setStep(stage,status,done,total){const el=$("#st-"+stage);if(!el)return;el.className="step "+(status==="running"?"running":status==="done"||status==="reused"?"done":status==="skipped"?"skipped":"");el.querySelector(".st").textContent={running:total?`진행 ${done}/${total}`:"진행 중",done:"완료",reused:"완료(재사용)",skipped:"건너뜀(초안 없음)"}[status]||status;if(status==="running"&&total)el.querySelector(".bar i").style.width=Math.round(100*done/total)+"%";}
+function startTimer(){t0=performance.now();timerH=setInterval(()=>{const s=(performance.now()-t0)/1000;$("#timer").textContent=`${String(Math.floor(s/60)).padStart(2,"0")}:${(s%60).toFixed(1).padStart(4,"0")}`;},100);}
+function stopTimer(){clearInterval(timerH);}
+
+async function startJob(form,url){$("#intake").classList.add("hidden");$("#progress").classList.remove("hidden");$("#results").classList.add("hidden");initSteps();startTimer();
+  const r=await fetch(url,{method:"POST",body:form});if(!r.ok){$("#log").textContent="실행 실패: "+await r.text();stopTimer();return;}
+  jobId=(await r.json()).job_id;const es=new EventSource(`/api/jobs/${jobId}/events`);
+  es.onmessage=async e=>{const ev=JSON.parse(e.data);if(ev.type==="stage")setStep(ev.stage,ev.status,ev.done,ev.total);
+    else if(ev.type==="done"){es.close();stopTimer();$("#log").textContent=`LLM 모드 ${ev.llm_mode} · 호출 ${ev.llm_calls}회 · 토큰 ${ev.tokens[0]}/${ev.tokens[1]}`;report=await (await fetch(`/api/jobs/${jobId}/report`)).json();pages=await (await fetch(`/api/jobs/${jobId}/pages`)).json();render();}
+    else if(ev.type==="error"){es.close();stopTimer();$("#log").innerHTML=`<span class="alert">${esc(ev.message)}</span>`;}};
+}
+$("#pdf").onchange=e=>$("#pdfName").textContent=e.target.files[0]?.name||"";
+$("#draft").onchange=e=>$("#draftName").textContent=e.target.files[0]?.name||"";
+$("#run").onclick=()=>{const f=new FormData();const p=$("#pdf").files[0];if(!p){$("#hint").textContent="PDF를 먼저 선택하세요";return;}f.append("pdf",p);if($("#draft").files[0])f.append("draft",$("#draft").files[0]);startJob(f,"/api/jobs");};
+$("#sample").onclick=async()=>{const s=await (await fetch("/api/samples")).json();const f=new FormData();f.append("pdf",s.pdfs[0]);if($("#withDraft").checked&&s.drafts[0])f.append("draft",s.drafts[0]);startJob(f,"/api/jobs/sample");};
+
+function render(){const s=report.summary;$("#mode").textContent="LLM: "+s.llm_mode;$("#results").classList.remove("hidden");$("#rfpTitle").textContent=s.title||"RFP";
+  $("#tiles").innerHTML=[["요구사항",s.requirement_count,`표 ${s.requirement_table} · 본문 ${s.requirement_prose} · 필수 ${s.requirement_must}`],["위험 조항",s.risk_count,`높음 ${s.risk_high} · 보통 ${s.risk_medium} · 낮음 ${s.risk_low}`,s.risk_high>0?"red":""],["배점 항목",s.scoring_count,`합계 ${s.scoring_points}점 → 목차 ${s.toc_count}장`],["미연결 요구사항",s.unmapped_count,"배점 항목에 연결되지 않음"],
+    s.coverage_covered==null?["커버리지","—","초안 없음"]:["필수 누락",s.coverage_must_missing,`충족 ${s.coverage_covered} · 부분 ${s.coverage_partial} · 누락 ${s.coverage_missing}`,s.coverage_must_missing>0?"red":""]].map(t=>`<div class="tile ${t[3]||""}"><div class="k">${t[0]}</div><div class="v">${t[1]}</div><div class="d">${t[2]}</div></div>`).join("");
+  $("#downloads").innerHTML=jobId?["xlsx","docx","json"].map(k=>`<a class="btn" href="/api/jobs/${jobId}/download/${k}">${{xlsx:"요구사항 추적표 .xlsx",docx:"목차 초안 .docx",json:"report.json"}[k]}</a>`).join(""):`<span class="muted">오프라인 대시보드 · 산출물은 같은 폴더의 traceability.xlsx / toc_draft.docx</span>`;
+  renderReq();renderRisk();renderToc();renderCov();
+  document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");["req","risk","toc","cov"].forEach(k=>$("#pane-"+k).classList.toggle("hidden",k!==t.dataset.tab));});
+}
+let reqFilter={source:"all",cat:"all",q:""};
+function renderReq(){const reqs=report.requirements;const cats=[...new Set(reqs.map(r=>r.category))];
+  const cov={};(report.coverage?.items||[]).forEach(i=>cov[i.requirement_id]=i);
+  const list=reqs.filter(r=>(reqFilter.source==="all"||r.source===reqFilter.source)&&(reqFilter.cat==="all"||r.category===reqFilter.cat)&&(!reqFilter.q||(r.id+r.title+r.quote).includes(reqFilter.q)));
+  $("#pane-req").innerHTML=`<div class="filters">${["all","table","prose"].map(k=>`<span class="chip ${reqFilter.source===k?"on":""}" data-src="${k}">${{all:"전체",table:"표",prose:"본문(숨은 요구사항)"}[k]}</span>`).join("")}
+    <select id="catSel"><option value="all">모든 분류</option>${cats.map(c=>`<option value="${c}" ${reqFilter.cat===c?"selected":""}>${c} ${CAT[c]||""}</option>`).join("")}</select>
+    <input type="search" id="reqQ" placeholder="검색" value="${esc(reqFilter.q)}"><span class="muted">${list.length}건</span></div>
+    <div style="max-height:560px;overflow:auto"><table><thead><tr><th>ID</th><th>요구사항</th><th>분류</th><th>필수</th><th>원문</th><th>쪽</th><th>출처</th>${report.coverage?"<th>커버리지</th>":""}</tr></thead><tbody>
+    ${list.map(r=>`<tr class="clickable" data-page="${r.page}" data-q="${esc(r.quote)}" data-t="${esc(r.id+" "+r.title)}"><td><b>${r.id}</b></td><td>${esc(r.title)}</td><td><span class="badge b-cat">${r.category} ${CAT[r.category]||""}</span></td><td><span class="badge b-${r.obligation}">${OB[r.obligation]}</span></td><td class="quote">${esc(r.quote)}${r.flags?.length?`<div class="muted">⚠ ${r.flags.join(", ")}</div>`:""}</td><td>p.${r.page}</td><td><span class="badge b-${r.source}">${r.source==="table"?"표":"본문"}</span></td>${report.coverage?`<td>${cov[r.id]?`<span class="badge b-${cov[r.id].status}">${ST[cov[r.id].status]}</span>`:""}</td>`:""}</tr>`).join("")}</tbody></table></div>`;
+  $("#pane-req").querySelectorAll(".chip").forEach(c=>c.onclick=()=>{reqFilter.source=c.dataset.src;renderReq();});
+  $("#catSel").onchange=e=>{reqFilter.cat=e.target.value;renderReq();};$("#reqQ").oninput=e=>{reqFilter.q=e.target.value;renderReq();};
+  bindRows("#pane-req");
+}
+function bindRows(sel){document.querySelectorAll(sel+" tr.clickable").forEach(tr=>tr.onclick=()=>openPage(+tr.dataset.page,tr.dataset.q,tr.dataset.t));}
+function renderRisk(){const rs=report.risks;if(!rs.length){$("#pane-risk").innerHTML='<p class="muted">위험 조항이 없다.</p>';return;}
+  $("#pane-risk").innerHTML=`<p class="muted">규칙이 "어디"를 찾고 LLM이 "왜·얼마나"를 보강한다. 판정: 규칙+LLM = 확정, LLM 단독 = 검토 권고.</p>`+rs.map(f=>`<div class="risk ${f.severity}"><div class="head"><span class="badge b-${f.severity}">${SEV[f.severity]}</span><b>${esc(f.title)}</b><span class="muted">${esc(f.category)} · p.${f.page} · ${esc(f.section||"")}</span><span class="badge b-cat" style="margin-left:auto">${{rule:"규칙",["rule+llm"]:"규칙+LLM","llm":"LLM"}[f.source]}</span></div>
+    <blockquote class="clickable" onclick="openPage(${f.page},${JSON.stringify(f.quote).replace(/"/g,"&quot;")},${JSON.stringify(f.title).replace(/"/g,"&quot;")})">“${esc(f.quote)}”</blockquote>
+    ${f.extracted_value||f.threshold?`<div class="vals">${f.extracted_value?`<div class="val bad">추출값<b>${esc(f.extracted_value)}</b></div>`:""}${f.threshold?`<div class="val">기준값<b>${esc(f.threshold)}</b></div>`:""}</div>`:""}
+    <div>${esc(f.why)}</div><div class="neg">협상 포인트 · ${esc(f.negotiation_point)}</div>${f.basis?`<div class="muted" style="margin-top:4px">근거: ${esc(f.basis)}</div>`:""}</div>`).join("");}
+function renderToc(){const t=report.toc;if(!t||!t.toc.length){$("#pane-toc").innerHTML=`<p class="alert">배점표를 찾지 못했다 (${(t?.flags||[]).join(", ")})</p>`;return;}
+  const pts={};t.scoring.forEach(c=>pts[c.id]=c);const maxP=Math.max(...t.scoring.filter(c=>!c.parent).map(c=>c.points),1);
+  $("#pane-toc").innerHTML=`<p class="muted">심사위원은 배점표 순서로 읽는다. 제안서 총 ${t.total_pages}쪽을 배점 비중대로 배분했다. ${t.flags.length?"⚠ "+t.flags.join(", "):""}</p><div class="toc">
+  ${t.toc.map(n=>{const p=n.criterion_ids.map(id=>pts[id]).filter(c=>c&&(!c.parent||!n.criterion_ids.includes(c.parent))).reduce((a,c)=>a+c.points,0);const l2=n.number.includes(".");
+   return `<div class="node ${l2?"l2":""}"><div class="num">${n.number}</div><div><b>${esc(n.title)}</b><div class="guide">${esc(n.writing_guide)}</div>${n.requirement_ids.length?`<div class="ids">${n.requirement_ids.join(", ")}</div>`:""}</div><div><div class="muted">배점 ${p}점</div><div class="ptsbar"><i style="width:${Math.round(100*p/maxP)}%"></i></div></div><div><b>${n.suggested_pages}쪽</b><div class="muted">${n.requirement_ids.length}건</div></div></div>`;}).join("")}</div>`;}
+function renderCov(){const c=report.coverage;if(!c){$("#pane-cov").innerHTML='<p class="muted">제안서 초안이 없어 커버리지를 대조하지 않았다. 초안(.md/.docx)을 함께 올리면 요구사항별 충족·부분·누락을 판정한다.</p>';return;}
+  const by={};report.requirements.forEach(r=>by[r.id]=r);const tot=c.items.length||1;const order={missing:0,partial:1,covered:2};
+  const items=[...c.items].sort((a,b)=>order[a.status]-order[b.status]||((by[b.requirement_id]?.obligation==="must")-(by[a.requirement_id]?.obligation==="must")));
+  $("#pane-cov").innerHTML=`${c.must_missing?`<div class="alert">필수 요구사항 ${c.must_missing}건이 초안에 없다.</div>`:""}
+   <div class="cov-bars"><div class="c" style="width:${100*c.covered/tot}%">충족 ${c.covered}</div><div class="p" style="width:${100*c.partial/tot}%">부분 ${c.partial}</div><div class="m" style="width:${100*c.missing/tot}%">누락 ${c.missing}</div></div>
+   <div style="max-height:520px;overflow:auto"><table><thead><tr><th>판정</th><th>ID</th><th>요구사항</th><th>필수</th><th>근거 문단</th><th>근거 / 보완 메모</th></tr></thead><tbody>
+   ${items.map(it=>{const r=by[it.requirement_id]||{};return `<tr class="clickable" data-page="${r.page||1}" data-q="${esc(r.quote||"")}" data-t="${esc(it.requirement_id)}"><td><span class="badge b-${it.status}">${ST[it.status]}</span></td><td><b>${it.requirement_id}</b></td><td>${esc(r.title||"")}</td><td>${r.obligation?`<span class="badge b-${r.obligation}">${OB[r.obligation]}</span>`:""}</td><td class="muted">${(it.evidence_paragraph_ids||[]).join(", ")}</td><td>${esc(it.evidence_quote||"")}${it.gap_note?`<div class="muted">${esc(it.gap_note)}</div>`:""}</td></tr>`;}).join("")}</tbody></table></div>`;
+  bindRows("#pane-cov");}
+function openPage(p,q,title){const text=pages[String(p)]||"(페이지 텍스트 없음)";$("#dTitle").textContent=title||"";$("#dMeta").textContent=`RFP 원문 p.${p}`;
+  let html=esc(text);if(q){const norm=s=>s.replace(/\s+/g,"");const nq=norm(q).slice(0,40);const nt=norm(text);const idx=nt.indexOf(nq);
+    if(idx>=0){let count=0,start=-1,end=-1;for(let i=0;i<text.length;i++){if(!/\s/.test(text[i])){if(count===idx)start=i;if(count===idx+nq.length-1){end=i+1;break;}count++;}}
+      if(start>=0&&end>start)html=esc(text.slice(0,start))+"<mark>"+esc(text.slice(start,end))+"</mark>"+esc(text.slice(end));}}
+  $("#dText").innerHTML=html;$("#drawer").classList.add("open");setTimeout(()=>$("#drawer mark")?.scrollIntoView({block:"center"}),50);}
+function closeDrawer(){$("#drawer").classList.remove("open");}
+(async function boot(){if(EMBEDDED){report=EMBEDDED.report;pages=EMBEDDED.pages||{};$("#intake").classList.add("hidden");render();return;}
+  try{const s=await (await fetch("/api/samples")).json();$("#mode").textContent="LLM: "+s.llm_mode;if(!s.pdfs.length)$("#sample").disabled=true;}catch(e){$("#mode").textContent="오프라인";}})();
+</script>
+</body>
+</html>

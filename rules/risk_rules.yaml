@@ -1,0 +1,276 @@
+# RFP 위험 조항 규칙. 규칙이 "어디"를 찾고, LLM이 "왜·얼마나"를 보강한다.
+# compare: gt(추출값 > threshold) | lt | present(패턴 존재) | absent(requires는 있으나 pattern이 문서 전체에 없음)
+# value_kind: rate_per_day_percent(지체상금률, %/일로 정규화) | years | percent
+# basis의 법령·예규 수치는 팀이 데모 전에 최신 조문으로 확인한다.
+version: 1
+rules:
+  - id: R01_delay_penalty_rate
+    title: 지체상금률 과다
+    category: 계약조건
+    pattern: '지체상금(률|율)?[^\n]{0,40}?(1000분의\s*\d+(\.\d+)?|\d+(\.\d+)?\s*(/\s*1000|‰|%|퍼센트))'
+    value_kind: rate_per_day_percent
+    compare: gt
+    threshold: 0.125
+    severity_default: high
+    why: 용역 지체상금률 기준은 1일 1000분의 1.25(0.125%)다. 이를 넘는 비율은 일정 지연 때 손실이 그만큼 커진다.
+    negotiation_point: 지체상금률을 국가계약법 시행규칙 기준(용역 1000분의 1.25)으로 조정 요청
+    basis: 국가를 당사자로 하는 계약에 관한 법률 시행규칙 제75조(지체상금률). 소프트웨어사업은 용역 기준 적용 여부를 확인할 것
+    examples:
+      hit: "지체상금률은 계약금액의 1000분의 2.5로 하며 지연일수에 곱하여 산정한다."
+      miss: "지체상금률은 계약금액의 1000분의 1.25로 한다."
+
+  - id: R02_delay_penalty_cap_missing
+    title: 지체상금 상한 미설정
+    category: 계약조건
+    scope: document
+    compare: absent
+    requires: '지체상금'
+    pattern: '지체상금[^\n]{0,60}?(한도|상한|초과할\s*수\s*없|넘지\s*(못|않)|이내로\s*한다|100분의\s*(10|30))'
+    severity_default: medium
+    why: 지체상금에 상한이 없으면 장기 지연 시 계약금액을 넘는 손실이 생길 수 있다.
+    negotiation_point: 지체상금 총액 상한(계약금액의 10% 또는 30%) 명시 요청
+    basis: 국가계약법 시행령 제74조(지체상금). 상한 비율은 계약 유형별로 확인할 것
+    examples:
+      hit: "지체상금은 지연일수마다 지체상금률을 곱하여 산정하고 대금에서 공제한다."
+      miss: "지체상금은 계약금액의 100분의 30을 초과할 수 없다."
+
+  - id: R03_warranty_period
+    title: 하자담보책임 기간 과다
+    category: 계약조건
+    pattern: '하자\s*(담보|보수)\s*(책임)?\s*기간[^\n]{0,40}?(\d+)\s*(년|개월)'
+    value_kind: years
+    compare: gt
+    threshold: 1
+    severity_default: medium
+    why: 소프트웨어 하자담보책임은 통상 1년이다. 그 이상은 사실상 무상 유지보수에 해당한다.
+    negotiation_point: 하자보수 1년, 이후 유지보수는 별도 계약으로 분리 요청
+    basis: 소프트웨어 진흥법 및 계약예규 용역계약일반조건의 하자담보 조항. 팀이 최신 조문으로 확인할 것
+    examples:
+      hit: "하자보수 기간은 검수 완료일로부터 3년으로 한다."
+      miss: "하자보수 기간은 검수 완료일로부터 1년으로 한다."
+
+  - id: R04_free_maintenance
+    title: 무상 유지보수 요구
+    category: 과업범위
+    pattern: '무상\s*(유지\s*보수|유지\s*관리|기술\s*지원)[^\n]{0,40}?(\d+)\s*(년|개월)|(\d+)\s*(년|개월)[^\n]{0,12}?무상\s*(유지\s*보수|유지\s*관리|기술\s*지원)|(유지\s*보수|유지\s*관리)[^\n]{0,20}?무상(으로)?\s*(제공|수행|지원)'
+    compare: present
+    severity_default: high
+    why: 하자보수와 유지보수는 다르다. 무상 유지보수는 비용이 산정되지 않은 과업이 추가되는 것이다.
+    negotiation_point: 무상 유지보수 조항 삭제 또는 유지보수 사업으로 별도 발주 요청
+    basis: 과학기술정보통신부 소프트웨어사업 계약 및 관리감독에 관한 지침(무상 유지보수 요구 금지)
+    examples:
+      hit: "검수 완료 후 2년간 무상 유지보수를 제공하여야 한다."
+      miss: "유지보수는 하자보수 기간 종료 후 별도 계약으로 수행한다."
+
+  - id: R05_unilateral_scope_change
+    title: 과업 범위 일방 변경 조항
+    category: 과업범위
+    pattern: '(발주기관|수요기관|주관기관|당\s*기관|○○시|시)(이|가|은|는)?\s*필요하다고\s*(인정|판단)하는\s*경우[^\n]{0,80}?(추가|변경|조정|확대)'
+    compare: present
+    severity_default: high
+    why: 발주기관 판단만으로 과업을 추가할 수 있으면 범위가 열려 있어 원가가 통제되지 않는다.
+    negotiation_point: 과업 변경은 과업심의위원회 심의와 계약금액·기간 조정을 전제로 한다는 문구 추가 요청
+    basis: 소프트웨어 진흥법 제50조(과업심의위원회) 및 같은 법 시행령
+    examples:
+      hit: "발주기관이 필요하다고 인정하는 경우 계약상대자와 협의 없이 과업 내용을 추가 또는 변경할 수 있다."
+      miss: "과업 내용의 변경은 과업심의위원회의 심의를 거쳐 계약금액과 기간을 조정한다."
+
+  - id: R06_ip_sole_ownership
+    title: 산출물 지식재산권 발주기관 단독 귀속
+    category: 지식재산
+    pattern: '(지식재산권|지적재산권|저작권|소유권)[^\n]{0,60}?(발주기관|수요기관|주관기관|당\s*기관|○○시)[^\n]{0,20}?(귀속|소유)'
+    exclude: '공동'
+    compare: present
+    severity_default: medium
+    why: 산출물 지식재산권이 발주기관에 단독 귀속되면 재사용 가능한 모듈까지 넘어간다.
+    negotiation_point: 공동 소유 원칙과 수행사 기존 자산(사전 보유 저작물) 제외 명시 요청
+    basis: 소프트웨어 진흥법 제59조(소프트웨어사업 산출물의 활용 보장) 및 계약예규 용역계약일반조건 제56조(계약목적물의 지식재산권 귀속)
+    examples:
+      hit: "본 사업의 모든 산출물에 대한 지식재산권은 발주기관에 귀속된다."
+      miss: "산출물의 지식재산권은 발주기관과 계약상대자가 공동으로 소유한다."
+
+  - id: R07_liability_cap_missing
+    title: 손해배상 상한 미설정
+    category: 계약조건
+    scope: document
+    compare: absent
+    requires: '손해배상|손해를\s*배상'
+    pattern: '(손해배상|배상)[^\n]{0,60}?(한도|상한|계약금액[^\n]{0,10}(이내|범위|초과하지))'
+    severity_default: high
+    why: 손해배상 범위에 상한이 없으면 책임이 계약금액을 넘어 무제한이 된다.
+    negotiation_point: 손해배상 총액을 계약금액 이내로 제한하고 간접손해를 제외하는 문구 요청
+    basis: 계약예규 용역계약일반조건 손해배상 조항. 상한 관행은 팀이 확인할 것
+    examples:
+      hit: "계약상대자는 과업 수행 중 발생한 모든 손해를 배상하여야 한다."
+      miss: "계약상대자의 손해배상 책임은 계약금액 범위 이내로 한다."
+
+  - id: R08_performance_bond_rate
+    title: 계약보증금 비율 과다
+    category: 계약조건
+    pattern: '(계약\s*보증금|계약\s*이행\s*보증)[^\n]{0,40}?(\d+)\s*(%|퍼센트|/\s*100|100분의)'
+    value_kind: percent
+    compare: gt
+    threshold: 10
+    severity_default: medium
+    why: 계약보증금 기준은 계약금액의 10%다. 그 이상은 보증 비용과 자금 부담이 늘어난다.
+    negotiation_point: 계약보증금 10% 기준 적용 요청
+    basis: 국가계약법 시행령 제50조(계약보증금)
+    examples:
+      hit: "계약보증금은 계약금액의 15% 이상을 납부하여야 한다."
+      miss: "계약보증금은 계약금액의 10%로 한다."
+
+  - id: R09_payment_terms
+    title: 대금 지급 조건 불리
+    category: 대금지급
+    pattern: '(대금|기성|준공금|잔금|사업비)[^\n]{0,40}?(최종\s*)?(검수|검사)[^\n]{0,20}?(완료|합격)\s*(후|이후)[^\n]{0,20}?(일괄|전액)|(선금|선급금)[^\n]{0,20}?(지급하지|미지급|없다|없음)'
+    compare: present
+    severity_default: medium
+    why: 선금 없이 검수 후 일괄 지급이면 사업 기간 내내 수행사가 자금을 부담한다.
+    negotiation_point: 선금 지급과 단계별 기성 지급 요청
+    basis: 국가계약법 시행령 제58조(기성 대가의 지급), 정부 입찰·계약 집행기준 선금 조항
+    examples:
+      hit: "사업비는 최종 검수 완료 후 일괄 지급하며 선금은 지급하지 아니한다."
+      miss: "대금은 착수 시 선금 30%, 중간 검수 후 30%, 최종 검수 후 40%를 지급한다."
+
+  - id: R10_vague_acceptance
+    title: 검수 기준 모호
+    category: 검수
+    pattern: '(발주기관|수요기관|주관기관)(이|의)?[^\n]{0,15}?(만족|승인)할\s*때까지|만족할\s*수준|발주기관의\s*판단에\s*따라\s*(검수|합격|승인)'
+    compare: present
+    severity_default: medium
+    why: 검수 기준이 발주기관의 만족이면 완료 시점을 수행사가 통제할 수 없다.
+    negotiation_point: 검수 기준을 요구사항 추적표와 테스트 시나리오 통과로 명시 요청
+    basis: 소프트웨어사업 관리감독 지침의 검사 기준 조항
+    examples:
+      hit: "검수는 발주기관이 만족할 때까지 반복 수행한다."
+      miss: "검수는 합의된 테스트 시나리오의 통과 여부로 판정한다."
+
+  - id: R11_staffing_control
+    title: 투입 인력 통제 조항
+    category: 인력
+    pattern: '(투입\s*인력|참여\s*인력|수행\s*인력)[^\n]{0,40}?(교체|변경)[^\n]{0,30}?(불가|제한|금지|승인을\s*받)|(전\s*인력|모든\s*인력|참여\s*인력)[^\n]{0,20}?(상주|파견)[^\n]{0,20}?(의무|하여야)'
+    compare: present
+    severity_default: medium
+    why: 인력 교체 제한과 전원 상주 요구는 기능 중심이 아니라 인력 중심 관리로, 공공 SW 사업 지침에 어긋나며 원가를 높인다.
+    negotiation_point: 핵심 인력 외 교체 자율과 상주 범위 축소 요청
+    basis: 소프트웨어 진흥법 시행령 및 소프트웨어사업 관리감독 지침(투입인력 관리 금지 원칙)
+    examples:
+      hit: "참여 인력의 교체는 불가하며 전 인력은 발주기관에 상주하여야 한다."
+      miss: "핵심 인력 교체 시 동급 이상 인력으로 교체하고 발주기관에 통보한다."
+
+  - id: R12_free_commercial_sw
+    title: 상용 소프트웨어 무상 제공 요구
+    category: 과업범위
+    pattern: '(상용\s*(SW|S/W|소프트웨어|솔루션)|라이선스)[^\n]{0,40}?(무상|무료)(으로)?\s*(제공|공급|포함)'
+    compare: present
+    severity_default: medium
+    why: 상용 소프트웨어를 무상으로 요구하면 라이선스 비용이 사업비 밖에서 발생한다.
+    negotiation_point: 상용 소프트웨어 분리 발주 또는 사업비 반영 요청
+    basis: 소프트웨어 진흥법 제54조(소프트웨어사업의 분리 발주)
+    examples:
+      hit: "운영에 필요한 상용 소프트웨어 라이선스는 사업자가 무상으로 제공한다."
+      miss: "상용 소프트웨어는 분리 발주하며 본 사업 범위에서 제외한다."
+
+  - id: R13_security_certification
+    title: 보안 인증 보유 요구
+    category: 보안
+    pattern: '(CC\s*인증|클라우드\s*보안\s*인증|CSAP|GS\s*인증|ISMS(-P)?)[^\n]{0,40}?(필수|보유|취득|획득|하여야)'
+    compare: present
+    severity_default: low
+    why: 인증 요구는 그 자체로 위험은 아니지만 비용과 일정에 영향을 준다. 제안 전 보유 여부를 확인해야 한다.
+    negotiation_point: 인증 취득 일정을 사업 기간과 분리하거나 동등 인증 인정 요청
+    basis: 공공기관 보안성 검토 지침, 클라우드컴퓨팅법 시행령(보안인증)
+    examples:
+      hit: "도입 솔루션은 CC 인증을 보유하여야 한다."
+      miss: "보안 취약점 점검은 발주기관의 정보보안 지침에 따라 수행한다."
+
+  - id: R14_privacy_liability_shift
+    title: 개인정보 책임 전가
+    category: 보안
+    pattern: '개인정보[^\n]{0,60}?(모든|일체의)\s*(책임|손해)[^\n]{0,40}?(계약상대자|수행사|사업자)'
+    compare: present
+    severity_default: high
+    why: 개인정보 사고의 모든 책임을 수행사에 두면 발주기관 귀책 사고까지 떠안게 된다.
+    negotiation_point: 책임을 귀책 사유에 따라 분담하고 수탁자 책임 범위를 개인정보 보호법 기준으로 한정 요청
+    basis: 개인정보 보호법 제26조(업무위탁에 따른 개인정보의 처리 제한)
+    examples:
+      hit: "개인정보 유출 사고 발생 시 원인을 불문하고 모든 책임은 계약상대자가 부담한다."
+      miss: "개인정보 처리 위탁에 따른 책임은 개인정보 보호법 제26조에 따라 분담한다."
+
+  - id: R15_sla_penalty
+    title: 성능 수치와 위약 조항 결합
+    category: 성능
+    pattern: '(응답\s*(시간|속도)|가용성|가동률)[^\n]{0,60}?\d+(\.\d+)?\s*(초|%)[^\n]{0,80}?(위약|패널티|감액|배상|공제)'
+    compare: present
+    severity_default: medium
+    why: 성능 수치에 금전 패널티가 붙어 있으면 측정 조건이 불명확할 때 분쟁과 감액으로 이어진다.
+    negotiation_point: 측정 환경·측정 방법·면책 조건(발주기관 인프라 장애 등) 명시 요청
+    basis: 정보시스템 서비스 수준 관리(SLA) 가이드
+    examples:
+      hit: "평균 응답시간 2초를 초과하는 월에는 월 대금의 5%를 감액한다."
+      miss: "평균 응답시간은 3초 이내를 목표로 한다."
+
+  - id: R16_third_party_integration
+    title: 제3자 연계 책임 전가
+    category: 과업범위
+    pattern: '(연계|인터페이스)[^\n]{0,60}?(기관|시스템)[^\n]{0,40}?(비협조|지연|불가)[^\n]{0,40}?(계약상대자|수행사|사업자)[^\n]{0,20}?(책임|부담)'
+    compare: present
+    severity_default: medium
+    why: 연계 대상 기관의 협조는 수행사가 통제할 수 없다. 그 지연 책임까지 지면 일정 위험이 전가된다.
+    negotiation_point: 외부 기관 협조는 발주기관 책임으로 하고 지연 시 기간 연장 사유로 인정 요청
+    basis: 계약예규 용역계약일반조건 계약기간 연장 사유 조항
+    examples:
+      hit: "외부 연계 기관의 비협조로 연계가 지연되더라도 그 책임은 사업자가 부담한다."
+      miss: "외부 연계 기관과의 협의는 발주기관이 주관한다."
+
+  - id: R17_data_migration_scope
+    title: 데이터 이관·정제 범위 무제한
+    category: 과업범위
+    pattern: '데이터\s*(이관|이행|전환|정제)[^\n]{0,60}?(전체|일체|모든)[^\n]{0,40}?(수행사|사업자|계약상대자)[^\n]{0,20}?(책임|부담|수행)'
+    compare: present
+    severity_default: medium
+    why: 이관 대상 데이터의 범위와 품질 기준이 없으면 정제 공수가 끝없이 늘어난다.
+    negotiation_point: 이관 대상 테이블·건수와 원천 데이터 품질 책임의 발주기관 분담 명시 요청
+    basis: 소프트웨어사업 요구사항 분석·적용 가이드(데이터 요구사항 DAR)
+    examples:
+      hit: "기존 시스템 데이터 이관은 정제를 포함하여 전체를 사업자가 책임지고 수행한다."
+      miss: "데이터 이관 대상은 별첨 테이블 목록 42개로 한정한다."
+
+  - id: R18_proposal_cost_and_ownership
+    title: 제안 비용 미보상·제안서 귀속
+    category: 입찰조건
+    pattern: '제안서[^\n]{0,40}?(반환하지|귀속|소유)|제안[^\n]{0,20}?(비용|소요\s*경비)[^\n]{0,30}?(보상하지|부담하지|제안사(의|가)\s*부담)'
+    compare: present
+    severity_default: low
+    why: 통상적인 조항이지만 제안서의 아이디어·설계가 발주기관에 귀속되는 범위는 확인해야 한다.
+    negotiation_point: 제안서 내 영업비밀 표시 부분의 비공개 요청
+    basis: 공공기관 제안서 평가 관련 일반 조건
+    examples:
+      hit: "제출된 제안서는 반환하지 아니하며 제안에 소요된 비용은 제안사가 부담한다."
+      miss: "제안서 작성 설명회는 공고일 7일 후 개최한다."
+
+  - id: R19_termination_without_compensation
+    title: 임의 해지·기투입 비용 미보상
+    category: 계약조건
+    pattern: '계약\s*(해지|해제)[^\n]{0,80}?(기\s*투입|기투입|투입된)\s*(비용|경비)[^\n]{0,30}?(보상하지|청구할\s*수\s*없)|(발주기관|수요기관)[^\n]{0,20}?(필요|사정)[^\n]{0,30}?(언제든지|임의로)\s*(계약을\s*)?(해지|해제)'
+    compare: present
+    severity_default: high
+    why: 발주기관이 임의로 해지하면서 투입 비용을 보상하지 않으면 손실이 그대로 남는다.
+    negotiation_point: 해지 시 기성 부분과 기투입 비용 정산 조항 요청
+    basis: 계약예규 용역계약일반조건 사정변경에 의한 계약해제·해지 조항
+    examples:
+      hit: "발주기관은 사정에 따라 언제든지 계약을 해지할 수 있으며 기투입 비용은 보상하지 아니한다."
+      miss: "계약 해지 시 기성 부분에 대한 대가를 정산하여 지급한다."
+
+  - id: R20_eligibility_track_record
+    title: 입찰 참가 자격 실적 요건
+    category: 입찰조건
+    pattern: '(참가\s*자격|입찰\s*자격|참여\s*자격)[^\n]{0,100}?실적[^\n]{0,40}?\d+\s*(건|억|회)'
+    compare: present
+    severity_default: low
+    why: 실적 요건은 위험이라기보다 자격 확인 항목이다. 제안 착수 전에 충족 여부를 확인해야 헛수고를 막는다.
+    negotiation_point: 유사 실적 인정 범위 질의
+    basis: 국가계약법 시행령 제12조(경쟁입찰의 참가자격)
+    examples:
+      hit: "입찰 참가 자격은 최근 3년 이내 10억 원 이상 유사 사업 실적 2건 이상을 보유한 업체로 한다."
+      miss: "입찰 참가 자격은 소프트웨어사업자 신고를 마친 업체로 한다."
