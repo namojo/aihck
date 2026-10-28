@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "workbench": {
+      "command": "python",
+      "args": ["-m", "workbench.mcp_server"],
+      "env": { "PYTHONPATH": "${CLAUDE_PLUGIN_ROOT}/src" }
+    }
+  }
+}
