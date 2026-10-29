@@ -24,10 +24,10 @@ const { chromium } = require('playwright'); const path = require('path'); const 
       : { customer_id: cid, has_clause: true, event_covered: user.includes('파업'), notice_ok: true, conditions_met: {}, applies: user.includes('파업'), reasoning: '가짜 응답: 파업은 면책 사유에 해당한다.', citation: { clause: '제12조', quote: '파업' } };
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ content: [{ type: 'tool_use', name: tool, input }], usage: { input_tokens: 1, output_tokens: 1 } }) });
   });
-  await page.goto('file://' + path.resolve(htmlPath)); await page.waitForTimeout(400);
+  await page.goto('file://' + path.resolve(htmlPath)); await page.addStyleTag({ content: '.appbar{position:static!important}.card{animation:none!important}' }); await page.waitForTimeout(400);
   const kpi = async () => page.$eval('#kpis', el => el.innerText.replace(/\s+/g, ' ').slice(0, 160));
   console.log('초기:', await kpi());
-  await page.screenshot({ path: `${outDir}/web_controls.png`, clip: { x: 0, y: 0, width: 1280, height: 620 } });
+  await page.screenshot({ path: `${outDir}/web_overview.png`, clip: { x: 0, y: 0, width: 1280, height: 900 } });
   // 1) 통지 시점을 10시간으로 → 세움건설 통지 요건 충족 → 면책 적용 → 숫자 변화
   await page.$eval('#c-notice', el => { el.value = 10; el.dispatchEvent(new Event('input')); }); await page.waitForTimeout(300);
   console.log('통지 10h:', await kpi()); const note1 = await page.$eval('#src-note', el => el.innerText); console.log('  ', note1.slice(0, 120));
@@ -36,7 +36,8 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   // 3) 출처 전환
   await page.selectOption('#c-source', 'golden'); await page.waitForTimeout(300); console.log('정답지 출처:', await kpi());
   // 4) 사람이 면책 뒤집기
-  const ovr = await page.$('[data-ovr="D"]'); if (ovr) { await ovr.check(); await page.waitForTimeout(300); console.log('D 면책 뒤집음:', (await page.$eval('#src-note', el => el.innerText)).slice(0, 100)); }
+  await page.selectOption('[data-ovr="D"]', 'yes'); await page.waitForTimeout(300); console.log('D 면책 뒤집음:', (await page.$eval('#src-note', el => el.innerText)).slice(0, 100));
+  await page.fill('#m-type', '지진'); await page.$eval('#m-type', el => el.dispatchEvent(new Event('change'))); await page.waitForTimeout(200); console.log('사건 직접 입력:', await page.$eval('#sc-title', el => el.innerText));
   // 5) 탐색
   await page.click('#btn-search'); await page.waitForTimeout(4000); console.log('탐색 후:', await kpi());
   // 6) 라이브 AI: 계약 업로드 흐름(API 키 백엔드)
@@ -52,13 +53,15 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   await page.click('#e-sample'); await page.click('#e-run');
   await page.waitForFunction(() => document.querySelector('#e-out').innerText.includes('완료') || document.querySelector('#e-out').innerText.includes('실패'), null, { timeout: 20000 });
   console.log('사건 재판단:', (await page.$eval('#e-out', el => el.innerText)).slice(0, 200)); console.log('  제목:', await page.$eval('#sc-title', el => el.innerText));
-  const cust = await page.$('main > section:nth-of-type(5)'); await cust.screenshot({ path: `${outDir}/web_live_customers.png` });
+  const board = await page.$('main > section:nth-of-type(2)'); await board.screenshot({ path: `${outDir}/web_board_cards.png` });
+  await page.click('#board-toggle [data-mode="matrix"]'); await page.waitForTimeout(200); await board.screenshot({ path: `${outDir}/web_board_matrix.png` }); await page.click('#board-toggle [data-mode="cards"]');
+  await page.click('[data-open="H"]'); await page.waitForTimeout(400); await page.screenshot({ path: `${outDir}/web_drawer.png`, clip: { x: 0, y: 0, width: 1280, height: 900 } }); await page.click('#drawer-close'); await page.waitForTimeout(300);
   await page.click('#e-reset'); await page.click('#u-remove'); await page.waitForTimeout(300); console.log('되돌림:', await kpi());
   // 8) 로컬 도우미 백엔드
   await page.selectOption('#k-backend', 'helper'); await page.click('#h-check'); await page.waitForTimeout(300); console.log('도우미 상태:', await page.$eval('#k-status', el => el.innerText));
   await page.fill('#u-name', '도우미고객'); await page.click('#u-run'); await page.waitForFunction(() => /추가했다|실패/.test(document.querySelector('#u-out').innerText), null, { timeout: 15000 }); console.log('도우미 업로드:', (await page.$eval('#u-out', el => el.innerText)).slice(0, 80));
   await page.click('#e-run'); await page.waitForFunction(() => /완료|실패/.test(document.querySelector('#e-out').innerText), null, { timeout: 20000 }); console.log('도우미 재판단:', (await page.$eval('#e-out', el => el.innerText)).slice(0, 80));
-  await page.screenshot({ path: `${outDir}/web_live_helper.png`, clip: { x: 0, y: 0, width: 1280, height: 900 } });
+  await page.$eval('#live', el => el.scrollIntoView()); await page.waitForTimeout(200); const lv = await page.$('#live'); await lv.screenshot({ path: `${outDir}/web_live_helper.png` });
   // 9) 사내 OpenAI 호환 백엔드
   await page.selectOption('#k-backend', 'custom'); await page.fill('#c-url', 'https://llm.company.local/v1'); await page.$eval('#c-url', el => el.dispatchEvent(new Event('change'))); await page.fill('#c-model', 'company-llm'); await page.$eval('#c-model', el => el.dispatchEvent(new Event('change')));
   await page.click('#u-remove'); await page.fill('#u-name', '사내LLM고객'); await page.click('#u-run'); await page.waitForFunction(() => /추가했다|실패/.test(document.querySelector('#u-out').innerText), null, { timeout: 15000 }); console.log('사내 LLM 업로드:', (await page.$eval('#u-out', el => el.innerText)).slice(0, 80));

@@ -25,7 +25,7 @@ def test_site_files_and_data(site):
     assert len(data["scenarios"]) == 3 and set(data["scenarios"][0]["shipments_by_seed"]) == set("ABCDE")
     assert "golden" in data["sources"] and "extract" in data["prompts"] and data["schemas"]["judge"]["title"] == "ForceMajeureJudgment"
     html = (site / "index.html").read_text(encoding="utf-8")
-    assert "실제 케이스 분석" in html and "연결 방식" in html
+    assert "실제 케이스 분석" in html and "AI 연결" in html and "면책 판단" in html
     import re
     for f in ("index.html", "app.js", "data.js"):
         assert not re.search(r"sk-ant-api\w{10,}", (site / f).read_text(encoding="utf-8")), f"{f}에 실제 키가 들어 있으면 안 된다"

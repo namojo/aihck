@@ -1,7 +1,7 @@
 // 웹 데모 조작 패널. 상태 → 시나리오·판단 재구성 → 엔진 실행 → 공용 렌더.
 (function () {
   const D = window.CT_DATA; const $ = s => document.querySelector(s);
-  const state = { sid: D.scenarios[0].scenario.id, source: D.sources.real ? 'real' : 'golden', seed: 'A', overrides: {}, search: false, params: {}, extra: [], live: null };
+  const state = { sid: D.scenarios[0].scenario.id, source: D.sources.real ? 'real' : 'golden', seed: 'A', overrides: {}, search: false, params: {}, extra: [], live: null, manualEvent: null };
   const scen = () => D.scenarios.find(s => s.scenario.id === state.sid);
   const fmt = n => n.toLocaleString('ko-KR');
 
@@ -22,66 +22,80 @@
   function build() {
     const S = scen(); const src = currentSource(); const p = state.params; const base = S.scenario;
     const scenario = JSON.parse(JSON.stringify(base)); scenario.trucks = p.trucks; scenario.event.notice_sent_after_hours = p.notice; scenario.event.facts = Object.assign({}, p.facts);
-    if (state.live) { scenario.event.event_type = state.live.event.event_type; scenario.event.description = state.live.event.description; scenario.title = base.title + ' → ' + state.live.event.event_type + '(AI 재판단)'; }
+    if (state.manualEvent) { if (state.manualEvent.event_type) scenario.event.event_type = state.manualEvent.event_type; if (state.manualEvent.description) scenario.event.description = state.manualEvent.description; if (state.manualEvent.event_type && state.manualEvent.event_type !== base.event.event_type) scenario.title = base.title + ' → ' + state.manualEvent.event_type + ' (직접 입력)'; }
+    if (state.live) { scenario.event.event_type = state.live.event.event_type; scenario.event.description = state.live.event.description; scenario.title = base.title + ' → ' + state.live.event.event_type + ' (AI 재판단)'; }
     scenario.disruption.trucks_out = Math.min(p.trucks_out, p.trucks); scenario.disruption.trucks_out_until_h = p.trucks_out_until;
     for (const r of p.affected) scenario.disruption.route_multipliers[r] = p.mult;
     const customers = allCustomers(); const terms = allTerms(src), extraction = allExtraction(src); const judgments = {};
-    for (const c of customers) judgments[c.id] = CT.deriveJudgment(baseJudgment(src, c.id), terms[c.id], scenario.event, state.overrides[c.id]);
+    for (const c of customers) { const o = state.overrides[c.id]; const j = CT.deriveJudgment(baseJudgment(src, c.id), terms[c.id], scenario.event, o ? o.applies : null); if (o && o.reason) j.reasoning = '사람 결정: ' + o.reason + ' (원래 판단: ' + j.reasoning + ')'; judgments[c.id] = j; }
     let shipments = S.shipments_by_seed[state.seed].slice(); state.extra.forEach(x => shipments = shipments.concat(x.shipments)); shipments.sort((a, b) => a.ready_h - b.ready_h || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     const label = D.sources[src].label + (state.extra.length ? ` + 업로드 ${state.extra.length}건(라이브 AI)` : '') + (state.live ? ' + 사건 재판단(라이브 AI)' : '');
     return CT.buildReport({ scenario, customers, terms, extraction, judgments, shipments, llm_mode: label, withSearch: state.search, searchOpts: { restarts: 6, sweeps: 2 } });
   }
 
   function renderControls() {
-    const S = scen().scenario; const p = state.params; const d = S.disruption; const conds = new Set(); const src = currentSource();
-    // 토글로 보여 주는 사실은 시나리오가 정의한 것과 정답지 계약의 정성 조건만. 모델이 추가로 적은 조건은 모델의 판단값을 그대로 둔다.
+    const S = scen().scenario; const p = state.params; const d = S.disruption; const src = currentSource(); const conds = new Set();
     for (const t of Object.values(D.sources.golden.terms)) for (const c of (t.force_majeure ? t.force_majeure.conditions : [])) conds.add(c);
     Object.keys(S.event.facts || {}).forEach(k => conds.add(k));
-    const seedOpts = Object.keys(scen().shipments_by_seed).map(k => `<option value="${k}" ${k === state.seed ? 'selected' : ''}>화물 배치 ${k}</option>`).join('');
+    const ev = state.manualEvent || {};
+    $('#panel-event').innerHTML = `
+      <div class="ctl"><b>사건 유형</b><input type="text" id="m-type" value="${esc(ev.event_type ?? S.event.event_type)}"></div>
+      <div class="ctl"><b>무슨 일이 있었나</b><textarea id="m-desc" rows="3">${esc(ev.description ?? S.event.description)}</textarea><span class="hint">직접 고쳐 쓸 수 있다. 면책 판단은 아래에서 손으로 정하거나, ③에서 AI에 맡긴다.</span></div>
+      <div class="ctl"><b>고객 통지 시점 <span class="val" id="v-notice"></span></b><input type="range" id="c-notice" min="-1" max="48" step="1" value="${p.notice == null ? -1 : p.notice}"><span class="hint">통지 시한이 있는 면책 조항에 바로 반영된다.</span></div>
+      ${[...conds].map(c => `<label class="switch"><span>${esc(c)}</span><input type="checkbox" data-fact="${esc(c)}" ${p.facts[c] ? 'checked' : ''}></label>`).join('')}`;
+    $('#panel-ops').innerHTML = `
+      <div class="ctl"><b>트럭 수 <span class="val" id="v-trucks"></span></b><input type="range" id="c-trucks" min="4" max="12" step="1" value="${p.trucks}"></div>
+      <div class="ctl"><b>결항 트럭 수 <span class="val" id="v-out"></span></b><input type="range" id="c-out" min="0" max="8" step="1" value="${p.trucks_out}"></div>
+      <div class="ctl"><b>결항 종료 <span class="val" id="v-until"></span></b><input type="range" id="c-until" min="0" max="36" step="1" value="${p.trucks_out_until}"></div>
+      ${p.affected.length ? `<div class="ctl"><b>피해 노선 이동시간 <span class="val" id="v-mult"></span></b><input type="range" id="c-mult" min="1" max="2.5" step="0.1" value="${p.mult}"><span class="hint">노선 ${p.affected.join(', ')}</span></div>` : ''}`;
+    const seedOpts = Object.keys(scen().shipments_by_seed).map(k => `<option value="${k}" ${k === state.seed ? 'selected' : ''}>배치 ${k}</option>`).join('');
     const srcOpts = Object.keys(D.sources).filter(k => k === 'golden' || scen().judgments.real).map(k => `<option value="${k}" ${k === src ? 'selected' : ''}>${D.sources[k].label}</option>`).join('');
-    let html = `
-      <div class="ctl"><b>계약 읽기 출처</b><select id="c-source">${srcOpts}</select><span class="note">정답지와 실제 모델 추출을 바꿔 가며 비교</span></div>
-      <div class="ctl"><b>화물 배치</b><select id="c-seed">${seedOpts}</select><span class="note">가액·노선·마감만 다른 56건 배치 5종</span></div>
-      <div class="ctl"><b>고객 통지 시점</b><input type="range" id="c-notice" min="-1" max="48" step="1" value="${p.notice == null ? -1 : p.notice}"><span class="val" id="v-notice"></span></div>
-      <div class="ctl"><b>트럭 수</b><input type="range" id="c-trucks" min="4" max="12" step="1" value="${p.trucks}"><span class="val" id="v-trucks"></span></div>`;
-    if (d.trucks_out_until_h || d.trucks_out) html += `
-      <div class="ctl"><b>결항 트럭 수</b><input type="range" id="c-out" min="0" max="8" step="1" value="${p.trucks_out}"><span class="val" id="v-out"></span></div>
-      <div class="ctl"><b>결항 종료 시각</b><input type="range" id="c-until" min="0" max="36" step="1" value="${p.trucks_out_until}"><span class="val" id="v-until"></span></div>`;
-    if (p.affected.length) html += `<div class="ctl"><b>피해 노선 이동시간 배율</b><input type="range" id="c-mult" min="1" max="2.5" step="0.1" value="${p.mult}"><span class="val" id="v-mult"></span></div>`;
-    for (const c of conds) html += `<div class="ctl"><b>사실: ${c}</b><label class="row"><input type="checkbox" data-fact="${c}" ${p.facts[c] ? 'checked' : ''}> 충족(입증 자료 있음)</label></div>`;
-    html += `<div class="ctl"><b>&nbsp;</b><button id="c-reset">원래 사건으로 되돌리기</button></div>`;
-    $('#controls').innerHTML = html;
-    const bind = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('input', fn); };
-    bind('c-notice', e => { const v = +e.target.value; p.notice = v < 0 ? null : v; refresh(); });
-    bind('c-trucks', e => { p.trucks = +e.target.value; refresh(); });
-    bind('c-out', e => { p.trucks_out = +e.target.value; refresh(); });
-    bind('c-until', e => { p.trucks_out_until = +e.target.value; refresh(); });
-    bind('c-mult', e => { p.mult = +e.target.value; refresh(); });
+    $('#panel-cargo').innerHTML = `
+      <div class="ctl"><b>화물 배치</b><select id="c-seed">${seedOpts}</select><span class="hint">가액·노선·마감만 다른 56건 배치 5종</span></div>
+      <div class="ctl"><b>계약 읽기 출처</b><select id="c-source">${srcOpts}</select><span class="hint">정답지와 실제 모델 추출을 바꿔 가며 비교</span></div>`;
+    renderJudgeEditor(src);
+    const bind = (id, ev2, fn) => { const el = document.getElementById(id); if (el) el.addEventListener(ev2, fn); };
+    bind('c-notice', 'input', e => { const v = +e.target.value; p.notice = v < 0 ? null : v; refresh(); });
+    bind('c-trucks', 'input', e => { p.trucks = +e.target.value; refresh(); });
+    bind('c-out', 'input', e => { p.trucks_out = +e.target.value; refresh(); });
+    bind('c-until', 'input', e => { p.trucks_out_until = +e.target.value; refresh(); });
+    bind('c-mult', 'input', e => { p.mult = +e.target.value; refresh(); });
+    bind('m-type', 'change', e => { state.manualEvent = Object.assign({}, state.manualEvent, { event_type: e.target.value.trim() }); refresh(); });
+    bind('m-desc', 'change', e => { state.manualEvent = Object.assign({}, state.manualEvent, { description: e.target.value.trim() }); refresh(); });
     document.querySelectorAll('[data-fact]').forEach(el => el.addEventListener('change', e => { p.facts[e.target.dataset.fact] = e.target.checked; refresh(); }));
     $('#c-source').addEventListener('change', e => { state.source = e.target.value; state.overrides = {}; refresh(true); });
     $('#c-seed').addEventListener('change', e => { state.seed = e.target.value; refresh(); });
-    $('#c-reset').addEventListener('click', () => { resetParams(); refresh(true); });
-    const ov = D.customers.filter(c => D.sources[src].terms[c.id].force_majeure).map(c => `<label><input type="checkbox" data-ovr="${c.id}" ${state.overrides[c.id] ? 'checked' : ''}> ${c.name}: 면책 인정</label>`).join('');
-    $('#overrides').innerHTML = ov;
-    document.querySelectorAll('[data-ovr]').forEach(el => el.addEventListener('change', e => { const id = e.target.dataset.ovr; if (e.target.checked) state.overrides[id] = true; else delete state.overrides[id]; refresh(); }));
-    $('#tabs').innerHTML = D.scenarios.map(s => `<button class="tab ${s.scenario.id === state.sid ? 'on' : ''}" data-id="${s.scenario.id}">${s.scenario.title}</button>`).join('');
-    document.querySelectorAll('nav.tabs .tab').forEach(t => t.addEventListener('click', () => { state.sid = t.dataset.id; state.live = null; resetParams(); refresh(true); }));
+    $('#c-reset').onclick = () => { resetParams(); refresh(true); };
+    $('#tabs').innerHTML = D.scenarios.map(s2 => `<button class="tab ${s2.scenario.id === state.sid ? 'on' : ''}" data-id="${s2.scenario.id}">${s2.scenario.title}</button>`).join('');
+    document.querySelectorAll('nav.tabs .tab').forEach(t => t.addEventListener('click', () => { state.sid = t.dataset.id; state.live = null; state.manualEvent = null; resetParams(); refresh(true); }));
     $('#clegend').innerHTML = allCustomers().map((c, i) => `<span><i style="background:var(--c${(i % 8) + 1})"></i>${c.name}</span>`).join('');
-    $('#contracts').innerHTML = D.customers.map(c => `<details style="margin:6px 0"><summary>${c.name}</summary><pre style="white-space:pre-wrap;font:13px/1.5 inherit;background:#fff;border:1px solid var(--grid);border-radius:8px;padding:10px">${D.contracts[c.id].replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]))}</pre></details>`).join('');
   }
 
+  // 고객별 면책 판단을 사람이 직접 정한다: 자동(조건 결합) | 적용 | 미적용 + 이유
+  function renderJudgeEditor(src) {
+    const rows = allCustomers().map(c => { const t = allTerms(src)[c.id]; const o = state.overrides[c.id]; const has = !!(t && t.force_majeure);
+      return `<tr><td class="nw"><i class="dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${ccolor(c.id)};margin-right:6px"></i>${esc(c.name)}</td>
+        <td>${has ? `<select data-ovr="${c.id}"><option value="auto" ${!o ? 'selected' : ''}>자동</option><option value="yes" ${o && o.applies ? 'selected' : ''}>면책 적용</option><option value="no" ${o && !o.applies ? 'selected' : ''}>미적용</option></select>` : '<span class="chip none">조항 없음</span>'}</td>
+        <td>${has ? `<input type="text" data-reason="${c.id}" placeholder="이유(선택)" value="${esc(o && o.reason || '')}">` : ''}</td></tr>`; }).join('');
+    $('#panel-judge').innerHTML = `<div class="hint" style="margin:6px 0 8px">"자동"은 조항·사유·통지·조건을 결합한 값이다. 사람이 뒤집으면 카드에 "사람 결정"으로 표시된다.</div><table class="jedit"><tbody>${rows}</tbody></table>`;
+    document.querySelectorAll('[data-ovr]').forEach(el => el.addEventListener('change', e => { const id = e.target.dataset.ovr; const v = e.target.value; if (v === 'auto') delete state.overrides[id]; else state.overrides[id] = Object.assign({}, state.overrides[id], { applies: v === 'yes' }); refresh(); }));
+    document.querySelectorAll('[data-reason]').forEach(el => el.addEventListener('change', e => { const id = e.target.dataset.reason; if (state.overrides[id]) { state.overrides[id].reason = e.target.value.trim(); refresh(); } }));
+  }
+
+  function renderControlsSyncJudge() { /* 판단 편집기는 고객 목록이 바뀔 때만 다시 그린다 */ }
   function showVals() {
     const p = state.params; const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-    set('v-notice', p.notice == null ? '통지 안 함' : `발생 ${p.notice}시간 뒤`); set('v-trucks', `${p.trucks}대`); set('v-out', `${Math.min(p.trucks_out, p.trucks)}대`); set('v-until', `+${p.trucks_out_until}h까지`); set('v-mult', `${p.mult.toFixed(1)}배`);
+    set('v-notice', p.notice == null ? '통지 안 함' : `발생 ${p.notice}h 뒤`); set('v-trucks', `${p.trucks}대`); set('v-out', `${Math.min(p.trucks_out, p.trucks)}대`); set('v-until', `+${p.trucks_out_until}h`); set('v-mult', `${p.mult.toFixed(1)}배`);
   }
 
   function refresh(rebuild) {
     if (rebuild) renderControls(); showVals();
+    renderControlsSyncJudge();
     const R = build(); window.CT_LAST = R; renderReport(R);
-    const src = currentSource(); const meta = D.sources[src].meta;
+    const src = currentSource();
     const changed = Object.entries(R.judgments).filter(([cid, j]) => { const b = (scen().judgments[src] || {})[cid]; return j.manual_override || (b && b.applies !== j.applies); });
-    $('#src-note').innerHTML = `<span class="badge">출처: ${D.sources[src].label}</span> ` + (meta ? `실제 모델 실행은 저장소의 <code>eval/results/real/</code>에 보고서와 로그로 남아 있다. ` : '') +
-      (changed.length ? `현재 설정에서 원래 판단과 달라진 고객: ${changed.map(([cid, j]) => `${R.customers.find(c => c.id === cid).name}(${j.manual_override ? '사람이 뒤집음' : '통지·사실 변경으로 재계산'})`).join(', ')}` : '면책 판단은 원래 사건과 같다.');
+    $('#src-note').innerHTML = `<span class="chip tower">계약 읽기 · ${D.sources[src].label}</span>` + (state.extra.length ? `<span class="chip warn">업로드 고객 ${state.extra.length}</span>` : '') + (state.live ? '<span class="chip warn">AI 재판단 적용</span>' : '') + (state.manualEvent ? '<span class="chip">사건 직접 입력</span>' : '') +
+      (changed.length ? `<span class="chip hot">판단 달라짐 · ${changed.map(([cid, j]) => R.customers.find(c => c.id === cid).name).join(', ')}</span>` : '');
     $('#search-note').textContent = state.search ? '탐색 완료. 설정을 바꾸면 다시 계산해야 한다.' : '';
     $('#btn-search').disabled = state.search;
   }
@@ -115,14 +129,14 @@
   $('#k-backend').value = store.get('backend') || 'api'; $('#k-backend').addEventListener('change', showBackend); showBackend();
   const masked = v => v ? '••••••••' + v.slice(-4) : '';
   $('#k-key').value = masked(store.get('anthropic_key'));
-  $('#k-save').onclick = () => { const v = $('#k-key').value.trim(); if (v && !v.startsWith('•')) { store.set('anthropic_key', v); $('#k-key').value = masked(v); status('키 저장됨(이 브라우저에만).'); } };
+  $('#k-save').onclick = () => { const v = $('#k-key').value.trim(); if (v && !v.startsWith('•')) { store.set('anthropic_key', v); $('#k-key').value = masked(v); status('API 키 저장됨(이 브라우저에만)', true); } };
   $('#k-clear').onclick = () => { store.set('anthropic_key', ''); $('#k-key').value = ''; status('키 지움.'); };
   $('#h-url').value = store.get('helper_url') || 'http://127.0.0.1:8787'; $('#h-url').addEventListener('change', e => store.set('helper_url', e.target.value.trim()));
   $('#c-url').value = store.get('custom_url'); $('#c-model').value = store.get('custom_model'); $('#c-proto').value = store.get('custom_proto') || 'openai'; $('#c-key').value = masked(store.get('custom_key'));
   for (const [id, k] of [['c-url', 'custom_url'], ['c-model', 'custom_model'], ['c-proto', 'custom_proto']]) $('#' + id).addEventListener('change', e => store.set(k, e.target.value.trim()));
   $('#c-key').addEventListener('change', e => { const v = e.target.value.trim(); if (v && !v.startsWith('•')) { store.set('custom_key', v); e.target.value = masked(v); } });
-  $('#h-check').onclick = async () => { try { const r = await fetch($('#h-url').value.replace(/\/$/, '') + '/health'); const j = await r.json(); status(`도우미 연결됨: LLM 모드 ${j.mode}, 모델 ${j.model}${j.mode === 'mock' ? ' — 주의: mock(자리표시자)' : ''}`); } catch (e) { status('도우미에 연결할 수 없다. 터미널에서 python -m clausetower serve 를 실행했는지, 주소가 맞는지 확인하라.'); } };
-  function status(t) { $('#k-status').textContent = t; }
+  $('#h-check').onclick = async () => { try { const r = await fetch($('#h-url').value.replace(/\/$/, '') + '/health'); const j = await r.json(); status(`도우미 연결됨: ${j.mode} · ${j.model}${j.mode === 'mock' ? ' (주의: mock)' : ''}`, j.mode !== 'mock'); } catch (e) { status('도우미에 연결할 수 없다. 터미널에서 python -m clausetower serve 를 실행했는지, 주소가 맞는지 확인하라.'); } };
+  function status(t, ok) { $('#k-status').textContent = t; const chip = $('#conn-chip'); if (chip) { chip.classList.toggle('ok', !!ok); chip.querySelector('span').textContent = ok ? 'AI 연결됨 · ' + t.slice(0, 40) : 'AI 연결 안 됨 · 아래 ①에서 연결'; } }
 
   function toolBlock(schema, toolName) { return { name: toolName, description: '결과를 이 스키마로 돌려준다.', input_schema: schema }; }
   async function callAnthropicLike(url, headers, model, { system, user, schema, toolName, maxTokens }) {
@@ -169,7 +183,7 @@
     return await file.text();
   }
   $('#u-file').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; try { $('#u-text').value = await readFile(f); if (!$('#u-name').value) $('#u-name').value = f.name.replace(/\.[^.]+$/, ''); } catch (err) { $('#u-out').textContent = err.message; } });
-  $('#u-sample').onclick = () => { $('#u-name').value = '새벽물산'; $('#u-text').value = `# 긴급 부품 운송 약정서 (새벽물산)\n\n## 제7조 (지연 배상)\n① 수행사가 배송 시한을 넘긴 경우 지연된 매 1시간마다 해당 주문 상품가액의 0.08%를 배상한다.\n② 배송 시한 경과 후 3시간 이내의 지연은 배상 대상에서 제외한다.\n③ 배상금 총액은 해당 주문 상품가액의 8%를 초과하지 아니한다.\n\n## 제12조 (불가항력)\n태풍, 지진, 홍수 등 천재지변 또는 파업으로 인한 지연에 대하여 수행사는 책임을 지지 아니한다. 수행사는 사유 발생 후 36시간 이내에 발주자에게 통지한다.`; };
+  $('#u-sample').onclick = () => { $('#u-name').value = '새벽물산'; $('#u-text').scrollIntoView({ block: 'nearest' }); $('#u-text').value = `# 긴급 부품 운송 약정서 (새벽물산)\n\n## 제7조 (지연 배상)\n① 수행사가 배송 시한을 넘긴 경우 지연된 매 1시간마다 해당 주문 상품가액의 0.08%를 배상한다.\n② 배송 시한 경과 후 3시간 이내의 지연은 배상 대상에서 제외한다.\n③ 배상금 총액은 해당 주문 상품가액의 8%를 초과하지 아니한다.\n\n## 제12조 (불가항력)\n태풍, 지진, 홍수 등 천재지변 또는 파업으로 인한 지연에 대하여 수행사는 책임을 지지 아니한다. 수행사는 사유 발생 후 36시간 이내에 발주자에게 통지한다.`; };
   $('#e-sample').onclick = () => { $('#e-type').value = '화물연대 파업'; $('#e-desc').value = '화물연대 총파업으로 운송사 소속이 아닌 지입 차량 절반이 운행을 거부했다. 운송사는 대체 차량 수배를 시도한 기록이 있다. 정부 업무개시명령은 아직 없다.'; };
 
   $('#u-run').onclick = async () => {

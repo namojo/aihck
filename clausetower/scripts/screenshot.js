@@ -9,11 +9,12 @@ const path = require('path');
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   await page.goto('file://' + path.resolve(htmlPath));
+  await page.addStyleTag({ content: '.appbar{position:static!important}.card{animation:none!important}' });
   await page.waitForTimeout(300);
   const scenarios = await page.$$eval('nav.tabs .tab', ts => ts.map(t => t.dataset.id));
   const shots = {
-    kpi: 'main > section:nth-of-type(1)', ranking: 'main > section:nth-of-type(2)', charts: 'main > .grid2',
-    customers: 'main > section:nth-of-type(3)', gantt: 'main > section:nth-of-type(4)', evidence: 'main > section:nth-of-type(5)', log: 'main > section:nth-of-type(6)',
+    kpi: 'main > section:nth-of-type(1)', board: 'main > section:nth-of-type(2)', ranking: 'main > section:nth-of-type(3)', charts: 'main > .grid2',
+    gantt: 'main > section:nth-of-type(4)',
   };
   for (const sid of scenarios) {
     await page.click(`.tab[data-id="${sid}"]`);
@@ -23,14 +24,18 @@ const path = require('path');
       const el = await page.$(sel);
       if (el) await el.screenshot({ path: `${outDir}/${sid}_${name}.png` });
     }
+    await page.click('#board-toggle [data-mode="matrix"]'); await page.waitForTimeout(150);
+    await (await page.$('main > section:nth-of-type(2)')).screenshot({ path: `${outDir}/${sid}_board_matrix.png` });
+    await page.click('#board-toggle [data-mode="cards"]'); await page.waitForTimeout(150);
   }
   await page.click('.tab[data-id="typhoon"]');
   await page.waitForTimeout(200);
   // 근거 펼침 장면
   await page.$$eval('#rank-body details', ds => ds.slice(0, 2).forEach(d => d.open = true));
   await page.waitForTimeout(100);
-  const rk = await page.$('main > section:nth-of-type(2)');
+  const rk = await page.$('main > section:nth-of-type(3)');
   await rk.screenshot({ path: `${outDir}/typhoon_ranking_open.png` });
+  await page.click('[data-open="H"]'); await page.waitForTimeout(400); await page.screenshot({ path: `${outDir}/typhoon_drawer.png`, clip: { x: 0, y: 0, width: 1280, height: 900 } }); await page.click('#drawer-close'); await page.waitForTimeout(300);
   // 호버 툴팁 장면
   const bar = await page.$('#g-base .bar rect');
   if (bar) { const b = await bar.boundingBox(); await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await page.waitForTimeout(150);

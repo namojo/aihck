@@ -66,67 +66,59 @@ def build_data() -> dict:
 
 
 HTML = """<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ClauseTower 웹 데모 — 계약을 읽는 물류 관제탑</title><link rel="stylesheet" href="style.css"><style>
-.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 18px}.ctl{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink2)}
-.ctl b{color:var(--ink);font-weight:600}.ctl input[type=range]{width:100%}.ctl select,.ctl button{font:inherit;padding:5px 8px;border:1px solid var(--axis);border-radius:8px;background:#fff}
-.ctl .val{font-variant-numeric:tabular-nums;color:var(--ink)}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.ovr{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px 14px;font-size:13px}.ovr label{display:flex;gap:6px;align-items:center}
-.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;background:#eef3fb;color:#1c5cab;border:1px solid #c9dbf5}
-.note{font-size:13px;color:var(--ink2)}a{color:var(--ours)}
-</style></head><body>
-<header><h1>ClauseTower</h1><span class="tag">급한 순서가 아니라, 물리는 순서로 — 계약 조항을 읽는 물류 관제탑</span><nav class="tabs" id="tabs"></nav></header>
-<main>
-<section><h2>사고 상황 바꾸기 <small>값을 바꾸면 브라우저 안에서 시뮬레이션이 다시 돌고 아래 모든 화면이 갱신된다.</small></h2>
-<div class="controls" id="controls"></div>
-<div style="margin-top:12px"><b style="font-size:13px">사람의 최종 결정</b> <span class="note">면책 판단을 사람이 뒤집을 수 있다. 뒤집은 고객은 표시된다.</span><div class="ovr" id="overrides"></div></div>
-<p class="note" id="src-note" style="margin:10px 0 0"></p></section>
-<section id="live"><h2>실제 케이스 분석(AI) <small>계약서를 올리거나 사건을 직접 적으면 이 브라우저에서 Claude를 호출해 바로 분석한다.</small></h2>
-<div class="controls">
-  <div class="ctl"><b>연결 방식</b><select id="k-backend">
-      <option value="api">Anthropic API 키 (브라우저에서 직접 호출)</option>
-      <option value="helper">로컬 도우미 (Claude 구독·Claude Code CLI, 사내 LLM 중계)</option>
-      <option value="custom">사내·호환 엔드포인트 (브라우저에서 직접 호출)</option></select>
-    <span class="note" id="k-help"></span></div>
-  <div class="ctl" data-for="api"><b>Anthropic API 키</b><div class="row"><input type="password" id="k-key" placeholder="sk-ant-…" style="flex:1;font:inherit;padding:5px 8px;border:1px solid var(--axis);border-radius:8px"><button id="k-save">저장</button><button id="k-clear">지움</button></div>
-    <span class="note">키는 이 브라우저의 localStorage에만 저장되고 api.anthropic.com으로만 전송된다. 공용 PC에서는 쓰고 나서 지운다.</span></div>
-  <div class="ctl" data-for="api"><b>모델</b><select id="k-model"><option value="claude-opus-5-5">claude-opus-5-5 (정확, 느림)</option><option value="claude-sonnet-5-5">claude-sonnet-5-5 (빠름)</option></select></div>
-  <div class="ctl" data-for="helper"><b>로컬 도우미 주소</b><div class="row"><input type="text" id="h-url" value="http://127.0.0.1:8787" style="flex:1;font:inherit;padding:5px 8px;border:1px solid var(--axis);border-radius:8px"><button id="h-check">연결 확인</button></div>
-    <span class="note">PC에서 <code>python -m clausetower serve --llm claude-code</code>(구독) 또는 <code>--llm openai</code>(사내 LLM, 환경변수로 주소 지정)를 띄운다. 계약서는 이 PC와 도우미 사이에서만 오간다.</span></div>
-  <div class="ctl" data-for="custom"><b>프로토콜</b><select id="c-proto"><option value="openai">OpenAI 호환 (chat/completions + tools)</option><option value="anthropic">Anthropic 호환 (v1/messages)</option></select></div>
-  <div class="ctl" data-for="custom"><b>기본 주소</b><input type="text" id="c-url" placeholder="https://llm.company.local/v1" style="font:inherit;padding:5px 8px;border:1px solid var(--axis);border-radius:8px"><span class="note">게이트웨이가 CORS를 허용해야 한다. 막히면 로컬 도우미(--llm openai)로 중계한다.</span></div>
-  <div class="ctl" data-for="custom"><b>모델 이름</b><input type="text" id="c-model" placeholder="예: company-llm-70b" style="font:inherit;padding:5px 8px;border:1px solid var(--axis);border-radius:8px"></div>
-  <div class="ctl" data-for="custom"><b>토큰(선택)</b><input type="password" id="c-key" placeholder="Bearer 토큰 또는 x-api-key" style="font:inherit;padding:5px 8px;border:1px solid var(--axis);border-radius:8px"><span class="note">이 브라우저에만 저장된다.</span></div>
-  <div class="ctl"><b>상태</b><span class="note" id="k-status">-</span></div>
-</div>
-<div class="grid2" style="margin-top:14px">
-  <div><b style="font-size:14px">① 계약서 올리기 → 조건 추출 → 시뮬레이션에 추가</b>
-    <div class="ctl" style="margin-top:6px"><input type="text" id="u-name" placeholder="고객 이름(예: 새벽물산)" style="font:inherit;padding:5px 8px;border:1px solid var(--axis);border-radius:8px">
-      <input type="file" id="u-file" accept=".txt,.md,.docx"><span class="note">txt, md, docx. 또는 아래에 붙여넣기.</span>
-      <textarea id="u-text" rows="7" placeholder="계약서 본문을 붙여넣는다. 지체상금, 유예, 상한, 불가항력 조항이 있는 부분이면 충분하다." style="font:inherit;padding:8px;border:1px solid var(--axis);border-radius:8px"></textarea>
-      <div class="row"><button id="u-run">AI로 조건 추출하고 추가</button><button id="u-sample">예시 계약서 넣기</button><button id="u-remove">추가한 고객 모두 제거</button></div>
-      <div id="u-out" class="note"></div></div></div>
-  <div><b style="font-size:14px">② 사건 직접 입력 → 8개 계약 면책 재판단</b>
-    <div class="ctl" style="margin-top:6px"><input type="text" id="e-type" placeholder="사건 유형(예: 화물연대 파업)" style="font:inherit;padding:5px 8px;border:1px solid var(--axis);border-radius:8px">
-      <textarea id="e-desc" rows="4" placeholder="무슨 일이 어떻게 일어났는지. 누구 책임인지, 통지는 언제 했는지, 입증 자료가 있는지." style="font:inherit;padding:8px;border:1px solid var(--axis);border-radius:8px"></textarea>
-      <span class="note">통지 시점과 사실 관계는 위의 '사고 상황 바꾸기' 값을 함께 보낸다.</span>
-      <div class="row"><button id="e-run">AI로 면책 다시 판단</button><button id="e-sample">예시 사건 넣기</button><button id="e-reset">원래 판단으로</button></div>
-      <div id="e-out" class="note"></div></div></div>
-</div></section>
-<section><h2 id="sc-title"></h2><p class="sub" id="sc-desc"></p><p class="sub" id="sc-event"></p><div class="kpis" id="kpis"></div></section>
-<section><h2>물리는 순서 <small>대기열이 가장 길었던 시점 <span id="rank-at"></span>의 대기 화물. 왼쪽이 ClauseTower 순위, 그 옆이 기존 마감 순위와 변동.</small></h2><p class="sub" id="rank-sub"></p>
-<div style="overflow-x:auto"><table><thead><tr><th class="n">노출 순위</th><th class="n">마감 순위</th><th>화물</th><th>고객</th><th class="n">마감까지</th><th class="n">지금 보내면</th><th class="n">한 사이클 미루면</th><th class="n">물리는 돈</th><th>판단과 근거</th></tr></thead><tbody id="rank-body"></tbody></table></div><button class="more" id="rank-more" style="margin-top:10px"></button></section>
-<div class="grid2">
-<section><h2>누적 페널티 <small>시간에 따라 쌓이는 페널티. 낮을수록 좋다.</small></h2><div class="legend"><span><i style="background:var(--base)"></i>기존(마감 순)</span><span><i style="background:var(--ours)"></i>ClauseTower</span><span><i style="background:var(--search)"></i>탐색 근사 최적(점선)</span></div><div id="curve"></div></section>
-<section><h2>정책별 총 페널티 <small>같은 화물, 같은 교란, 순서만 다르다.</small></h2><div id="bars" style="margin-top:12px"></div><div class="row" style="margin-top:8px"><button class="more" id="btn-search">탐색 근사 최적 계산(수 초)</button><span class="note" id="search-note"></span></div></section>
-</div>
-<section><h2>고객별 결과 <small>계약 조건, 이번 사건의 면책 판단, 정책별 페널티.</small></h2><table><thead><tr><th>고객</th><th>계약 조건(추출)</th><th>면책 판단</th><th class="n">기존</th><th class="n">ClauseTower</th></tr></thead><tbody id="cust-body"></tbody></table></section>
-<section><h2>배차 간트 <small>트럭별 운행. 막대 색은 고객, 빨간 테두리는 지연, 빗금은 결항.</small></h2><div class="legend" id="clegend"></div>
-<p class="sub" id="g-base-t"></p><div class="gantt-wrap" id="g-base"></div><p class="sub" id="g-ours-t" style="margin-top:14px"></p><div class="gantt-wrap" id="g-ours"></div></section>
-<section><h2>계약서 근거 <small>고객별 추출 조건과 원문 인용. "그 조항 어디 있어요?"에 바로 답한다.</small></h2><div class="cards" id="cards"></div>
-<details style="margin-top:12px"><summary style="cursor:pointer;color:var(--ours)">계약서 전문 8부 보기</summary><div id="contracts"></div></details></section>
-<section><h2>에이전트 실행 기록</h2><ol class="log" id="log"></ol></section>
-<section><h2>이 데모에 대해</h2><p class="note">가상의 고객·계약·사건이다. 계약 조건은 '정답지' 또는 '실제 Claude가 계약서를 읽은 결과' 중에서 고를 수 있고, 면책의 최종 적용 여부는 통지 시점과 사실 관계를 조건으로 결합해 브라우저에서 다시 계산한다. 돈 계산과 배차 시뮬레이션은 전부 이 페이지의 JavaScript가 수행하며 서버로 아무것도 보내지 않는다. 파이썬 구현과 같은 결과를 내는지는 저장소의 <code>scripts/verify_engine.js</code>가 확인한다. 코드와 기획서: <a href="https://github.com/namojo/clausetower">github.com/namojo/clausetower</a></p></section>
-</main><div class="tip" id="tip"></div><footer id="foot"></footer>
+<title>ClauseTower — 계약을 읽는 물류 관제탑</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<header class="appbar">
+  <div class="brand"><span class="mark">Clause<b>Tower</b></span><span class="tag">급한 순서가 아니라, 물리는 순서로</span></div>
+  <span class="spacer"></span>
+  <nav class="seg tabs" id="tabs"></nav>
+  <span class="status-chip" id="conn-chip"><i></i><span>AI 연결 안 됨 · 아래 ③에서 연결</span></span>
+</header>
+<div class="shell">
+<aside class="panel" id="panel">
+  <h2>사건</h2><div class="grp" id="panel-event"></div>
+  <h2>운영</h2><div class="grp" id="panel-ops"></div>
+  <h2>화물·출처</h2><div class="grp" id="panel-cargo"></div>
+  <h2>면책 판단 (사람의 최종 결정)</h2><div class="grp" id="panel-judge"></div>
+  <div class="grp"><button class="btn ghost" id="c-reset" style="width:100%">원래 사건으로 되돌리기</button></div>
+</aside>
+<main class="canvas">
+  <section class="card"><div class="head"><div><h2 id="sc-title"></h2><p class="lead" id="sc-desc" style="margin-bottom:8px"></p><div class="chips" id="sc-event"></div></div><div class="chips" id="src-note"></div></div>
+    <div class="kpis" id="kpis"></div><div class="hot-row" id="hot"></div></section>
+  <section class="card"><div class="head"><h2>계약 케이스 <small>고객 8곳의 지연 페널티 조건을 항목별로. 카드의 "원문 보기"가 인용 문장을 강조해 연다.</small></h2><div class="toggle" id="board-toggle"><button data-mode="cards" class="on">카드</button><button data-mode="matrix">비교표</button></div></div><div id="board" class="board"></div></section>
+  <section class="card"><h2>물리는 순서 <small>대기열이 가장 길었던 시점 <span id="rank-at"></span>. 왼쪽이 ClauseTower 순위, 그 옆이 기존 마감 순위와 변동.</small></h2><p class="lead" id="rank-sub"></p>
+    <div style="overflow-x:auto"><table><thead><tr><th class="n">노출 순위</th><th class="n">마감 순위</th><th>화물</th><th>고객</th><th class="n">마감까지</th><th class="n">지금 보내면</th><th class="n">한 사이클 미루면</th><th class="n">물리는 돈</th><th>판단과 근거</th></tr></thead><tbody id="rank-body"></tbody></table></div><button class="btn ghost" id="rank-more" style="margin-top:10px"></button></section>
+  <div class="grid2">
+    <section class="card"><h2>누적 페널티 <small>시간에 따라 쌓이는 페널티. 낮을수록 좋다.</small></h2><div class="legend"><span><i style="background:var(--penalty)"></i>기존(마감 순)</span><span><i style="background:var(--tower)"></i>ClauseTower</span><span><i style="background:var(--neutral)"></i>탐색 근사 최적(점선)</span></div><div id="curve"></div></section>
+    <section class="card"><h2>정책별 총 페널티 <small>같은 화물, 같은 교란, 순서만 다르다.</small></h2><div id="bars" style="margin-top:14px"></div><div class="row" style="margin-top:10px"><button class="btn" id="btn-search">탐색 근사 최적 계산 (수 초)</button><span class="hint" id="search-note" style="font-size:12.5px;color:var(--ink-3)"></span></div></section>
+  </div>
+  <section class="card" id="live"><h2>실제 케이스 분석 <small>계약서를 올리거나 사건을 적으면 AI가 바로 읽고 판단해 시뮬레이션에 넣는다.</small></h2>
+    <div class="steps">
+      <div class="step"><h3><span class="no">1</span>AI 연결</h3>
+        <select id="k-backend"><option value="api">Anthropic API 키 (브라우저에서 직접 호출)</option><option value="helper">로컬 도우미 (Claude 구독·Claude Code CLI, 사내 LLM 중계)</option><option value="custom">사내·호환 엔드포인트 (직접 호출)</option></select>
+        <div class="hint" id="k-help"></div>
+        <div data-for="api"><div class="row"><input type="password" id="k-key" placeholder="sk-ant-…" style="flex:1"><button class="btn" id="k-save">저장</button><button class="btn ghost" id="k-clear">지움</button></div><div class="hint">키는 이 브라우저에만 저장되고 api.anthropic.com으로만 간다.</div>
+          <select id="k-model" style="margin-top:6px"><option value="claude-opus-5-5">claude-opus-5-5 (정확, 느림)</option><option value="claude-sonnet-5-5">claude-sonnet-5-5 (빠름)</option></select></div>
+        <div data-for="helper"><div class="row"><input type="text" id="h-url" value="http://127.0.0.1:8787" style="flex:1"><button class="btn" id="h-check">연결 확인</button></div><div class="hint">PC에서 <code>python -m clausetower serve --llm claude-code</code>(구독) 또는 <code>--llm openai</code>(사내 LLM)를 띄운다.</div></div>
+        <div data-for="custom"><select id="c-proto"><option value="openai">OpenAI 호환 (chat/completions + tools)</option><option value="anthropic">Anthropic 호환 (v1/messages)</option></select><input type="text" id="c-url" placeholder="기본 주소 https://llm.company.local/v1" style="margin-top:6px"><input type="text" id="c-model" placeholder="모델 이름" style="margin-top:6px"><input type="password" id="c-key" placeholder="토큰(선택) · Bearer 또는 x-api-key" style="margin-top:6px"><div class="hint">게이트웨이가 CORS를 허용해야 한다. 막히면 로컬 도우미로 중계한다.</div></div>
+        <div class="out" id="k-status">연결 전</div></div>
+      <div class="step"><h3><span class="no">2</span>계약서 올리기 → 조건 추출 → 시뮬레이션에 추가</h3>
+        <input type="text" id="u-name" placeholder="고객 이름(예: 새벽물산)"><input type="file" id="u-file" accept=".txt,.md,.docx"><div class="hint">txt, md, docx 또는 아래에 붙여넣기. 지체상금·유예·상한·불가항력 조항이 있는 부분이면 충분하다.</div>
+        <textarea id="u-text" rows="7" placeholder="계약서 본문"></textarea>
+        <div class="row"><button class="btn primary" id="u-run">AI로 조건 추출하고 추가</button><button class="btn ghost" id="u-sample">예시 계약서</button><button class="btn ghost" id="u-remove">추가한 고객 제거</button></div><div class="out" id="u-out">대기</div></div>
+      <div class="step"><h3><span class="no">3</span>사건 입력 → 계약별 면책 재판단</h3>
+        <input type="text" id="e-type" placeholder="사건 유형(예: 화물연대 파업)"><textarea id="e-desc" rows="5" placeholder="무슨 일이 어떻게 일어났는지. 누구 책임인지, 통지는 언제 했는지, 입증 자료가 있는지."></textarea><div class="hint">통지 시점과 사실 관계는 왼쪽 패널의 값을 함께 보낸다. AI 없이 손으로 정하려면 왼쪽 "면책 판단"에서 고객별로 고른다.</div>
+        <div class="row"><button class="btn primary" id="e-run">AI로 면책 다시 판단</button><button class="btn ghost" id="e-sample">예시 사건</button><button class="btn ghost" id="e-reset">원래 판단으로</button></div><div class="out" id="e-out">대기</div></div>
+    </div></section>
+  <section class="card"><details class="sec" open><summary><h2>배차 간트 <small>트럭별 운행. 막대 색은 고객, 빨간 테두리는 지연, 빗금은 결항.</small></h2></summary>
+    <div class="legend" id="clegend" style="margin-top:10px"></div><p class="lead" id="g-base-t"></p><div class="gantt-wrap" id="g-base"></div><p class="lead" id="g-ours-t" style="margin-top:14px"></p><div class="gantt-wrap" id="g-ours"></div></details></section>
+  <section class="card"><details class="sec"><summary><h2>실행 기록과 이 데모에 대해</h2></summary><ol class="log" id="log"></ol>
+    <p class="lead" style="margin-top:12px">가상의 고객·계약·사건이다. 계약 조건은 정답지 또는 실제 Claude가 읽은 결과 중에서 고를 수 있고, 면책의 최종 적용 여부는 통지 시점과 사실 관계를 조건으로 결합해 브라우저에서 다시 계산한다. 돈 계산과 배차 시뮬레이션은 전부 이 페이지의 JavaScript가 수행하며 서버로 아무것도 보내지 않는다. 파이썬 구현과 같은 결과를 내는지는 저장소의 <code>scripts/verify_engine.js</code>가 확인한다. 코드와 기획서: <a href="https://github.com/namojo/clausetower">github.com/namojo/clausetower</a></p></details></section>
+</main></div>
+<div class="scrim" id="scrim"></div><aside class="drawer" id="drawer" aria-label="계약서 원문"><div class="dh"><div><b id="drawer-title"></b><div class="hint" id="drawer-sub" style="font-size:12.5px;color:var(--ink-3)"></div></div><span class="spacer" style="flex:1"></span><button class="btn ghost" id="drawer-close">닫기 ✕</button></div><div class="db" id="drawer-body"></div></aside>
+<div class="tip" id="tip"></div><footer id="foot"></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js" defer></script>
 <script src="data.js"></script><script src="engine.js"></script><script src="render.js"></script><script src="app.js"></script></body></html>
 """

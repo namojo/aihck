@@ -25,7 +25,7 @@
 
 https://namojo.github.io/clausetower/ 는 서버가 없는 정적 페이지다. 파이썬 계산기와 시뮬레이터를 JavaScript로 옮겼고(`src/clausetower/web/engine.js`), 같은 입력에서 파이썬과 같은 총 페널티가 나오는지 `scripts/verify_engine.js`가 31개 항목을 대조한다(전부 일치). 통지 시점, 결항 대수, 입증 자료, 화물 배치, 계약 읽기 출처(정답지 또는 실제 Claude 추출)를 바꾸면 면책 판단이 조건 결합으로 다시 계산되고 모든 화면이 갱신된다. 고객별 면책을 사람이 뒤집는 것도 된다.
 
-![웹 데모](docs/screenshots/web/web_controls.png)
+![웹 데모](docs/screenshots/web/web_overview.png)
 
 **실제 케이스 분석(AI).** 계약서(txt, md, docx 또는 붙여넣기)를 올리면 조건을 추출하고 현재 사건의 면책을 판단해 시뮬레이션에 넣는다. 사건을 직접 적으면 8개 계약의 면책을 다시 판단한다. 연결 방식은 세 가지이고, 계약서 본문은 선택한 LLM 엔드포인트 외에는 어디에도 전송되지 않는다.
 
