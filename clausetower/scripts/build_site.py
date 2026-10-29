@@ -85,15 +85,16 @@ HTML = """<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name=
   <div class="grp"><button class="btn ghost" id="c-reset" style="width:100%">원래 사건으로 되돌리기</button></div>
 </aside>
 <main class="canvas">
-  <section class="card"><div class="head"><div><h2 id="sc-title"></h2><p class="lead" id="sc-desc" style="margin-bottom:8px"></p><div class="chips" id="sc-event"></div></div><div class="chips" id="src-note"></div></div>
-    <div class="kpis" id="kpis"></div><div class="hot-row" id="hot"></div></section>
-  <section class="card"><div class="head"><h2>계약 케이스 <small>고객 8곳의 지연 페널티 조건을 항목별로. 카드의 "원문 보기"가 인용 문장을 강조해 연다.</small></h2><div class="toggle" id="board-toggle"><button data-mode="cards" class="on">카드</button><button data-mode="matrix">비교표</button></div></div><div id="board" class="board"></div></section>
-  <section class="card"><h2>물리는 순서 <small>대기열이 가장 길었던 시점 <span id="rank-at"></span>. 왼쪽이 ClauseTower 순위, 그 옆이 기존 마감 순위와 변동.</small></h2><p class="lead" id="rank-sub"></p>
+  <section class="card" id="sec-summary"><div class="head"><div><h2 id="sc-title"></h2><p class="lead" id="sc-desc" style="margin-bottom:8px"></p><div class="chips" id="sc-event"></div></div><div class="chips" id="src-note"></div></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="actions" id="actions"></div></section>
+  <section class="card" id="sec-rank"><h2>물리는 순서 <small>대기열이 가장 길었던 시점 <span id="rank-at"></span>. 왼쪽이 ClauseTower 순위, 그 옆이 기존 마감 순위와 변동.</small></h2><p class="lead" id="rank-sub"></p>
     <div style="overflow-x:auto"><table><thead><tr><th class="n">노출 순위</th><th class="n">마감 순위</th><th>화물</th><th>고객</th><th class="n">마감까지</th><th class="n">지금 보내면</th><th class="n">한 사이클 미루면</th><th class="n">물리는 돈</th><th>판단과 근거</th></tr></thead><tbody id="rank-body"></tbody></table></div><button class="btn ghost" id="rank-more" style="margin-top:10px"></button></section>
-  <div class="grid2">
+  <div class="grid2" id="sec-charts">
     <section class="card"><h2>누적 페널티 <small>시간에 따라 쌓이는 페널티. 낮을수록 좋다.</small></h2><div class="legend"><span><i style="background:var(--penalty)"></i>기존(마감 순)</span><span><i style="background:var(--tower)"></i>ClauseTower</span><span><i style="background:var(--neutral)"></i>탐색 근사 최적(점선)</span></div><div id="curve"></div></section>
     <section class="card"><h2>정책별 총 페널티 <small>같은 화물, 같은 교란, 순서만 다르다.</small></h2><div id="bars" style="margin-top:14px"></div><div class="row" style="margin-top:10px"><button class="btn" id="btn-search">탐색 근사 최적 계산 (수 초)</button><span class="hint" id="search-note" style="font-size:12.5px;color:var(--ink-3)"></span></div></section>
   </div>
+  <section class="card" id="sec-board"><div class="head"><h2>계약 케이스 <small>고객별 지연 페널티 조건을 항목별로. 항목이나 "항목별 상세"를 누르면 조항·원문 인용·이번 사건 판단이 서랍으로 열린다.</small></h2><div class="toggle" id="board-toggle"><button data-mode="cards" class="on">카드</button><button data-mode="matrix">비교표</button></div></div><div id="board" class="board"></div></section>
   <section class="card" id="live"><h2>실제 케이스 분석 <small>계약서를 올리거나 사건을 적으면 AI가 바로 읽고 판단해 시뮬레이션에 넣는다.</small></h2>
     <div class="steps">
       <div class="step"><h3><span class="no">1</span>AI 연결</h3>
@@ -112,12 +113,12 @@ HTML = """<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name=
         <input type="text" id="e-type" placeholder="사건 유형(예: 화물연대 파업)"><textarea id="e-desc" rows="5" placeholder="무슨 일이 어떻게 일어났는지. 누구 책임인지, 통지는 언제 했는지, 입증 자료가 있는지."></textarea><div class="hint">통지 시점과 사실 관계는 왼쪽 패널의 값을 함께 보낸다. AI 없이 손으로 정하려면 왼쪽 "면책 판단"에서 고객별로 고른다.</div>
         <div class="row"><button class="btn primary" id="e-run">AI로 면책 다시 판단</button><button class="btn ghost" id="e-sample">예시 사건</button><button class="btn ghost" id="e-reset">원래 판단으로</button></div><div class="out" id="e-out">대기</div></div>
     </div></section>
-  <section class="card"><details class="sec" open><summary><h2>배차 간트 <small>트럭별 운행. 막대 색은 고객, 빨간 테두리는 지연, 빗금은 결항.</small></h2></summary>
+  <section class="card" id="sec-gantt"><details class="sec" open><summary><h2>배차 간트 <small>트럭별 운행. 막대 색은 고객, 빨간 테두리는 지연, 빗금은 결항.</small></h2></summary>
     <div class="legend" id="clegend" style="margin-top:10px"></div><p class="lead" id="g-base-t"></p><div class="gantt-wrap" id="g-base"></div><p class="lead" id="g-ours-t" style="margin-top:14px"></p><div class="gantt-wrap" id="g-ours"></div></details></section>
   <section class="card"><details class="sec"><summary><h2>실행 기록과 이 데모에 대해</h2></summary><ol class="log" id="log"></ol>
     <p class="lead" style="margin-top:12px">가상의 고객·계약·사건이다. 계약 조건은 정답지 또는 실제 Claude가 읽은 결과 중에서 고를 수 있고, 면책의 최종 적용 여부는 통지 시점과 사실 관계를 조건으로 결합해 브라우저에서 다시 계산한다. 돈 계산과 배차 시뮬레이션은 전부 이 페이지의 JavaScript가 수행하며 서버로 아무것도 보내지 않는다. 파이썬 구현과 같은 결과를 내는지는 저장소의 <code>scripts/verify_engine.js</code>가 확인한다. 코드와 기획서: <a href="https://github.com/namojo/clausetower">github.com/namojo/clausetower</a></p></details></section>
 </main></div>
-<div class="scrim" id="scrim"></div><aside class="drawer" id="drawer" aria-label="계약서 원문"><div class="dh"><div><b id="drawer-title"></b><div class="hint" id="drawer-sub" style="font-size:12.5px;color:var(--ink-3)"></div></div><span class="spacer" style="flex:1"></span><button class="btn ghost" id="drawer-close">닫기 ✕</button></div><div class="db" id="drawer-body"></div></aside>
+<div class="scrim" id="scrim"></div><aside class="drawer" id="drawer" aria-label="계약 상세"><div class="dh"><div><b id="drawer-title"></b><div class="hint" id="drawer-sub" style="font-size:12.5px;color:var(--ink-3)"></div></div><span class="spacer" style="flex:1"></span><button class="btn ghost" id="drawer-close">닫기 ✕</button></div><div class="db" id="drawer-body"></div></aside>
 <div class="tip" id="tip"></div><footer id="foot"></footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js" defer></script>
 <script src="data.js"></script><script src="engine.js"></script><script src="render.js"></script><script src="app.js"></script></body></html>

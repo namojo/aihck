@@ -35,8 +35,8 @@
 
   function renderControls() {
     const S = scen().scenario; const p = state.params; const d = S.disruption; const src = currentSource(); const conds = new Set();
-    for (const t of Object.values(D.sources.golden.terms)) for (const c of (t.force_majeure ? t.force_majeure.conditions : [])) conds.add(c);
-    Object.keys(S.event.facts || {}).forEach(k => conds.add(k));
+    for (const t of Object.values(allTerms(src))) for (const c of (t.force_majeure ? t.force_majeure.conditions : [])) conds.add(c);
+    Object.keys(S.event.facts || {}).forEach(k => conds.add(k)); Object.keys(p.facts || {}).forEach(k => conds.add(k));
     const ev = state.manualEvent || {};
     $('#panel-event').innerHTML = `
       <div class="ctl"><b>사건 유형</b><input type="text" id="m-type" value="${esc(ev.event_type ?? S.event.event_type)}"></div>
@@ -113,6 +113,9 @@
     clearExtra() { state.extra = []; refresh(true); },
     setLiveEvent(event, judgments) { state.live = { event, judgments }; refresh(true); },
     clearLiveEvent() { state.live = null; refresh(true); },
+    // 조치 보드의 "시뮬레이션" 버튼: 통지 시점·사실 관계를 패널 값에 반영하고 전체를 다시 계산한다
+    setNotice(h) { state.params.notice = h; state.search = false; refresh(true); const t = document.getElementById('sec-summary'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+    setFact(k, v) { state.params.facts[k] = !!v; state.search = false; refresh(true); },
   };
   resetParams(); refresh(true);
 })();

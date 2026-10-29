@@ -28,6 +28,12 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   const kpi = async () => page.$eval('#kpis', el => el.innerText.replace(/\s+/g, ' ').slice(0, 160));
   console.log('초기:', await kpi());
   await page.screenshot({ path: `${outDir}/web_overview.png`, clip: { x: 0, y: 0, width: 1280, height: 900 } });
+  await (await page.$('#actions')).screenshot({ path: `${outDir}/web_actions.png` });
+  console.log('조치 보드:', await page.$eval('#actions', el => el.innerText.replace(/\s+/g, ' ').slice(0, 260)));
+  // 조치 버튼: 통지 시뮬레이션 → 통지 슬라이더가 바뀌고 KPI가 달라진다
+  const before = await kpi(); await page.click('#actions [data-act="notice"]'); await page.waitForTimeout(300); console.log('조치→통지 시뮬레이션:', await page.$eval('#c-notice', e => e.value) + 'h', (await kpi()) !== before ? 'KPI 변화' : 'KPI 동일');
+  await page.click('#actions [data-act="fact"]'); await page.waitForTimeout(300); console.log('조치→조건 충족:', await page.$eval('[data-fact]', e => e.checked), await kpi());
+  await page.click('#c-reset'); await page.waitForTimeout(300);
   // 1) 통지 시점을 10시간으로 → 세움건설 통지 요건 충족 → 면책 적용 → 숫자 변화
   await page.$eval('#c-notice', el => { el.value = 10; el.dispatchEvent(new Event('input')); }); await page.waitForTimeout(300);
   console.log('통지 10h:', await kpi()); const note1 = await page.$eval('#src-note', el => el.innerText); console.log('  ', note1.slice(0, 120));
@@ -53,9 +59,15 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   await page.click('#e-sample'); await page.click('#e-run');
   await page.waitForFunction(() => document.querySelector('#e-out').innerText.includes('완료') || document.querySelector('#e-out').innerText.includes('실패'), null, { timeout: 20000 });
   console.log('사건 재판단:', (await page.$eval('#e-out', el => el.innerText)).slice(0, 200)); console.log('  제목:', await page.$eval('#sc-title', el => el.innerText));
-  const board = await page.$('main > section:nth-of-type(2)'); await board.screenshot({ path: `${outDir}/web_board_cards.png` });
+  const board = await page.$('#sec-board'); await board.screenshot({ path: `${outDir}/web_board_cards.png` });
   await page.click('#board-toggle [data-mode="matrix"]'); await page.waitForTimeout(200); await board.screenshot({ path: `${outDir}/web_board_matrix.png` }); await page.click('#board-toggle [data-mode="cards"]');
-  await page.click('[data-open="H"]'); await page.waitForTimeout(400); await page.screenshot({ path: `${outDir}/web_drawer.png`, clip: { x: 0, y: 0, width: 1280, height: 900 } }); await page.click('#drawer-close'); await page.waitForTimeout(300);
+  await page.click('#sec-board .foot [data-open="H"]'); await page.waitForTimeout(450); await page.screenshot({ path: `${outDir}/web_drawer.png`, clip: { x: 0, y: 0, width: 1280, height: 900 } });
+  console.log('서랍 항목:', await page.$$eval('#drawer-body .ditem', ds => ds.map(d => d.dataset.key).join(',')), '| 인용 링크:', await page.$$eval('#drawer-body [data-goto]', b => b.length));
+  await page.click('#drawer-body [data-goto]'); await page.waitForTimeout(200); console.log('  원문 탭 전환:', await page.$eval('#drawer-body [data-tab="text"]', b => b.classList.contains('on')), '| mark 수:', await page.$$eval('#drawer-body mark', m => m.length));
+  await page.click('#drawer-close'); await page.waitForTimeout(300);
+  // 비교표 칸 클릭 → 해당 항목으로 서랍
+  await page.click('#board-toggle [data-mode="matrix"]'); await page.waitForTimeout(150); await page.click('#board tr[data-cid="C"] td[data-item="fm"]'); await page.waitForTimeout(300);
+  console.log('비교표 칸 클릭:', await page.$eval('#drawer-title', e => e.innerText), '| 초점 항목:', await page.$eval('#drawer-body .ditem.focus', e => e.dataset.key)); await page.click('#drawer-close'); await page.click('#board-toggle [data-mode="cards"]'); await page.waitForTimeout(200);
   await page.click('#e-reset'); await page.click('#u-remove'); await page.waitForTimeout(300); console.log('되돌림:', await kpi());
   // 8) 로컬 도우미 백엔드
   await page.selectOption('#k-backend', 'helper'); await page.click('#h-check'); await page.waitForTimeout(300); console.log('도우미 상태:', await page.$eval('#k-status', el => el.innerText));
