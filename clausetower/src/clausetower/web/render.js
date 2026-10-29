@@ -49,9 +49,17 @@ function renderBoard(R) {
   if (tg) tg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.mode === BOARD_MODE));
   const base = R.policies.deadline_first, ours = R.policies.exposure_first;
   if (BOARD_MODE === 'matrix') {
-    el.className = 'matrix'; el.innerHTML = `<table><thead><tr><th>고객</th><th>과금 방식</th><th>요율·정액</th><th class="n">유예</th><th>상한</th><th>불가항력 사유</th><th>통지 시한</th><th>조건</th><th>이번 사건</th><th class="n">기존</th><th class="n">ClauseTower</th></tr></thead><tbody>` +
+    el.className = 'matrix'; el.innerHTML = `<table><colgroup><col style="width:11%"><col style="width:15%"><col style="width:6%"><col style="width:9%"><col style="width:17%"><col style="width:12%"><col style="width:12%"><col style="width:9%"><col style="width:9%"></colgroup>
+      <thead><tr><th>고객</th><th>과금 방식 · 요율</th><th class="n">유예</th><th>상한</th><th>불가항력 사유</th><th>통지 시한 · 조건</th><th>이번 사건</th><th class="n">기존</th><th class="n">ClauseTower</th></tr></thead><tbody>` +
       R.customers.map(c => { const t = R.terms[c.id], j = R.judgments[c.id], s = termsSummary(t), v = verdictOf(j); const fm = t.force_majeure;
-        return `<tr><td class="nw"><i class="dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${ccolor(c.id)};margin-right:7px"></i><b>${esc(c.name)}</b></td><td class="nw">${BASIS[t.basis] || t.basis}</td><td class="nw" title="기준: ${BASE[t.base]}">${esc(s.rate)}${t.base !== 'shipment_value' ? ` <small style="color:var(--ink-3)">(${BASE[t.base]})</small>` : ''}</td><td class="n">${t.grace_hours}h</td><td class="nw">${s.cap ? s.cap.label + (s.cap.scope === 'customer_period' ? ' <small>(고객 합계)</small>' : '') : '<b style="color:var(--hot)">없음</b>'}</td><td class="wrap">${fm ? esc(fm.covered_events.join(' · ')) : '<span class="chip none">없음</span>'}</td><td class="nw">${fm ? (fm.notice_hours != null ? fm.notice_hours + 'h 이내' : '시한 없음') : '–'}</td><td class="cond">${fm && fm.conditions.length ? '<span style="color:var(--warn)">' + esc(fm.conditions.join(' · ')) + '</span>' : '–'}</td><td class="nw"><span class="chip ${v.cls === 'ok' ? 'fm' : v.cls === 'no' ? 'hot' : 'none'}">${v.t}</span></td><td class="n">${fmt(base.per_customer_krw[c.id] || 0)}</td><td class="n"><b>${fmt(ours.per_customer_krw[c.id] || 0)}</b></td></tr>`; }).join('') + '</tbody></table>';
+        const notice = fm ? (fm.notice_hours != null ? `${fm.notice_hours}h 이내` : '시한 없음') : '–';
+        const cond = fm && fm.conditions.length ? `<div style="color:var(--warn)">${esc(fm.conditions.join(' · '))}</div>` : '';
+        return `<tr><td><i class="dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${ccolor(c.id)};margin-right:6px"></i><b>${esc(c.name)}</b></td>
+          <td><div>${BASIS[t.basis] || t.basis}</div><div style="color:var(--ink-2)">${esc(s.rate)}${t.base !== 'shipment_value' ? ` <small>(${BASE[t.base]})</small>` : ''}</div></td>
+          <td class="n">${t.grace_hours}h</td><td>${s.cap ? s.cap.label + (s.cap.scope === 'customer_period' ? '<div><small>고객 합계</small></div>' : '') : '<b style="color:var(--hot)">없음</b>'}</td>
+          <td>${fm ? esc(fm.covered_events.join(' · ')) : '<span class="chip none">없음</span>'}</td><td>${notice}${cond}</td>
+          <td><span class="vd ${v.cls}">${v.cls === 'ok' ? '✓' : v.cls === 'no' ? '!' : '–'} ${v.t.replace(' (사람 결정)', '<br><small>(사람 결정)</small>')}</span></td>
+          <td class="n">${fmt(base.per_customer_krw[c.id] || 0)}</td><td class="n"><b>${fmt(ours.per_customer_krw[c.id] || 0)}</b></td></tr>`; }).join('') + '</tbody></table>';
     return;
   }
   el.className = 'board';

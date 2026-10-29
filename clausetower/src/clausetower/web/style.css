@@ -83,7 +83,8 @@ input[type=range]{width:100%;accent-color:var(--tower);margin:2px 0}
 .lnk{background:none;border:0;color:var(--tower);cursor:pointer;padding:0;font-size:12.5px}
 .lnk:hover{text-decoration:underline}
 /* 비교표 */
-.matrix{overflow:auto;margin-top:14px}.matrix table{min-width:1060px;table-layout:auto}.matrix th,.matrix td{padding:8px 8px;font-size:13px}.matrix td.wrap{white-space:normal;min-width:150px;max-width:230px;line-height:1.45}.matrix td.cond{white-space:normal;min-width:140px;line-height:1.45}
+.matrix{margin-top:14px;overflow:hidden}.matrix table{width:100%;table-layout:fixed}.matrix th,.matrix td{padding:9px 8px;font-size:12.5px;white-space:normal;overflow-wrap:anywhere;line-height:1.45;vertical-align:top}.matrix th.n,.matrix td.n{white-space:normal}.matrix td.n{font-variant-numeric:tabular-nums}
+.vd{font-weight:600}.vd.ok{color:var(--good)}.vd.no{color:var(--hot)}.vd.none{color:var(--ink-3);font-weight:500}
 table{border-collapse:separate;border-spacing:0;width:100%;font-size:13.5px}
 th{position:sticky;top:0;background:var(--card);color:var(--ink-3);font-weight:600;text-align:left;font-size:12px;letter-spacing:.03em;padding:9px 10px;border-bottom:1px solid var(--line-2);white-space:nowrap}
 td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}td.n,th.n{text-align:right;white-space:nowrap}td.nw{white-space:nowrap}
