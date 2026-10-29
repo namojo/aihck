@@ -1,0 +1,19 @@
+terms:
+  customer_id: B
+  basis: per_hour
+  rate_pct: 0.05
+  grace_hours: 0
+  base: shipment_value
+  cap_pct: null
+  cap_scope: shipment
+  partial_unit_rounds_up: true
+  force_majeure: null
+  citations:
+    rate: {clause: "제9조 제1항", quote: "지연된 매 1시간마다 해당 주문 상품가액의 0.05%를 배상한다"}
+    grace: {clause: "제9조 제3항", quote: "본 조의 배상금에는 별도의 유예기간을 두지 아니한다"}
+    cap: {clause: "제9조 제4항", quote: "본 조의 배상금에는 상한을 두지 아니한다"}
+    basis: {clause: "제11조", quote: "배송 지연의 원인이 수행사의 귀책사유인지 여부와 관계없이 제9조의 배상 책임을 진다"}
+judgments:
+  typhoon: {has_clause: false, event_covered: false, notice_ok: true, applies: false, reasoning: "불가항력 조항이 없고, 제11조가 귀책사유를 불문하고 배상 책임을 지운다."}
+  port_congestion: {has_clause: false, event_covered: false, notice_ok: true, applies: false, reasoning: "불가항력 조항이 없고, 제11조가 귀책사유를 불문하고 배상 책임을 지운다."}
+  wms_outage: {has_clause: false, event_covered: false, notice_ok: true, applies: false, reasoning: "불가항력 조항이 없고, 제11조가 귀책사유를 불문하고 배상 책임을 지운다."}

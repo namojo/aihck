@@ -1,0 +1,125 @@
+{
+ "seeds": 30,
+ "scenarios": {
+  "port_congestion": {
+   "title": "항만 적체",
+   "policies": {
+    "deadline_first": {
+     "mean": 5599166,
+     "median": 5535750,
+     "max": 8659500,
+     "min": 3746500
+    },
+    "fifo": {
+     "mean": 6656033,
+     "median": 6205750,
+     "max": 11829000,
+     "min": 3543500
+    },
+    "value_first": {
+     "mean": 11420166,
+     "median": 11469250,
+     "max": 18626500,
+     "min": 4534500
+    },
+    "exposure_abs": {
+     "mean": 2332816,
+     "median": 2244500,
+     "max": 4514000,
+     "min": 655000
+    },
+    "exposure_first": {
+     "mean": 2300583,
+     "median": 2202000,
+     "max": 4569000,
+     "min": 655000
+    }
+   },
+   "win_rate": 1.0,
+   "ties": 0,
+   "saving_pct_mean": 58.7,
+   "saving_pct_min": 32.4,
+   "saving_pct_max": 83.5
+  },
+  "typhoon": {
+   "title": "태풍 상륙",
+   "policies": {
+    "deadline_first": {
+     "mean": 12865000,
+     "median": 12762750,
+     "max": 19101000,
+     "min": 8916000
+    },
+    "fifo": {
+     "mean": 14218983,
+     "median": 14580250,
+     "max": 18878000,
+     "min": 9749000
+    },
+    "value_first": {
+     "mean": 19183816,
+     "median": 19110500,
+     "max": 23446500,
+     "min": 15501000
+    },
+    "exposure_abs": {
+     "mean": 4028116,
+     "median": 4025250,
+     "max": 6879000,
+     "min": 2485500
+    },
+    "exposure_first": {
+     "mean": 3885116,
+     "median": 3919250,
+     "max": 6508000,
+     "min": 2293500
+    }
+   },
+   "win_rate": 1.0,
+   "ties": 0,
+   "saving_pct_mean": 69.1,
+   "saving_pct_min": 49.6,
+   "saving_pct_max": 82.1
+  },
+  "wms_outage": {
+   "title": "자사 WMS 장애",
+   "policies": {
+    "deadline_first": {
+     "mean": 17374883,
+     "median": 16954500,
+     "max": 26550500,
+     "min": 11828500
+    },
+    "fifo": {
+     "mean": 18486533,
+     "median": 17992500,
+     "max": 26148500,
+     "min": 12874000
+    },
+    "value_first": {
+     "mean": 19024616,
+     "median": 18996750,
+     "max": 23162500,
+     "min": 9922000
+    },
+    "exposure_abs": {
+     "mean": 6565616,
+     "median": 6453250,
+     "max": 9316000,
+     "min": 4896000
+    },
+    "exposure_first": {
+     "mean": 6377866,
+     "median": 6219000,
+     "max": 7765500,
+     "min": 4896000
+    }
+   },
+   "win_rate": 1.0,
+   "ties": 0,
+   "saving_pct_mean": 62.4,
+   "saving_pct_min": 41.7,
+   "saving_pct_max": 72.2
+  }
+ }
+}

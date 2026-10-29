@@ -2,6 +2,14 @@
 
 300쪽 제안요청서(RFP) PDF를 넣으면 **요구사항 추적표 · 배점 기준 목차 초안 · 위험 조항 경고 · 제안서 초안 커버리지**가 나오는 제안 검토 에이전트. 사내 해커톤 출품용 하네스와 데모, 아이디어 기획서를 담고 있다.
 
+## 이 저장소의 해커톤 아이템
+
+| 폴더 | 아이템 | 상태 |
+| --- | --- | --- |
+| `clausetower/` | **ClauseTower** — 계약 조항을 읽어 페널티 노출액 순서로 배차하는 물류 관제 에이전트. [README](clausetower/README.md) · [기획서](clausetower/docs/proposal.md) | 최신 출품 후보 |
+| 루트(`src/rfpharness/`) | RFP Compass — 제안요청서 자동 검토 에이전트 하네스 | 이전 후보, 동작함 |
+| `workbench/` | 작업구역 — DRM 보호 문서를 격리 환경에서 AI가 다루는 MCP 서버 | 보류(사내 연동 불가). 최신본은 [namojo/nasca-mcp](https://github.com/namojo/nasca-mcp) |
+
 | 폴더 | 내용 |
 | --- | --- |
 | `src/rfpharness/` | 런타임 파이프라인(parse → extract → toc → risk → coverage → export)과 데모 웹 UI |

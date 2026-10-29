@@ -1,0 +1,21 @@
+terms:
+  customer_id: C
+  basis: per_calendar_day
+  rate_pct: 0.3
+  grace_hours: 0
+  base: shipment_value
+  cap_pct: null
+  cap_scope: shipment
+  partial_unit_rounds_up: true
+  force_majeure:
+    covered_events: ["천재지변", "전쟁", "폭동", "그 밖에 수급인의 책임 없는 사유"]
+    notice_hours: 12
+    conditions: []
+    citation: {clause: "제14조 제1항·제2항", quote: "천재지변, 전쟁, 폭동 그 밖에 수급인의 책임 없는 사유로 지체한 경우에는 그 기간을 지체일수에 산입하지 아니한다. … 12시간 이내에 도급인에게 서면(전자문서 포함)으로 통지하여야 한다"}
+  citations:
+    rate: {clause: "제13조 제1항", quote: "지체일수 1일당 해당 자재 운송 건 자재가액의 1,000분의 3을 지체상금으로"}
+    cap: {clause: "제13조 제3항", quote: "본 조의 지체상금에는 상한을 두지 아니한다"}
+judgments:
+  typhoon: {has_clause: true, event_covered: true, notice_ok: false, applies: false, reasoning: "태풍은 천재지변으로 면제 사유에 해당한다. 그러나 제14조 제2항은 12시간 이내 서면 통지를 요구하는데 운영팀은 발생 20시간 뒤에 통지했으므로 면제를 주장하지 못한다."}
+  port_congestion: {has_clause: true, event_covered: true, notice_ok: true, applies: true, reasoning: "선사 사정에 따른 항만 적체는 '그 밖에 수급인의 책임 없는 사유'에 해당한다. 발생 6시간 뒤 통지해 12시간 요건을 충족했다."}
+  wms_outage: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "자사 시스템 장애는 수급인의 책임 있는 사유다."}

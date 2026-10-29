@@ -1,0 +1,23 @@
+terms:
+  customer_id: F
+  basis: per_business_day
+  rate_pct: 0.2
+  grace_hours: 24
+  base: shipment_value
+  cap_pct: 5
+  cap_scope: shipment
+  partial_unit_rounds_up: true
+  force_majeure:
+    covered_events: ["천재지변", "그 밖에 을이 통제할 수 없는 사유"]
+    notice_hours: 48
+    conditions: []
+    citation: {clause: "제12조", quote: "천재지변 그 밖에 을이 통제할 수 없는 사유로 인한 지체에 대하여 을은 책임을 지지 아니한다. 을은 그 사유를 안 날부터 2일 이내에 갑에게 통지한다."}
+  citations:
+    rate: {clause: "제9조 제1항·제2항", quote: "지체 영업일 1일당 해당 배송 건 상품가액의 0.2% … 토요일, 일요일 및 공휴일은 제외한다"}
+    grace: {clause: "제9조 제3항", quote: "배송일 다음 영업일 중의 지연은 지체로 보지 아니한다"}
+    cap: {clause: "제9조 제4항", quote: "지체상금 총액은 해당 배송 건 상품가액의 5%를 초과하지 아니한다"}
+  notes: "제9조 제3항의 '다음 영업일 중'을 24시간 유예로 근사했다. 배송일이 금요일이면 실제 유예는 더 길다."
+judgments:
+  typhoon: {has_clause: true, event_covered: true, notice_ok: true, applies: true, reasoning: "태풍은 천재지변이고, 통지 요건 2일 이내를 발생 20시간 뒤 통지로 충족했다."}
+  port_congestion: {has_clause: true, event_covered: true, notice_ok: true, applies: true, reasoning: "선사 사정에 따른 항만 적체는 '을이 통제할 수 없는 사유'에 해당하고 통지 요건을 충족했다."}
+  wms_outage: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "자사 시스템 장애는 을이 통제할 수 있는 사유다."}

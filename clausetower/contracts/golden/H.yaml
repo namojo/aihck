@@ -1,0 +1,21 @@
+terms:
+  customer_id: H
+  basis: per_calendar_day
+  rate_pct: 0.15
+  grace_hours: 0
+  base: shipment_value
+  cap_pct: 10
+  cap_scope: shipment
+  partial_unit_rounds_up: true
+  force_majeure:
+    covered_events: ["태풍", "홍수", "지진", "천재지변"]
+    notice_hours: 48
+    conditions: ["대체 운송수단 확보 노력 입증"]
+    citation: {clause: "제12조 제1항·제2항", quote: "태풍, 홍수, 지진 등 천재지변으로 인하여 납품이 지체된 경우 을은 지체상금의 책임을 면한다. 다만 … 대체 운송수단을 확보하기 위하여 노력하였음을 입증하여야 한다."}
+  citations:
+    rate: {clause: "제11조 제1항", quote: "지체일수 1일당 해당 운송 건 의약품가액의 0.15%를 지체상금으로"}
+    cap: {clause: "제11조 제3항", quote: "지체상금은 해당 운송 건 의약품가액의 10%를 상한으로 한다"}
+judgments:
+  typhoon: {has_clause: true, event_covered: true, notice_ok: true, conditions_met: {"대체 운송수단 확보 노력 입증": false}, applies: false, reasoning: "태풍은 제12조 제1항의 면책 사유다. 그러나 제2항은 대체 운송수단 확보 노력의 입증을 요구하는데 이번 사건에서 그 기록이 없다. 입증 자료를 확보하면 면책으로 바뀐다."}
+  port_congestion: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "항만 적체는 천재지변이 아니다."}
+  wms_outage: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "자사 시스템 장애는 천재지변이 아니다."}

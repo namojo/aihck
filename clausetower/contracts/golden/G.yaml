@@ -1,0 +1,24 @@
+terms:
+  customer_id: G
+  basis: per_hour
+  rate_pct: 0.05
+  grace_hours: 6
+  base: monthly_fee
+  base_amount_krw: 180000000
+  cap_pct: 20
+  cap_scope: customer_period
+  partial_unit_rounds_up: true
+  force_majeure:
+    covered_events: ["천재지변 일체", "전쟁", "테러", "정부 조치", "합리적으로 통제할 수 없는 사유"]
+    notice_hours: null
+    conditions: []
+    citation: {clause: "제13조 제1항", quote: "천재지변 일체, 전쟁, 테러, 정부 조치 등 서비스 제공자가 합리적으로 통제할 수 없는 사유로 인한 지체는 제8조의 감액 대상에서 제외한다"}
+  citations:
+    rate: {clause: "제8조 제1항", quote: "지체된 매 1시간마다 월 서비스료의 0.05%를 당월 서비스료에서 감액한다"}
+    grace: {clause: "제8조 제2항", quote: "납기 경과 후 6시간 이내의 지연은 감액 대상에서 제외한다"}
+    cap: {clause: "제8조 제4항", quote: "당월 감액 총액은 월 서비스료의 20%를 초과하지 아니한다"}
+    basis: {clause: "제3조", quote: "월 서비스료 금 180,000,000원"}
+judgments:
+  typhoon: {has_clause: true, event_covered: true, notice_ok: true, applies: true, reasoning: "태풍은 '천재지변 일체'에 해당한다. 통지 요건은 '지체 없이'로 시한이 없고 발생 20시간 뒤 통지했다."}
+  port_congestion: {has_clause: true, event_covered: true, notice_ok: true, applies: true, reasoning: "선사 사정의 항만 적체는 서비스 제공자가 합리적으로 통제할 수 없는 사유다."}
+  wms_outage: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "자사 시스템 장애는 서비스 제공자의 통제 범위 안이다."}

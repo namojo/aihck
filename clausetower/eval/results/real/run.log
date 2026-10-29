@@ -1,0 +1,17 @@
+LLM mode: claude-code model: claude-opus-5-5
+[typhoon] 54s calls=16 fallbacks=0 cost=$1.69 savings=76.8%
+    시나리오 '태풍 상륙' 로드. 고객 8곳, LLM 모드 claude-code.
+    계약서 8건에서 지연 페널티 조건 추출 완료. A:per_calendar_day, B:per_hour/상한無/면책無, C:per_calendar_day/상한無, D:tiered_per_day, E:flat_per_shipment/면책無, F:per_business_day, G:per_hour, H:per_calendar_day
+    불가항력 판단: 면책 적용 ['A', 'F', 'G'], 조항은 있으나 미적용 ['C(통지 지연)', 'D(사유 불해당)', 'H(조건 미충족)'].
+    대기열 최대 시점(+15.9h) 노출액 산출: 대기 화물 45건, 마감 순위와 노출 순위가 3계단 이상 갈린 화물 32건.
+    시뮬레이션 비교(총 페널티): 마감 급한 순(기존) 12,834,000원, 도착 순 11,732,000원, 고액 화물 순 17,610,500원, 물리는 순서(ClauseTower) 2,979,000원, 물리는 순서(시간당 변형) 2,996,500원, 탐색 근사 최적(참고) 2,919,000원
+    기존 대비 절감 9,855,000원(76.8%). 소요 53.8초, LLM 호출 16회
+[port_congestion] 31s calls=24 fallbacks=0 cost=$1.98 savings=72.5%
+    시나리오 '항만 적체' 로드. 고객 8곳, LLM 모드 claude-code.
+    계약 추출 결과를 이전 실행에서 재사용(같은 계약서).
+    계약서 8건에서 지연 페널티 조건 추출 완료. A:per_calendar_day, B:per_hour/상한無/면책無, C:per_calendar_day/상한無, D:tiered_per_day, E:flat_per_shipment/면책無, F:per_business_day, G:per_hour, H:per_calendar_day
+    불가항력 판단: 면책 적용 ['C', 'F'], 조항은 있으나 미적용 ['A(사유 불해당)', 'D(사유 불해당)', 'G(조건 미충족)', 'H(사유 불해당)'].
+    대기열 최대 시점(+14.5h) 노출액 산출: 대기 화물 32건, 마감 순위와 노출 순위가 3계단 이상 갈린 화물 4건.
+    시뮬레이션 비교(총 페널티): 마감 급한 순(기존) 8,100,000원, 도착 순 7,529,500원, 고액 화물 순 10,650,500원, 물리는 순서(ClauseTower) 2,224,500원, 물리는 순서(시간당 변형) 2,083,500원, 탐색 근사 최적(참고) 1,644,500원
+    기존 대비 절감 5,875,500원(72.5%). 소요 30.6초, LLM 호출 24회
+{"calls": 24, "fallbacks": 0, "input_tokens": 437324, "output_tokens": 26070, "seconds": 270.0066616535187, "cost_usd": 1.9811608, "by_stage": {"extract": 8, "judge": 16}}

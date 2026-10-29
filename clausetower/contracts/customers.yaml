@@ -1,0 +1,35 @@
+# 가상의 고객 8곳. 실제 기업과 무관하다. 조항 구조를 일부러 다르게 설계해 '급한 순서'와 '물리는 순서'가 갈리게 했다.
+customers:
+  - id: A
+    name: 한빛전자
+    segment: 전자부품
+    contract_file: A_한빛전자.md
+  - id: B
+    name: 두루물산
+    segment: 유통
+    contract_file: B_두루물산.md
+  - id: C
+    name: 세움건설
+    segment: 건설자재
+    contract_file: C_세움건설.md
+  - id: D
+    name: 미래식품
+    segment: 식품
+    contract_file: D_미래식품.md
+  - id: E
+    name: 가온헬스케어
+    segment: 의료기기
+    contract_file: E_가온헬스케어.md
+  - id: F
+    name: 바로유통
+    segment: 생활용품
+    contract_file: F_바로유통.md
+  - id: G
+    name: 누리에너지
+    segment: 에너지설비
+    monthly_fee_krw: 180000000
+    contract_file: G_누리에너지.md
+  - id: H
+    name: 청람제약
+    segment: 제약(콜드체인)
+    contract_file: H_청람제약.md

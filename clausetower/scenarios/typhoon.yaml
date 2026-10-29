@@ -1,0 +1,21 @@
+id: typhoon
+title: 태풍 상륙
+description: 남부 해안에 태풍이 상륙해 트럭 8대 중 4대가 16시간 결항하고, 남부 노선의 이동 시간이 18시간 동안 1.6배로 늘었다. 운영팀은 발생 20시간 뒤 고객에게 일괄 통지했다. 대체 운송수단 확보 노력은 기록하지 않았다.
+event:
+  event_type: 태풍
+  description: 태풍 상륙. 남부 노선 침수와 강풍으로 결항과 지연 발생.
+  onset_hours: 0
+  notice_sent_after_hours: 20
+  facts: {"대체 운송수단 확보 노력 입증": false}
+disruption:
+  trucks_out: 4
+  trucks_out_from_h: 0
+  trucks_out_until_h: 16
+  route_multipliers: {S1: 1.6, S2: 1.6, S3: 1.6}
+  route_multiplier_from_h: 0
+  route_multiplier_until_h: 18
+t0: 2026-11-02T06:00:00
+horizon_h: 72
+trucks: 8
+seed: 7
+shipments_per_customer: 7

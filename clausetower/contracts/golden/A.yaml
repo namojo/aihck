@@ -1,0 +1,22 @@
+terms:
+  customer_id: A
+  basis: per_calendar_day
+  rate_pct: 0.1
+  grace_hours: 24
+  base: shipment_value
+  cap_pct: 10
+  cap_scope: shipment
+  partial_unit_rounds_up: true
+  force_majeure:
+    covered_events: ["태풍", "지진", "홍수", "폭설", "천재지변", "전쟁", "내란", "정부의 명령"]
+    notice_hours: 24
+    conditions: []
+    citation: {clause: "제15조 제1항·제2항", quote: "태풍, 지진, 홍수, 폭설 등 천재지변 또는 전쟁, 내란, 정부의 명령으로 인하여 납기를 지체한 경우 을은 그 책임을 면한다. … 24시간 이내에 갑에게 그 사실을 통지하여야 하며"}
+  citations:
+    rate: {clause: "제12조 제1항", quote: "지체된 매 1일에 대하여 해당 운송 건 화물가액의 1,000분의 1에 해당하는 지체상금"}
+    grace: {clause: "제12조 제2항", quote: "납기로부터 24시간 이내의 지연은 지체로 보지 아니한다"}
+    cap: {clause: "제12조 제3항", quote: "지체상금의 총액은 해당 운송 건 화물가액의 100분의 10을 초과하지 아니한다"}
+judgments:
+  typhoon: {has_clause: true, event_covered: true, notice_ok: true, applies: true, reasoning: "태풍은 제15조 제1항에 명시된 면책 사유다. 통지 요건은 24시간 이내이고 운영팀은 발생 20시간 뒤에 통지했으므로 충족한다."}
+  port_congestion: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "항만 적체는 천재지변도 정부의 명령도 아니다. 제15조의 열거 사유에 해당하지 않는다."}
+  wms_outage: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "자사 시스템 장애는 을의 통제 범위 안의 사유다. 면책 대상이 아니다."}

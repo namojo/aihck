@@ -1,0 +1,18 @@
+terms:
+  customer_id: E
+  basis: flat_per_shipment
+  flat_amount_krw: 500000
+  flat_escalation: {after_hours: 24, amount_krw: 2000000}
+  grace_hours: 0
+  base: shipment_value
+  cap_amount_krw: 20000000
+  cap_scope: customer_period
+  partial_unit_rounds_up: true
+  force_majeure: null
+  citations:
+    rate: {clause: "제9조 제1항·제2항", quote: "지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금 … 24시간을 초과한 경우 제1항의 위약금은 1건당 금 2,000,000원으로 한다"}
+    cap: {clause: "제9조 제3항", quote: "1개월 동안 배송사가 지급하는 위약금의 합계는 금 20,000,000원을 초과하지 아니한다"}
+judgments:
+  typhoon: {has_clause: false, event_covered: false, notice_ok: true, applies: false, reasoning: "제9조 제1항이 지체 사유를 불문한다고 정했다. 불가항력 면책이 없다."}
+  port_congestion: {has_clause: false, event_covered: false, notice_ok: true, applies: false, reasoning: "제9조 제1항이 지체 사유를 불문한다고 정했다."}
+  wms_outage: {has_clause: false, event_covered: false, notice_ok: true, applies: false, reasoning: "제9조 제1항이 지체 사유를 불문한다고 정했다."}

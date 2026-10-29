@@ -1,0 +1,24 @@
+terms:
+  customer_id: D
+  basis: tiered_per_day
+  tiers:
+    - {from_day: 1, to_day: 2, rate_pct: 0.1}
+    - {from_day: 3, to_day: 5, rate_pct: 0.2}
+    - {from_day: 6, to_day: null, rate_pct: 0.5}
+  grace_hours: 0
+  base: shipment_value
+  cap_pct: 15
+  cap_scope: shipment
+  partial_unit_rounds_up: true
+  force_majeure:
+    covered_events: ["지진", "전쟁", "파업"]
+    notice_hours: null
+    conditions: []
+    citation: {clause: "제11조 제1항·제2항", quote: "지진, 전쟁, 파업으로 인하여 납품이 지체된 경우 지연 배상금의 책임을 지지 아니한다. 전항의 면책 사유는 열거된 것에 한한다."}
+  citations:
+    rate: {clause: "제10조 제1항", quote: "지체 1일차부터 2일차까지: 1일당 해당 운송 건 납품가액의 0.1% … 3일차부터 5일차까지: 0.2% … 6일차 이후: 0.5%"}
+    cap: {clause: "제10조 제3항", quote: "지연 배상금의 총액은 해당 운송 건 납품가액의 15%를 한도로 한다"}
+judgments:
+  typhoon: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "면책 사유는 지진, 전쟁, 파업으로 한정되고 제11조 제2항이 열거된 것에 한한다고 못 박았다. 태풍은 해당하지 않는다."}
+  port_congestion: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "항만 적체는 열거된 사유가 아니다."}
+  wms_outage: {has_clause: true, event_covered: false, notice_ok: true, applies: false, reasoning: "자사 시스템 장애는 열거된 사유가 아니다."}

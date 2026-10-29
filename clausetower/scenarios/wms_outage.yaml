@@ -1,0 +1,17 @@
+id: wms_outage
+title: 자사 WMS 장애
+description: 운송사 자체 창고관리시스템이 6시간 멈춰 모든 화물의 출고 준비가 6시간 늦어졌다. 운송사 귀책이라 어느 계약의 불가항력도 적용되지 않는다. 유예와 상한만이 변수다.
+event:
+  event_type: 자사 시스템 장애
+  description: 운송사 WMS 장애로 출고 작업이 6시간 중단. 운송사 귀책.
+  onset_hours: 0
+  notice_sent_after_hours: 2
+  facts: {}
+disruption:
+  ready_delay_h: 6
+  ready_delay_share: 1.0
+t0: 2026-11-06T06:00:00
+horizon_h: 72
+trucks: 8
+seed: 23
+shipments_per_customer: 7

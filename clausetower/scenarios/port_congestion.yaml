@@ -1,0 +1,18 @@
+id: port_congestion
+title: 항만 적체
+description: 선사 사정으로 항만 반출이 밀려 항만발 화물 절반의 출발 준비가 14시간 늦어졌다. 천재지변은 아니다. 운영팀은 발생 6시간 뒤 고객에게 통지했다.
+event:
+  event_type: 항만 적체
+  description: 선사의 선적 지연으로 항만 반출이 14시간 밀림. 천재지변이나 정부 조치가 아닌 제3자(선사) 사정.
+  onset_hours: 0
+  notice_sent_after_hours: 6
+  facts: {}
+disruption:
+  ready_delay_h: 14
+  ready_delay_share: 0.5
+  ready_delay_routes: [P1, P2]
+t0: 2026-11-04T06:00:00
+horizon_h: 72
+trucks: 8
+seed: 11
+shipments_per_customer: 7
