@@ -1,6 +1,7 @@
 """LLM 호출의 단일 출입구. RFP Compass의 llm.py와 같은 설계를 따른다.
 
-모드(CLAUSETOWER_LLM): claude-code(CLI, 구독) | anthropic(SDK) | mock(결정적) | auto(키 → CLI → mock).
+모드(CLAUSETOWER_LLM): claude-code(CLI, 구독) | anthropic(SDK, ANTHROPIC_BASE_URL로 사내 호환 게이트웨이 가능) |
+openai(OpenAI 호환 chat/completions + tools, 사내 LLM용: CLAUSETOWER_OPENAI_BASE_URL, CLAUSETOWER_OPENAI_API_KEY) | mock(결정적) | auto(키 → CLI → mock).
 구조화 출력은 pydantic 스키마로 검증한다. 실패하면 1회 재시도하고, 그래도 안 되면 mock 함수로 대체하고 로그에 남긴다.
 """
 
@@ -13,6 +14,8 @@ import shutil
 import subprocess
 import tempfile
 import time
+import urllib.error
+import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, TypeVar
@@ -35,6 +38,8 @@ def resolve_mode(mode: str | None) -> str:
         return m
     if os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN"):
         return "anthropic"
+    if os.environ.get("CLAUSETOWER_OPENAI_BASE_URL"):
+        return "openai"
     if shutil.which(CLAUDE_BIN):
         return "claude-code"
     return "mock"
@@ -80,6 +85,8 @@ class LLM:
             return mock_fn()
         if self.mode == "claude-code":
             return self._parse_claude_code(stage=stage, system=system, user=user, schema=schema, mock_fn=mock_fn)
+        if self.mode == "openai":
+            return self._parse_openai(stage=stage, system=system, user=user, schema=schema, mock_fn=mock_fn, max_tokens=max_tokens)
         t0 = time.time()
         last: Exception | None = None
         for attempt in range(2):
@@ -143,6 +150,45 @@ class LLM:
                 log.warning("[%s] claude-code 응답 처리 실패(시도 %d): %s", stage, attempt + 1, str(e)[:300])
         self.usage.fallbacks += 1
         log.error("[%s] claude-code 실패, mock으로 대체한다: %s", stage, last)
+        return mock_fn()
+
+    def _parse_openai(self, *, stage, system, user, schema, mock_fn, max_tokens):
+        """OpenAI 호환 엔드포인트. 도구 호출을 강제해 구조화 출력을 받고, 도구 호출이 없으면 본문을 JSON으로 해석한다."""
+        base = os.environ.get("CLAUSETOWER_OPENAI_BASE_URL", "").rstrip("/")
+        key = os.environ.get("CLAUSETOWER_OPENAI_API_KEY", "")
+        if not base:
+            self.usage.fallbacks += 1
+            log.error("[%s] CLAUSETOWER_OPENAI_BASE_URL이 없어 mock으로 대체한다.", stage)
+            return mock_fn()
+        tool = {"type": "function", "function": {"name": "submit", "description": "결과를 이 스키마로 돌려준다.", "parameters": schema.model_json_schema()}}
+        body = {"model": self.model, "max_tokens": max_tokens, "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+                "tools": [tool], "tool_choice": {"type": "function", "function": {"name": "submit"}}}
+        headers = {"content-type": "application/json"}
+        if key:
+            headers["authorization"] = f"Bearer {key}"
+        last: Exception | None = None
+        for attempt in range(2):
+            t0 = time.time()
+            try:
+                req = urllib.request.Request(base + "/chat/completions", data=json.dumps(body, ensure_ascii=False).encode("utf-8"), headers=headers, method="POST")
+                with urllib.request.urlopen(req, timeout=CLAUDE_TIMEOUT) as r:
+                    data = json.loads(r.read().decode("utf-8"))
+                u = data.get("usage") or {}
+                self._count(stage, time.time() - t0, u.get("prompt_tokens", 0), u.get("completion_tokens", 0))
+                msg = (data.get("choices") or [{}])[0].get("message") or {}
+                calls = msg.get("tool_calls") or []
+                payload = json.loads(calls[0]["function"]["arguments"]) if calls else json.loads(msg.get("content") or "null")
+                if payload is None:
+                    raise ValueError("응답에 구조화 출력이 없다")
+                return schema.model_validate(payload)
+            except urllib.error.HTTPError as e:
+                last = RuntimeError(f"HTTP {e.code}: {e.read().decode('utf-8', 'replace')[:200]}")
+                log.warning("[%s] openai 호환 호출 실패(시도 %d): %s", stage, attempt + 1, last)
+            except (ValidationError, ValueError, KeyError, OSError) as e:
+                last = e
+                log.warning("[%s] openai 호환 응답 처리 실패(시도 %d): %s", stage, attempt + 1, str(e)[:200])
+        self.usage.fallbacks += 1
+        log.error("[%s] openai 호환 실패, mock으로 대체한다: %s", stage, last)
         return mock_fn()
 
     def map(self, fn: Callable, items: list) -> list:

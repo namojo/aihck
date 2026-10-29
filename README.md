@@ -6,7 +6,7 @@
 
 | 폴더 | 아이템 | 상태 |
 | --- | --- | --- |
-| `clausetower/` | **ClauseTower** — 계약 조항을 읽어 페널티 노출액 순서로 배차하는 물류 관제 에이전트. [README](clausetower/README.md) · [기획서](clausetower/docs/proposal.md) | 최신 출품 후보 |
+| `clausetower/` | **ClauseTower** — 계약 조항을 읽어 페널티 노출액 순서로 배차하는 물류 관제 에이전트. 정본은 [namojo/clausetower](https://github.com/namojo/clausetower), 웹 데모 https://namojo.github.io/clausetower/ | 최신 출품 후보 |
 | 루트(`src/rfpharness/`) | RFP Compass — 제안요청서 자동 검토 에이전트 하네스 | 이전 후보, 동작함 |
 | `workbench/` | 작업구역 — DRM 보호 문서를 격리 환경에서 AI가 다루는 MCP 서버 | 보류(사내 연동 불가). 최신본은 [namojo/nasca-mcp](https://github.com/namojo/nasca-mcp) |
 

@@ -40,6 +40,10 @@ def main(argv: list[str] | None = None) -> int:
     p_demo.add_argument("--out", default="out/demo")
     p_demo.add_argument("--from-reports", default=None, help="이미 만든 report.json들이 있는 폴더로 대시보드만 다시 만든다")
     p_demo.add_argument("--resim", action="store_true", help="--from-reports와 함께: LLM 결과는 두고 시뮬레이션만 다시 돌려 report를 갱신한다")
+    p_serve = sub.add_parser("serve", help="웹 데모용 로컬 도우미 서버(구독 CLI·사내 LLM 연결)")
+    p_serve.add_argument("--port", type=int, default=8787)
+    p_serve.add_argument("--host", default="127.0.0.1")
+    p_serve.add_argument("--llm", default=None, help="mock | claude-code | anthropic | openai | auto")
     p_eval = sub.add_parser("eval", help="다중 시드 견고성 평가")
     p_eval.add_argument("--seeds", type=int, default=30)
     p_eval.add_argument("--out", default="eval/results")
@@ -82,6 +86,11 @@ def main(argv: list[str] | None = None) -> int:
         reports.sort(key=lambda r: order.get(r.scenario.id, 99))
         path = build_dashboard(reports, out / "dashboard.html")
         print(f"\n대시보드: {path}")
+        return 0
+    if a.cmd == "serve":
+        from .server import serve
+
+        serve(a.host, a.port, LLM(a.llm))
         return 0
     if a.cmd == "eval":
         from eval.run_eval import robustness  # noqa: WPS433

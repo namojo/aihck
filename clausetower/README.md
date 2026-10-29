@@ -9,6 +9,7 @@
 | 결과(측정) | 같은 화물·같은 교란에서 순서만 바꿔 총 페널티 **58~77% 절감**(시나리오 3종), 시드 30개 × 3종에서 **90/90 승** |
 | 실제 모델(측정) | Claude가 계약서 8부를 읽은 추출 정확도 **96.2%**(106항목), 면책 판단 **100% / 96.9%**, 인용 원문 일치 **100%**, 호출 24회 |
 | 근거 | 모든 판단에 계약서 **조항 번호와 원문 인용**이 붙는다 |
+| 웹 데모 | **https://namojo.github.io/clausetower/** — 브라우저 안에서 시뮬레이션이 돌고, 계약서를 올리면 AI가 바로 분석한다(연결 방식 3종) |
 | 돌려 보기 | `pip install -e .` 뒤 `python -m clausetower demo --llm mock` → `out/demo/dashboard.html` (네트워크 불필요, 10초) |
 
 ## 심사 기준에 대한 답
@@ -20,6 +21,26 @@
 | 실제 업무 적용 가능성 | 기존 배차 엔진을 바꾸지 않고 우선순위 입력에 열 하나를 더하는 형태. 모든 판단에 원문 인용. 사람이 최종 결정. `docs/proposal.md` 7~8절 |
 | 재현성 | 결정적 시뮬레이터, mock 모드, 시험 31개, 실제 모델 실행 보고서와 로그를 저장소에 포함. 아래 "검증 절차" |
 
+## 웹 데모: 조건을 바꾸고, 실제 계약서를 올려 본다
+
+https://namojo.github.io/clausetower/ 는 서버가 없는 정적 페이지다. 파이썬 계산기와 시뮬레이터를 JavaScript로 옮겼고(`src/clausetower/web/engine.js`), 같은 입력에서 파이썬과 같은 총 페널티가 나오는지 `scripts/verify_engine.js`가 31개 항목을 대조한다(전부 일치). 통지 시점, 결항 대수, 입증 자료, 화물 배치, 계약 읽기 출처(정답지 또는 실제 Claude 추출)를 바꾸면 면책 판단이 조건 결합으로 다시 계산되고 모든 화면이 갱신된다. 고객별 면책을 사람이 뒤집는 것도 된다.
+
+![웹 데모](docs/screenshots/web/web_controls.png)
+
+**실제 케이스 분석(AI).** 계약서(txt, md, docx 또는 붙여넣기)를 올리면 조건을 추출하고 현재 사건의 면책을 판단해 시뮬레이션에 넣는다. 사건을 직접 적으면 8개 계약의 면책을 다시 판단한다. 연결 방식은 세 가지이고, 계약서 본문은 선택한 LLM 엔드포인트 외에는 어디에도 전송되지 않는다.
+
+| 연결 방식 | 준비 | 흐름 |
+| --- | --- | --- |
+| Anthropic API 키 | 키를 입력(브라우저 localStorage에만 저장) | 브라우저 → api.anthropic.com 직접 호출(tool use로 구조화 출력) |
+| 로컬 도우미(Claude 구독, Claude Code CLI) | PC에서 `python -m clausetower serve --llm claude-code` | 브라우저 → 127.0.0.1:8787 → 기존 `llm.py`가 CLI로 처리. 사내 LLM 중계도 같은 경로(`--llm openai`) |
+| 사내·호환 엔드포인트 | 기본 주소, 모델 이름, 토큰 입력 | 브라우저 → OpenAI 호환(`/chat/completions` + tools) 또는 Anthropic 호환(`/v1/messages`) 직접 호출. CORS가 막히면 도우미로 중계 |
+
+로컬 도우미를 Claude 구독으로 띄우고 예시 계약서를 올린 실제 실행(추출 22초, 조건 전부 정확, 인용 원문 일치):
+
+![구독 경로 실제 실행](docs/screenshots/web/web_live_helper_real.png)
+
+사내 LLM을 파이썬 파이프라인에서 직접 쓰려면 `CLAUSETOWER_OPENAI_BASE_URL`, `CLAUSETOWER_OPENAI_API_KEY`, `CLAUSETOWER_MODEL`을 두고 `--llm openai`로 실행한다. Anthropic 호환 게이트웨이는 SDK의 `ANTHROPIC_BASE_URL`로 바꾼다.
+
 ## 빠른 시작
 
 ```bash
@@ -28,7 +49,9 @@ python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activ
 pip install -e ".[dev]"
 python -m clausetower demo --llm mock             # 3개 시나리오 실행 + out/demo/dashboard.html
 python -m clausetower run typhoon --llm mock      # 하나만
-pytest -q                                         # 31개
+pytest -q                                         # 39개
+python -m clausetower serve --llm claude-code     # 웹 데모용 로컬 도우미(구독). --llm openai 로 사내 LLM
+python scripts/build_site.py && node scripts/verify_engine.js   # 웹 데모 조립 + 브라우저 엔진 검증
 python eval/run_eval.py robustness --seeds 30     # 다중 시드 견고성 → eval/results/robustness.md
 ```
 
@@ -84,13 +107,16 @@ clausetower/
 │   ├── sim.py         배송 네트워크 시뮬레이터, 정책 5개, 우선순위 지역 탐색
 │   ├── agent.py       파이프라인과 '물리는 순서' 표, 재시뮬레이션
 │   ├── dashboard.py   단일 HTML 대시보드(인라인 SVG, 오프라인)
-│   └── cli.py         run | demo | eval
+│   ├── server.py      웹 데모용 로컬 도우미(/extract, /judge, CORS)
+│   ├── web/           engine.js(계산기·시뮬레이터 이식), render.js(공용 렌더), app.js(조작 패널·라이브 AI), style.css
+│   └── cli.py         run | demo | serve | eval
 ├── contracts/         가상 계약서 8부(.md)와 정답지(golden/*.yaml)
 ├── scenarios/         교란 3종(태풍, 항만 적체, 자사 WMS 장애)
 ├── prompts/           extract.md, judge.md
 ├── eval/              run_eval.py(robustness, extraction), results/(측정값, 실제 모델 보고서)
-├── tests/             31개
-├── scripts/           real_run.py(실제 모델 실행), screenshot.js(Playwright 캡처)
+├── tests/             39개
+├── scripts/           build_site.py(웹 데모 조립), verify_engine.js(JS≡Python 검증), smoke_web.js(브라우저 스모크), real_run.py, screenshot.js
+├── .github/workflows/ pages.yml(테스트 → 조립 → 검증 → gh-pages 배포)
 └── docs/              proposal.md(기획서), demo-script.md(3분 대본), screenshots/
 ```
 
@@ -101,15 +127,17 @@ clausetower/
 - 면책의 최종 적용 여부는 모델의 `applies`를 믿지 않고 `has_clause ∧ event_covered ∧ notice_ok ∧ 조건 충족`으로 다시 만든다.
 - 어느 순서가 낫다는 주장은 시뮬레이션 숫자로만 한다. 정책은 "트럭이 빌 때 무엇을 먼저 보내는가"만 다르고 나머지는 같다.
 - LLM 호출이 실패하면 정답지로 대체하고 횟수를 보고서에 남긴다. 데모는 mock으로도 끝까지 돈다.
+- 웹 데모의 엔진은 파이썬의 이식이며 둘의 결과가 같다는 것을 자동으로 검증한다. 라이브 분석의 세 연결 방식은 가짜 응답으로 브라우저 스모크 테스트를 돌리고(`scripts/smoke_web.js`), 구독 경로는 실제 CLI로 한 번 확인했다.
 
 ## 검증 절차(심사용)
 
 ```bash
-pytest -q                                              # 31 passed
+pytest -q                                              # 39 passed
 python -m clausetower demo --llm mock                  # 표의 숫자가 그대로 나온다(결정적)
 python eval/run_eval.py robustness --seeds 30          # 90/90 승, 평균 절감률
 python eval/run_eval.py extraction eval/results/real/report_typhoon.json   # 실제 모델 결과 채점(저장된 보고서)
-node scripts/screenshot.js out/demo/dashboard.html /tmp/shots              # Playwright가 있으면 화면 재생성
+python scripts/build_site.py && node scripts/verify_engine.js              # 웹 엔진 31/31 일치
+node scripts/smoke_web.js site/index.html /tmp/shots                       # 브라우저 스모크(Playwright, API는 가짜 응답)
 ```
 
 mock 모드에서 추출 정확도 100%는 정답지를 그대로 쓰기 때문이며 의미가 없다. 실제 모델 수치는 저장된 보고서(`eval/results/real/`)와 실행 로그(`run.log`)로 확인한다.
@@ -122,3 +150,8 @@ mock 모드에서 추출 정확도 100%는 정답지를 그대로 쓰기 때문�
 - 탐색 근사 최적은 지역 탐색이며 진짜 최적이 아니다.
 - 교란 동시 발생, 부분 적재, 환적, 통지 자동화는 없다(기획서 9절의 목표).
 - 계약 해석의 최종 책임은 사람에게 있다. 이 도구는 노출액과 근거를 보여 주는 참모다.
+- 웹 데모는 정적 페이지라 LLM 호출에 사용자의 키나 로컬 도우미가 필요하다. 업로드 계약의 화물 7건은 가상으로 만든다. PDF와 HWP 업로드는 아직 없다(텍스트로 붙여넣기).
+
+## 배포
+
+`main`에 푸시하면 GitHub Actions가 테스트, 사이트 조립, 엔진 검증을 거쳐 `gh-pages` 브랜치로 배포한다(`.github/workflows/pages.yml`). 저장소 설정의 Pages 소스가 `gh-pages` 브랜치여야 한다.

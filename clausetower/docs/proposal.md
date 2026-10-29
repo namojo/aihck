@@ -94,6 +94,26 @@
 
 ![실제 모델의 계약 근거 카드](screenshots/real/typhoon_evidence.png)
 
+## 5-1. 웹 데모와 실제 케이스 분석
+
+GitHub Pages(`https://namojo.github.io/clausetower/`)에 올린 웹 데모는 서버 없이 브라우저 안에서 시뮬레이션이 돈다. 파이썬 계산기와 시뮬레이터를 JavaScript로 옮겼고, 같은 입력에서 같은 총 페널티가 나오는지 `scripts/verify_engine.js`가 31개 항목을 대조한다(전부 일치).
+
+심사위원이 직접 바꿀 수 있는 것: 계약 읽기 출처(정답지 또는 실제 Claude 추출), 화물 배치 5종, 고객 통지 시점, 트럭 수, 결항 대수와 시각, 피해 노선 배율, 입증 자료 같은 사실 관계, 그리고 고객별 면책 판단을 사람이 뒤집는 것. 값을 바꾸면 면책 적용 여부가 조건 결합으로 다시 계산되고 모든 화면이 갱신된다.
+
+![웹 데모 조작 패널](screenshots/web/web_controls.png)
+
+**실제 케이스 분석.** 계약서(txt, md, docx 또는 붙여넣기)를 올리면 LLM이 조건을 추출하고 현재 사건의 면책을 판단한 뒤 가상 화물 7건과 함께 시뮬레이션에 들어간다. 사건을 직접 적으면 8개 계약의 면책을 다시 판단한다. 연결 방식은 세 가지다.
+
+| 연결 방식 | 어떻게 | 언제 |
+| --- | --- | --- |
+| Anthropic API 키 | 브라우저가 api.anthropic.com을 직접 호출. 키는 브라우저에만 저장 | 개인 키가 있을 때 |
+| 로컬 도우미 | PC에서 `python -m clausetower serve --llm claude-code`. 브라우저가 127.0.0.1로 요청하고 도우미가 기존 파이프라인으로 처리 | Claude 구독(Claude Code CLI)으로 쓸 때, 사내 LLM을 중계할 때 |
+| 사내·호환 엔드포인트 | OpenAI 호환 또는 Anthropic 호환 게이트웨이를 브라우저에서 직접 호출 | 사내 LLM이 CORS를 허용할 때 |
+
+아래는 로컬 도우미를 Claude 구독으로 띄우고 예시 계약서를 올린 실제 실행이다. 추출에 22초가 걸렸고, 요율·유예·상한·면책 사유·통지 시한을 모두 맞게 읽었으며 인용은 원문과 일치했다.
+
+![실제 구독 경로 실행](screenshots/web/web_live_helper_real.png)
+
 ## 6. 아키텍처
 
 ```
@@ -144,8 +164,8 @@ agent.py: 위를 묶어 Report(JSON) ─▶ dashboard.py(단일 HTML, 오프라�
 
 ## 부록. 산출물 위치
 
-- 코드: `src/clausetower/` (schemas, exposure, extract, sim, agent, dashboard, cli)
+- 코드: `src/clausetower/` (schemas, exposure, extract, sim, agent, dashboard, server, cli), `src/clausetower/web/`(브라우저 엔진·렌더·앱)
 - 데이터: `contracts/`(계약서 8부, 정답지), `scenarios/`(교란 3종), `prompts/`
 - 측정: `eval/results/robustness.md`, `eval/results/extraction_*.json`, `eval/results/real/`(실제 모델 실행 보고서와 로그)
-- 화면: `docs/screenshots/`(mock), `docs/screenshots/real/`(실제 모델)
-- 시험: `tests/` 31개
+- 화면: `docs/screenshots/`(mock), `docs/screenshots/real/`(실제 모델), `docs/screenshots/web/`(웹 데모)
+- 시험: `tests/` 39개
