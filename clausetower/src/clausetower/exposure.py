@@ -1,4 +1,4 @@
-"""지연 페널티 계산기. 결정적이고 순수하다. LLM은 여기 들어오지 않는다.
+"""지연 배상금 계산기. 결정적이고 순수하다. LLM은 여기 들어오지 않는다.
 
 입력은 계약에서 뽑은 PenaltyTerms, 지연 시간, 기준금액, 그리고 불가항력 판단이다.
 출력은 금액과 함께 '왜 이 금액인가'를 단계별 문장으로 남긴 Breakdown이다. 설명과 인용은 이 단계 문장에서 나온다.
@@ -58,7 +58,7 @@ def compute_penalty(
                          uncapped_krw=int(uncapped), capped=capped, blocked_by=blocked, steps=steps, citations=cites)
 
     if delay_hours <= 0:
-        steps.append("지연 없음. 페널티 0원.")
+        steps.append("지연 없음. 배상금 0원.")
         return done(0, 0, units=0, effective=0)
 
     # 1) 불가항력
@@ -72,7 +72,7 @@ def compute_penalty(
         if judgment.citation:
             cites.append(judgment.citation)
     elif terms.force_majeure is None:
-        steps.append("불가항력 조항 없음. 사유를 불문하고 지연 페널티가 발생한다.")
+        steps.append("불가항력 조항 없음. 사유를 불문하고 지연 배상금이 발생한다.")
 
     # 2) 유예
     effective = delay_hours - terms.grace_hours
@@ -80,7 +80,7 @@ def compute_penalty(
         if "grace" in terms.citations:
             cites.append(terms.citations["grace"])
         if effective <= 0:
-            steps.append(f"지연 {delay_hours:.1f}시간은 유예 {terms.grace_hours:.0f}시간 이내. 페널티 0원.")
+            steps.append(f"지연 {delay_hours:.1f}시간은 유예 {terms.grace_hours:.0f}시간 이내. 배상금 0원.")
             return done(0, 0, units=0, effective=0, blocked="유예기간 내")
         steps.append(f"지연 {delay_hours:.1f}시간 중 유예 {terms.grace_hours:.0f}시간을 뺀 {effective:.1f}시간이 과금 대상.")
     else:

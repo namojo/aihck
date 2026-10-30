@@ -1,5 +1,5 @@
 // ClauseTower 엔진(브라우저용). 파이썬 exposure.py / sim.py / agent.py의 이식이다.
-// 같은 입력이면 파이썬과 같은 총 페널티가 나와야 한다. scripts/verify_engine.js가 그것을 확인한다.
+// 같은 입력이면 파이썬과 같은 총 배상금이 나와야 한다. scripts/verify_engine.js가 그것을 확인한다.
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory(); else root.CT = factory();
 })(typeof self !== 'undefined' ? self : this, function () {
@@ -29,14 +29,14 @@
     const steps = [], cites = []; const base = baseAmount(terms, shipmentValue); delayHours = Math.max(0, delayHours);
     const done = (penalty, uncapped, units, effective, blocked, capped) => ({ customer_id: terms.customer_id, shipment_id: shipmentId, delay_hours: Math.round(delayHours * 100) / 100,
       effective_delay_hours: Math.round(effective * 100) / 100, units, penalty_krw: penalty, uncapped_krw: uncapped, capped: !!capped, blocked_by: blocked || null, steps, citations: cites });
-    if (delayHours <= 0) { steps.push('지연 없음. 페널티 0원.'); return done(0, 0, 0, 0, null); }
+    if (delayHours <= 0) { steps.push('지연 없음. 배상금 0원.'); return done(0, 0, 0, 0, null); }
     if (judgment && judgment.has_clause) {
       if (judgment.applies) { steps.push('불가항력 조항 적용: ' + judgment.reasoning); if (judgment.citation) cites.push(judgment.citation); return done(0, 0, 0, 0, '불가항력 면책'); }
       steps.push('불가항력 조항 있으나 미적용: ' + judgment.reasoning); if (judgment.citation) cites.push(judgment.citation);
-    } else if (!terms.force_majeure) steps.push('불가항력 조항 없음. 사유를 불문하고 지연 페널티가 발생한다.');
+    } else if (!terms.force_majeure) steps.push('불가항력 조항 없음. 사유를 불문하고 지연 배상금이 발생한다.');
     let effective = delayHours - terms.grace_hours;
     if (terms.grace_hours > 0) { if (terms.citations.grace) cites.push(terms.citations.grace);
-      if (effective <= 0) { steps.push(`지연 ${delayHours.toFixed(1)}시간은 유예 ${terms.grace_hours}시간 이내. 페널티 0원.`); return done(0, 0, 0, 0, '유예기간 내'); }
+      if (effective <= 0) { steps.push(`지연 ${delayHours.toFixed(1)}시간은 유예 ${terms.grace_hours}시간 이내. 배상금 0원.`); return done(0, 0, 0, 0, '유예기간 내'); }
       steps.push(`지연 ${delayHours.toFixed(1)}시간 중 유예 ${terms.grace_hours}시간을 뺀 ${effective.toFixed(1)}시간이 과금 대상.`);
     } else steps.push(`유예 없음. 지연 ${delayHours.toFixed(1)}시간 전체가 과금 대상.`);
     if (terms.citations.rate) cites.push(terms.citations.rate);
@@ -81,7 +81,7 @@
     exposure_first: (st, ctx) => { const c = minBy(st.waiting, s => exposureKey(st, ctx, s, true)); const [n, l, b] = marginalExposure(st, ctx, c); st.decisions[c.id] = `미루면 +${fmt(l - n)}원` + (b.blocked_by ? ` (${b.blocked_by})` : ''); return c; },
     exposure_abs: (st, ctx) => minBy(st.waiting, s => exposureKey(st, ctx, s, false)),
   };
-  const POLICY_LABEL = { deadline_first: '마감 급한 순(기존)', fifo: '도착 순', value_first: '고액 화물 순', exposure_first: '물리는 순서(ClauseTower)', exposure_abs: '물리는 순서(절대값 변형)' };
+  const POLICY_LABEL = { deadline_first: '마감 임박 순(기존)', fifo: '도착 순', value_first: '고액 화물 순', exposure_first: '배상 노출 순(ClauseTower)', exposure_abs: '배상 노출 순(절대값 변형)' };
   const avgRoute = Object.values(ROUTES).reduce((a, b) => a + b, 0) / Object.keys(ROUTES).length;
 
   function runPolicy(scenario, shipments, ctx, policyId, order) {
@@ -128,7 +128,7 @@
     const rows = waiting.map(s => { const [n0, l, b] = marginalExposure(state, ctx, s); const occ = 2 * travelTime(scenario, s.route, t); return { s, n: n0, l, b, score: (l - n0) / occ }; });
     const byDeadline = sortBy(rows, r => [r.s.due_h, r.s.id]), byExposure = sortBy(rows, r => [-r.score, -r.l, r.s.due_h, r.s.id]);
     const dRank = {}, eRank = {}; byDeadline.forEach((r, i) => dRank[r.s.id] = i + 1); byExposure.forEach((r, i) => eRank[r.s.id] = i + 1);
-    return byExposure.map(({ s, n: n0, l, b }) => { let why; if (b.blocked_by) why = `${b.blocked_by}. 미뤄도 페널티가 늘지 않는다.`; else if (l - n0 === 0 && l === 0) why = '한 사이클 미뤄도 마감 안이거나 유예 안이다.'; else why = b.steps.filter(st => st.includes('=') || st.includes('상한') || st.includes('정액')).join(' ').slice(0, 160);
+    return byExposure.map(({ s, n: n0, l, b }) => { let why; if (b.blocked_by) why = `${b.blocked_by}. 보류해도 배상금이 늘지 않는다.`; else if (l - n0 === 0 && l === 0) why = '한 사이클 보류해도 마감 또는 유예 범위 안이다.'; else why = b.steps.filter(st => st.includes('=') || st.includes('상한') || st.includes('정액')).join(' ').slice(0, 160);
       return { shipment_id: s.id, customer_id: s.customer_id, customer_name: customers[s.customer_id].name, due_in_h: Math.round((s.due_h - t) * 10) / 10, deadline_rank: dRank[s.id], exposure_rank: eRank[s.id], penalty_if_now_krw: n0, penalty_if_deferred_krw: l, marginal_krw: l - n0, blocked_by: b.blocked_by, why, citations: b.citations.slice(0, 2) }; });
   }
 
@@ -152,7 +152,7 @@
     const log = [`시나리오 '${scenario.title}'. 고객 ${customers.length}곳, 트럭 ${scenario.trucks}대, 화물 ${shipments.length}건. 계약 읽기 출처: ${llm_mode}.`,
       `불가항력 판단(현재 설정 기준): 면책 적용 ${applied.length ? applied.join(', ') : '없음'}, 조항은 있으나 미적용 ${blocked.length ? blocked.join(', ') : '없음'}.`,
       `대기열 최대 시점(+${baseRun.peak_queue_h.toFixed(1)}h) 노출액 산출: 대기 ${ranking.length}건, 순위가 3계단 이상 갈린 화물 ${flips}건.`,
-      '시뮬레이션 비교(총 페널티): ' + Object.values(policies).map(p => `${p.label} ${fmt(p.total_penalty_krw)}원`).join(', '), `기존 대비 절감 ${fmt(savings)}원(${pct}%). 브라우저 안에서 계산했다.`];
+      '시뮬레이션 비교(총 배상금): ' + Object.values(policies).map(p => `${p.label} ${fmt(p.total_penalty_krw)}원`).join(', '), `기존 대비 절감 ${fmt(savings)}원(${pct}%). 브라우저 안에서 계산했다.`];
     return { scenario, customers, terms, extraction, judgments, ranking, ranking_at_h: baseRun.peak_queue_h, policies, savings_vs_deadline_krw: savings, savings_vs_deadline_pct: pct, llm_mode, llm_calls: 0, generated_at: new Date().toISOString(), agent_log: log };
   }
 

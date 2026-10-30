@@ -71,7 +71,7 @@ HTML = """<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name=
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css"></head><body>
 <header class="appbar">
-  <div class="brand"><span class="mark">Clause<b>Tower</b></span><span class="tag">급한 순서가 아니라, 물리는 순서로</span></div>
+  <div class="brand"><span class="mark">Clause<b>Tower</b></span><span class="tag">마감 임박 순이 아니라, 배상 노출 순으로</span></div>
   <span class="spacer"></span>
   <nav class="seg tabs" id="tabs"></nav>
   <span class="status-chip" id="conn-chip"><i></i><span>AI 연결 안 됨 · 아래 ③에서 연결</span></span>
@@ -88,13 +88,13 @@ HTML = """<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name=
   <section class="card" id="sec-summary"><div class="head"><div><h2 id="sc-title"></h2><p class="lead" id="sc-desc" style="margin-bottom:8px"></p><div class="chips" id="sc-event"></div></div><div class="chips" id="src-note"></div></div>
     <div class="kpis" id="kpis"></div>
     <div class="actions" id="actions"></div></section>
-  <section class="card" id="sec-rank"><h2>물리는 순서 <small>대기열이 가장 길었던 시점 <span id="rank-at"></span>. 왼쪽이 ClauseTower 순위, 그 옆이 기존 마감 순위와 변동.</small></h2><p class="lead" id="rank-sub"></p>
-    <div style="overflow-x:auto"><table><thead><tr><th class="n">노출 순위</th><th class="n">마감 순위</th><th>화물</th><th>고객</th><th class="n">마감까지</th><th class="n">지금 보내면</th><th class="n">한 사이클 미루면</th><th class="n">물리는 돈</th><th>판단과 근거</th></tr></thead><tbody id="rank-body"></tbody></table></div><button class="btn ghost" id="rank-more" style="margin-top:10px"></button></section>
+  <section class="card" id="sec-rank"><h2>배상 노출 순위 <small>대기열이 가장 길었던 시점 <span id="rank-at"></span>. 왼쪽이 ClauseTower 순위, 그 옆이 기존 마감 순위와 변동.</small></h2><p class="lead" id="rank-sub"></p>
+    <div style="overflow-x:auto"><table><thead><tr><th class="n">배상 순위</th><th class="n">마감 순위</th><th>화물</th><th>고객</th><th class="n">마감까지</th><th class="n">즉시 배차 시</th><th class="n">한 사이클 보류 시</th><th class="n">배상 노출액</th><th>판단과 근거</th></tr></thead><tbody id="rank-body"></tbody></table></div><button class="btn ghost" id="rank-more" style="margin-top:10px"></button></section>
   <div class="grid2" id="sec-charts">
-    <section class="card"><h2>누적 페널티 <small>시간에 따라 쌓이는 페널티. 낮을수록 좋다.</small></h2><div class="legend"><span><i style="background:var(--penalty)"></i>기존(마감 순)</span><span><i style="background:var(--tower)"></i>ClauseTower</span><span><i style="background:var(--neutral)"></i>탐색 근사 최적(점선)</span></div><div id="curve"></div></section>
-    <section class="card"><h2>정책별 총 페널티 <small>같은 화물, 같은 교란, 순서만 다르다.</small></h2><div id="bars" style="margin-top:14px"></div><div class="row" style="margin-top:10px"><button class="btn" id="btn-search">탐색 근사 최적 계산 (수 초)</button><span class="hint" id="search-note" style="font-size:12.5px;color:var(--ink-3)"></span></div></section>
+    <section class="card"><h2>누적 배상금 <small>시간에 따라 쌓이는 배상금. 낮을수록 좋다.</small></h2><div class="legend"><span><i style="background:var(--penalty)"></i>기존(마감 순)</span><span><i style="background:var(--tower)"></i>ClauseTower</span><span><i style="background:var(--neutral)"></i>탐색 근사 최적(점선)</span></div><div id="curve"></div></section>
+    <section class="card"><h2>정책별 총 배상금 <small>같은 화물, 같은 교란, 순서만 다르다.</small></h2><div id="bars" style="margin-top:14px"></div><div class="row" style="margin-top:10px"><button class="btn" id="btn-search">탐색 근사 최적 계산 (수 초)</button><span class="hint" id="search-note" style="font-size:12.5px;color:var(--ink-3)"></span></div></section>
   </div>
-  <section class="card" id="sec-board"><div class="head"><h2>계약 케이스 <small>고객별 지연 페널티 조건을 항목별로. 항목이나 "항목별 상세"를 누르면 조항·원문 인용·이번 사건 판단이 서랍으로 열린다.</small></h2><div class="toggle" id="board-toggle"><button data-mode="cards" class="on">카드</button><button data-mode="matrix">비교표</button></div></div><div id="board" class="board"></div></section>
+  <section class="card" id="sec-board"><div class="head"><h2>계약 케이스 <small>고객별 지연 배상 조건을 항목별로. 항목이나 "항목별 상세"를 누르면 조항·원문 인용·이번 사건 판단이 서랍으로 열린다.</small></h2><div class="toggle" id="board-toggle"><button data-mode="cards" class="on">카드</button><button data-mode="matrix">비교표</button></div></div><div id="board" class="board"></div></section>
   <section class="card" id="live"><h2>실제 케이스 분석 <small>계약서를 올리거나 사건을 적으면 AI가 바로 읽고 판단해 시뮬레이션에 넣는다.</small></h2>
     <div class="steps">
       <div class="step"><h3><span class="no">1</span>AI 연결</h3>

@@ -32,7 +32,7 @@ class ForceMajeure(BaseModel):
 
 
 class PenaltyTerms(BaseModel):
-    """계약서에서 뽑은 지연 페널티 조건. 계산기(exposure.py)의 입력이다."""
+    """계약서에서 뽑은 지연 배상 조건. 계산기(exposure.py)의 입력이다."""
 
     customer_id: str
     basis: Literal["per_calendar_day", "per_business_day", "per_hour", "flat_per_shipment", "tiered_per_day"]
@@ -40,7 +40,7 @@ class PenaltyTerms(BaseModel):
     flat_amount_krw: Optional[int] = Field(default=None, description="flat_per_shipment일 때 건당 정액(원)")
     flat_escalation: Optional[FlatEscalation] = None
     tiers: list[Tier] = Field(default_factory=list, description="tiered_per_day일 때 구간표")
-    grace_hours: float = Field(default=0, description="유예 시간. 이 안의 지연은 페널티가 없다")
+    grace_hours: float = Field(default=0, description="유예 시간. 이 범위의 지연은 배상금이 없다")
     base: Literal["shipment_value", "monthly_fee", "contract_value"] = "shipment_value"
     base_amount_krw: Optional[int] = Field(default=None, description="base가 monthly_fee나 contract_value일 때 그 금액(원)")
     cap_pct: Optional[float] = Field(default=None, description="상한(기준금액의 %). 없으면 null")
@@ -164,7 +164,7 @@ class PolicyResult(BaseModel):
 
 
 class RankRow(BaseModel):
-    """대기열이 가장 길었던 시점의 '물리는 순서' 표 한 줄."""
+    """대기열이 가장 길었던 시점의 '배상 노출 순위' 표 한 줄."""
 
     shipment_id: str
     customer_id: str

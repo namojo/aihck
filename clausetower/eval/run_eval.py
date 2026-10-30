@@ -30,7 +30,7 @@ def robustness(seeds: int, out_dir: Path) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     summary: dict = {"seeds": seeds, "scenarios": {}}
     lines = [f"# 다중 시드 견고성 평가 (시드 {seeds}개 × 시나리오 {len(list_scenarios())}개)", "",
-             "같은 계약·같은 교란에서 화물의 가액·노선·마감만 시드로 바꿔 가며 정책을 비교했다. 숫자는 총 페널티(원).", ""]
+             "같은 계약·같은 교란에서 화물의 가액·노선·마감만 시드로 바꿔 가며 정책을 비교했다. 숫자는 총 배상금(원).", ""]
     for sid in list_scenarios():
         base_sc = load_scenario(sid)
         judg = {c.id: load_golden_judgment(c.id, sid) for c in customers}

@@ -1,4 +1,4 @@
-"""페널티 계산기. 돈 계산은 여기서 전부 검증한다."""
+"""배상금 계산기. 돈 계산은 여기서 전부 검증한다."""
 from datetime import datetime
 
 import pytest

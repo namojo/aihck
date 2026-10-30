@@ -19,7 +19,7 @@ log = logging.getLogger("clausetower.agent")
 
 
 def ranking_at(ctx: Context, shipments, scenario, customers: dict[str, Customer], t: float, ids: list[str]) -> list[RankRow]:
-    """특정 시점의 대기 화물에 대해 '마감 순서'와 '물리는 순서'를 나란히 놓는다. 데모의 핵심 표다."""
+    """특정 시점의 대기 화물에 대해 '마감 순서'와 '배상 노출 순'를 나란히 놓는다. 데모의 핵심 표다."""
     from .sim import ROUTES, travel_time
     waiting = [s for s in shipments if s.id in set(ids)]
     n = scenario.trucks - (scenario.disruption.trucks_out if scenario.disruption.trucks_out_from_h <= t < scenario.disruption.trucks_out_until_h else 0)
@@ -37,9 +37,9 @@ def ranking_at(ctx: Context, shipments, scenario, customers: dict[str, Customer]
     out: list[RankRow] = []
     for s, now_p, later_p, b, _ in by_exposure:
         if b.blocked_by:
-            why = f"{b.blocked_by}. 미뤄도 페널티가 늘지 않는다."
+            why = f"{b.blocked_by}. 보류해도 배상금이 늘지 않는다."
         elif later_p - now_p == 0 and later_p == 0:
-            why = "한 사이클 미뤄도 마감 안이거나 유예 안이다."
+            why = "한 사이클 보류해도 마감 또는 유예 범위 안이다."
         else:
             why = " ".join(st for st in b.steps if "=" in st or "상한" in st or "정액" in st)[:160]
         out.append(RankRow(shipment_id=s.id, customer_id=s.customer_id, customer_name=customers[s.customer_id].name,
@@ -67,7 +67,7 @@ def run(scenario_id: str, *, llm: LLM | None = None, with_search: bool = True,
         if extraction_cache is not None:
             extraction_cache.update(extractions)
     terms = {cid: r.terms for cid, r in extractions.items()}
-    agent_log.append("계약서 8건에서 지연 페널티 조건 추출 완료. " + ", ".join(
+    agent_log.append("계약서 8건에서 지연 배상 조건 추출 완료. " + ", ".join(
         f"{cid}:{t.basis}{'/상한無' if t.cap_pct is None and t.cap_amount_krw is None else ''}{'/면책無' if t.force_majeure is None else ''}"
         for cid, t in terms.items()))
 
@@ -92,7 +92,7 @@ def run(scenario_id: str, *, llm: LLM | None = None, with_search: bool = True,
         results["search_best"] = search_best_order(scenario, shipments, ctx, start=[r.shipment_id for r in results["exposure_first"].records])
     base = results["deadline_first"].total_penalty_krw
     ours = results["exposure_first"].total_penalty_krw
-    agent_log.append("시뮬레이션 비교(총 페널티): " + ", ".join(f"{r.label} {r.total_penalty_krw:,}원" for r in results.values()))
+    agent_log.append("시뮬레이션 비교(총 배상금): " + ", ".join(f"{r.label} {r.total_penalty_krw:,}원" for r in results.values()))
     savings = base - ours
     pct = (savings / base * 100) if base else 0.0
     agent_log.append(f"기존 대비 절감 {savings:,}원({pct:.1f}%). 소요 {time.time() - t0:.1f}초, LLM 호출 {llm.usage.calls}회"

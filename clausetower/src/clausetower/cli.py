@@ -24,7 +24,7 @@ def _print_summary(r: Report) -> None:
     top = [x for x in r.ranking if abs(x.deadline_rank - x.exposure_rank) >= 3][:3]
     for x in top:
         print(f"  순위 역전: {x.shipment_id} {x.customer_name} 마감 {x.deadline_rank}위 → 노출 {x.exposure_rank}위 "
-              f"({x.blocked_by or f'물리는 돈 {x.marginal_krw:,}원'})")
+              f"({x.blocked_by or f'배상 노출액 {x.marginal_krw:,}원'})")
 
 
 def main(argv: list[str] | None = None) -> int:

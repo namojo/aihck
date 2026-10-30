@@ -1,4 +1,4 @@
-// 브라우저 엔진(engine.js)이 파이썬 구현과 같은 총 페널티를 내는지 확인한다.
+// 브라우저 엔진(engine.js)이 파이썬 구현과 같은 총 배상금을 내는지 확인한다.
 // 사용: node scripts/verify_engine.js   (먼저 python scripts/build_site.py, python -m clausetower demo --llm mock)
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const ROOT = path.resolve(__dirname, '..');

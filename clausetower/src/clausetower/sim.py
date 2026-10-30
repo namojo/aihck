@@ -95,7 +95,7 @@ def fifo(state: State, ctx: Context) -> Shipment:
 
 
 def marginal_exposure(state: State, ctx: Context, s: Shipment, defer_h: float | None = None) -> tuple[int, int, Breakdown]:
-    """지금 보낼 때와 한 사이클 미룰 때의 페널티. 차이가 '기다리게 했을 때 물리는 돈'이다."""
+    """지금 보낼 때와 한 사이클 보류할 때의 배상금. 차이가 '보류했을 때의 추가 배상액'이다."""
     defer = state.avg_cycle_h if defer_h is None else defer_h
     now_eta = state.t + travel_time(ctx.scenario, s.route, state.t)
     later_eta = state.t + defer + travel_time(ctx.scenario, s.route, state.t + defer)
@@ -113,8 +113,8 @@ def _exposure_key(state: State, ctx: Context, s: Shipment, per_hour: bool):
 
 
 def exposure_first(state: State, ctx: Context) -> Shipment:
-    """물리는 순서. 한 사이클 미뤘을 때 늘어나는 페널티('물리는 돈')를 그 화물이 트럭을 묶어 두는 시간으로 나눈 값이
-    큰 화물부터 보낸다. 같으면 미뤘을 때의 페널티가 큰 순, 그다음 마감이 급한 순. 30개 시드 평가에서 절대값 변형보다 평균이 낮았다."""
+    """배상 노출 순위. 한 사이클 보류했을 때 늘어나는 배상금('배상 노출액')를 그 화물이 트럭을 묶어 두는 시간으로 나눈 값이
+    큰 화물부터 보낸다. 같으면 보류했을 때의 배상금이 큰 순, 그다음 마감이 임박한 순. 30개 시드 평가에서 절대값 변형보다 평균이 낮았다."""
     chosen = min(state.waiting, key=lambda s: _exposure_key(state, ctx, s, per_hour=True))
     now_p, later_p, b = marginal_exposure(state, ctx, chosen)
     state.decisions[chosen.id] = f"미루면 +{later_p - now_p:,}원" + (f" ({b.blocked_by})" if b.blocked_by else "")
@@ -122,16 +122,16 @@ def exposure_first(state: State, ctx: Context) -> Shipment:
 
 
 def exposure_abs(state: State, ctx: Context) -> Shipment:
-    """변형: 트럭 점유 시간으로 나누지 않은 '물리는 돈' 절대값 순. 비교용."""
+    """변형: 트럭 점유 시간으로 나누지 않은 '배상 노출액' 절대값 순. 비교용."""
     return min(state.waiting, key=lambda s: _exposure_key(state, ctx, s, per_hour=False))
 
 
 POLICIES: dict[str, tuple[str, Policy]] = {
-    "deadline_first": ("마감 급한 순(기존)", deadline_first),
+    "deadline_first": ("마감 임박 순(기존)", deadline_first),
     "fifo": ("도착 순", fifo),
     "value_first": ("고액 화물 순", value_first),
-    "exposure_first": ("물리는 순서(ClauseTower)", exposure_first),
-    "exposure_abs": ("물리는 순서(절대값 변형)", exposure_abs),
+    "exposure_first": ("배상 노출 순(ClauseTower)", exposure_first),
+    "exposure_abs": ("배상 노출 순(절대값 변형)", exposure_abs),
 }
 
 
