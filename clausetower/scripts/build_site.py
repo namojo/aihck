@@ -1,7 +1,7 @@
 """GitHub Pages용 웹 데모를 site/에 조립한다. 브라우저 안에서 시뮬레이션이 돌아가는 정적 사이트다.
 
   python scripts/build_site.py            # site/ 생성
-구성: index.html, style.css, engine.js(계산기·시뮬레이터 이식), render.js(공용 렌더), app.js(조작 패널), data.js(계약·정답지·실제 모델 결과·화물 배치)
+구성: index.html, style.css, engine.js(계산기·시뮬레이터 이식), render.js(공용 렌더), app.js(조작 패널), data.js(계약·정답지·실제 모델 결과·화물 배치), README.md와 docs/(저장소 첫 화면용)
 """
 from __future__ import annotations
 
@@ -135,6 +135,12 @@ def main() -> int:
         shutil.copy2(WEB / name, SITE / name)
     (SITE / "index.html").write_text(HTML, encoding="utf-8")
     (SITE / ".nojekyll").write_text("", encoding="utf-8")
+    # 저장소 첫 화면용: gh-pages 브랜치에도 README와 문서·스크린샷을 함께 실어 GitHub가 README를 렌더링하게 한다(상대 경로 유지)
+    shutil.copy2(ROOT / "README.md", SITE / "README.md")
+    (SITE / "docs").mkdir(exist_ok=True)
+    for md in (ROOT / "docs").glob("*.md"):
+        shutil.copy2(md, SITE / "docs" / md.name)
+    shutil.copytree(ROOT / "docs" / "screenshots", SITE / "docs" / "screenshots")
     print(f"site/ 생성: 시나리오 {len(data['scenarios'])}개, 출처 {list(data['sources'])}, data.js {((SITE / 'data.js').stat().st_size) // 1024}KB")
     return 0
 
