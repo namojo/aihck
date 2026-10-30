@@ -1,0 +1,7379 @@
+{
+ "scenario": {
+  "id": "port_congestion",
+  "title": "항만 적체",
+  "description": "선사 사정으로 항만 반출이 밀려 항만발 화물 절반의 출발 준비가 14시간 늦어졌다. 천재지변은 아니다. 운영팀은 발생 6시간 뒤 고객에게 통지했다.",
+  "event": {
+   "event_type": "항만 적체",
+   "description": "선사의 선적 지연으로 항만 반출이 14시간 밀림. 천재지변이나 정부 조치가 아닌 제3자(선사) 사정.",
+   "onset_hours": 0.0,
+   "notice_sent_after_hours": 6.0,
+   "facts": {}
+  },
+  "disruption": {
+   "trucks_out": 0,
+   "trucks_out_from_h": 0.0,
+   "trucks_out_until_h": 0.0,
+   "route_multipliers": {},
+   "route_multiplier_from_h": 0.0,
+   "route_multiplier_until_h": 0.0,
+   "ready_delay_h": 14.0,
+   "ready_delay_share": 0.5,
+   "ready_delay_routes": [
+    "P1",
+    "P2"
+   ]
+  },
+  "t0": "2026-11-04T06:00:00",
+  "horizon_h": 72.0,
+  "trucks": 8,
+  "seed": 11,
+  "shipments_per_customer": 7,
+  "customer_facts": {}
+ },
+ "customers": [
+  {
+   "id": "A",
+   "name": "한빛전자",
+   "segment": "전자부품",
+   "monthly_fee_krw": null,
+   "contract_value_krw": null
+  },
+  {
+   "id": "B",
+   "name": "두루물산",
+   "segment": "유통",
+   "monthly_fee_krw": null,
+   "contract_value_krw": null
+  },
+  {
+   "id": "C",
+   "name": "세움건설",
+   "segment": "건설자재",
+   "monthly_fee_krw": null,
+   "contract_value_krw": null
+  },
+  {
+   "id": "D",
+   "name": "미래식품",
+   "segment": "식품",
+   "monthly_fee_krw": null,
+   "contract_value_krw": null
+  },
+  {
+   "id": "E",
+   "name": "가온헬스케어",
+   "segment": "의료기기",
+   "monthly_fee_krw": null,
+   "contract_value_krw": null
+  },
+  {
+   "id": "F",
+   "name": "바로유통",
+   "segment": "생활용품",
+   "monthly_fee_krw": null,
+   "contract_value_krw": null
+  },
+  {
+   "id": "G",
+   "name": "누리에너지",
+   "segment": "에너지설비",
+   "monthly_fee_krw": 180000000,
+   "contract_value_krw": null
+  },
+  {
+   "id": "H",
+   "name": "청람제약",
+   "segment": "제약(콜드체인)",
+   "monthly_fee_krw": null,
+   "contract_value_krw": null
+  }
+ ],
+ "terms": {
+  "A": {
+   "customer_id": "A",
+   "basis": "per_calendar_day",
+   "rate_pct": 0.1,
+   "flat_amount_krw": null,
+   "flat_escalation": null,
+   "tiers": [],
+   "grace_hours": 24.0,
+   "base": "shipment_value",
+   "base_amount_krw": null,
+   "cap_pct": 10.0,
+   "cap_amount_krw": null,
+   "cap_scope": "shipment",
+   "partial_unit_rounds_up": true,
+   "force_majeure": {
+    "covered_events": [
+     "태풍",
+     "지진",
+     "홍수",
+     "폭설",
+     "천재지변",
+     "전쟁",
+     "내란",
+     "정부의 명령"
+    ],
+    "notice_hours": 24.0,
+    "conditions": [],
+    "citation": {
+     "clause": "제15조 제1항, 제2항",
+     "quote": "① 태풍, 지진, 홍수, 폭설 등 천재지변 또는 전쟁, 내란, 정부의 명령으로 인하여 납기를 지체한 경우 을은 그 책임을 면한다. ② 을은 전항의 사유가 발생한 때로부터 24시간 이내에 갑에게 그 사실을 통지하여야 하며, 통지하지 아니한 경우 면책을 주장할 수 없다."
+    }
+   },
+   "citations": {
+    "rate": {
+     "clause": "제12조 제1항",
+     "quote": "을이 납기를 지체한 경우, 갑은 지체된 매 1일에 대하여 해당 운송 건 화물가액의 1,000분의 1에 해당하는 지체상금을 을에게 청구할 수 있다."
+    },
+    "grace": {
+     "clause": "제12조 제2항",
+     "quote": "전항의 지체일수 산정에 있어 납기로부터 24시간 이내의 지연은 지체로 보지 아니한다."
+    },
+    "cap": {
+     "clause": "제12조 제3항",
+     "quote": "지체상금의 총액은 해당 운송 건 화물가액의 100분의 10을 초과하지 아니한다."
+    },
+    "basis": {
+     "clause": "제12조 제4항",
+     "quote": "1일 미만의 지체는 1일로 본다."
+    }
+   },
+   "notes": "요율 1,000분의 1 = 0.1%/일, 상한 100분의 10 = 10%(건별 화물가액 기준). 계약기간 2년(제20조)."
+  },
+  "B": {
+   "customer_id": "B",
+   "basis": "per_hour",
+   "rate_pct": 0.05,
+   "flat_amount_krw": null,
+   "flat_escalation": null,
+   "tiers": [],
+   "grace_hours": 0.0,
+   "base": "shipment_value",
+   "base_amount_krw": null,
+   "cap_pct": null,
+   "cap_amount_krw": null,
+   "cap_scope": "shipment",
+   "partial_unit_rounds_up": true,
+   "force_majeure": null,
+   "citations": {
+    "rate": {
+     "clause": "제9조 제1항",
+     "quote": "수행사가 배송 시한을 넘긴 경우, 지연된 매 1시간마다 해당 주문 상품가액의 0.05%를 배상한다."
+    },
+    "basis": {
+     "clause": "제9조 제2항",
+     "quote": "지연 시간은 배송 시한 경과 시점부터 실제 인도 시점까지로 하며, 1시간 미만은 1시간으로 계산한다."
+    },
+    "grace": {
+     "clause": "제9조 제3항",
+     "quote": "본 조의 배상금에는 별도의 유예기간을 두지 아니한다."
+    },
+    "cap": {
+     "clause": "제9조 제4항",
+     "quote": "본 조의 배상금에는 상한을 두지 아니한다. 다만 발주자가 서면으로 감면에 동의한 경우에는 그러하지 아니하다."
+    },
+    "liability": {
+     "clause": "제11조",
+     "quote": "수행사는 배송 지연의 원인이 수행사의 귀책사유인지 여부와 관계없이 제9조의 배상 책임을 진다. 다만 발주자의 귀책사유로 인한 경우에는 그러하지 아니하다."
+    }
+   },
+   "notes": "시간당 0.05%, 1시간 미만은 올림, 유예 없음, 상한 없음. 불가항력 조항은 없음. 제11조에 따라 수행사의 귀책 여부와 관계없이 책임을 지며, 발주자 귀책인 경우에만 면책된다."
+  },
+  "C": {
+   "customer_id": "C",
+   "basis": "per_calendar_day",
+   "rate_pct": 0.3,
+   "flat_amount_krw": null,
+   "flat_escalation": null,
+   "tiers": [],
+   "grace_hours": 0.0,
+   "base": "shipment_value",
+   "base_amount_krw": null,
+   "cap_pct": null,
+   "cap_amount_krw": null,
+   "cap_scope": "shipment",
+   "partial_unit_rounds_up": true,
+   "force_majeure": {
+    "covered_events": [
+     "천재지변",
+     "전쟁",
+     "폭동",
+     "그 밖에 수급인의 책임 없는 사유"
+    ],
+    "notice_hours": 12.0,
+    "conditions": [
+     "사유 발생 시부터 12시간 이내에 도급인에게 서면(전자문서 포함)으로 통지",
+     "기한 내 통지가 없으면 면제를 주장하지 못함",
+     "면제는 해당 사유로 지체한 기간을 지체일수에 산입하지 않는 방식(전액 면책 아님)"
+    ],
+    "citation": {
+     "clause": "제14조 제1항, 제2항",
+     "quote": "① 천재지변, 전쟁, 폭동 그 밖에 수급인의 책임 없는 사유로 지체한 경우에는 그 기간을 지체일수에 산입하지 아니한다. ② 수급인이 전항의 면제를 받고자 하는 때에는 그 사유가 발생한 때부터 12시간 이내에 도급인에게 서면(전자문서 포함)으로 통지하여야 한다. 기한 내 통지가 없는 경우 면제를 주장하지 못한다."
+    }
+   },
+   "citations": {
+    "rate": {
+     "clause": "제13조 제1항",
+     "quote": "수급인이 인도 기한을 지체한 때에는 지체일수 1일당 해당 자재 운송 건 자재가액의 1,000분의 3을 지체상금으로 도급인에게 지급한다."
+    },
+    "basis": {
+     "clause": "제13조 제1항",
+     "quote": "수급인이 인도 기한을 지체한 때에는 지체일수 1일당 해당 자재 운송 건 자재가액의 1,000분의 3을 지체상금으로 도급인에게 지급한다."
+    },
+    "rounding": {
+     "clause": "제13조 제2항",
+     "quote": "지체일수에 1일 미만의 단수가 있는 때에는 이를 1일로 계산한다."
+    },
+    "cap": {
+     "clause": "제13조 제3항",
+     "quote": "본 조의 지체상금에는 상한을 두지 아니한다. 공정 지연으로 인한 도급인의 손해가 지체상금을 초과하는 경우 도급인은 그 초과분을 별도로 청구할 수 있다."
+    }
+   },
+   "notes": "상한 없음. 지체상금을 넘는 손해는 도급인이 따로 청구할 수 있음(제13조 제3항). 누적 지체가 5일을 넘으면 도급인이 계약을 해지할 수 있음(제22조). 유예 조항 없음."
+  },
+  "D": {
+   "customer_id": "D",
+   "basis": "tiered_per_day",
+   "rate_pct": null,
+   "flat_amount_krw": null,
+   "flat_escalation": null,
+   "tiers": [
+    {
+     "from_day": 1,
+     "to_day": 2,
+     "rate_pct": 0.1
+    },
+    {
+     "from_day": 3,
+     "to_day": 5,
+     "rate_pct": 0.2
+    },
+    {
+     "from_day": 6,
+     "to_day": null,
+     "rate_pct": 0.5
+    }
+   ],
+   "grace_hours": 0.0,
+   "base": "shipment_value",
+   "base_amount_krw": null,
+   "cap_pct": 15.0,
+   "cap_amount_krw": null,
+   "cap_scope": "shipment",
+   "partial_unit_rounds_up": true,
+   "force_majeure": {
+    "covered_events": [
+     "지진",
+     "전쟁",
+     "파업"
+    ],
+    "notice_hours": null,
+    "conditions": [],
+    "citation": {
+     "clause": "제11조 제1항",
+     "quote": "수탁자는 지진, 전쟁, 파업으로 인하여 납품이 지체된 경우 지연 배상금의 책임을 지지 아니한다."
+    }
+   },
+   "citations": {
+    "rate": {
+     "clause": "제10조 제1항",
+     "quote": "수탁자가 납품 기한을 지체한 경우 지연 배상금은 지체일수에 따라 다음 각 호와 같이 누진 산정한다."
+    },
+    "tier_1": {
+     "clause": "제10조 제1항 제1호",
+     "quote": "지체 1일차부터 2일차까지: 1일당 해당 운송 건 납품가액의 0.1%"
+    },
+    "tier_2": {
+     "clause": "제10조 제1항 제2호",
+     "quote": "지체 3일차부터 5일차까지: 1일당 해당 운송 건 납품가액의 0.2%"
+    },
+    "tier_3": {
+     "clause": "제10조 제1항 제3호",
+     "quote": "지체 6일차 이후: 1일당 해당 운송 건 납품가액의 0.5%"
+    },
+    "rounding": {
+     "clause": "제10조 제2항",
+     "quote": "1일 미만의 지체는 1일로 계산한다."
+    },
+    "cap": {
+     "clause": "제10조 제3항",
+     "quote": "지연 배상금의 총액은 해당 운송 건 납품가액의 15%를 한도로 한다."
+    },
+    "force_majeure_scope": {
+     "clause": "제11조 제2항",
+     "quote": "전항의 면책 사유는 열거된 것에 한한다."
+    }
+   },
+   "notes": "요율 기준은 '해당 운송 건 납품가액'으로 건별 가액이므로 shipment_value로 매핑했다. 유예 조항은 없다. 면책 사유는 지진, 전쟁, 파업 세 가지로 한정 열거되어 있고(제11조 제2항), 통지 의무는 없다."
+  },
+  "E": {
+   "customer_id": "E",
+   "basis": "flat_per_shipment",
+   "rate_pct": null,
+   "flat_amount_krw": 500000,
+   "flat_escalation": {
+    "after_hours": 24.0,
+    "amount_krw": 2000000
+   },
+   "tiers": [],
+   "grace_hours": 0.0,
+   "base": "shipment_value",
+   "base_amount_krw": null,
+   "cap_pct": null,
+   "cap_amount_krw": 20000000,
+   "cap_scope": "customer_period",
+   "partial_unit_rounds_up": true,
+   "force_majeure": null,
+   "citations": {
+    "rate": {
+     "clause": "제9조 제1항",
+     "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+    },
+    "basis": {
+     "clause": "제9조 제1항",
+     "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+    },
+    "escalation": {
+     "clause": "제9조 제2항",
+     "quote": "지체가 배송 기한으로부터 24시간을 초과한 경우 제1항의 위약금은 1건당 금 2,000,000원으로 한다."
+    },
+    "cap": {
+     "clause": "제9조 제3항",
+     "quote": "1개월 동안 배송사가 지급하는 위약금의 합계는 금 20,000,000원을 초과하지 아니한다."
+    },
+    "force_majeure": {
+     "clause": "제9조 제1항",
+     "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+    },
+    "liquidated_damages": {
+     "clause": "제10조",
+     "quote": "제9조의 위약금은 손해배상액의 예정으로 보며, 회사는 위약금을 초과하는 손해를 별도로 청구하지 아니한다."
+    }
+   },
+   "notes": "건당 정액 위약금이다. 24시간 이내 지연은 500,000원, 24시간을 넘긴 지연은 2,000,000원이며, 2,000,000원은 500,000원에 더해지는 금액이 아니라 이를 대체하는 금액이다. 유예 시간이 없다. 상한은 1개월 합계 20,000,000원이다. '지체 사유를 불문'하므로 불가항력 면책이 없다(force_majeure=null). 위약금은 손해배상액의 예정이다(제10조). 건당 정액이므로 base 필드는 계산에 쓰이지 않는다."
+  },
+  "F": {
+   "customer_id": "F",
+   "basis": "per_business_day",
+   "rate_pct": 0.2,
+   "flat_amount_krw": null,
+   "flat_escalation": null,
+   "tiers": [],
+   "grace_hours": 24.0,
+   "base": "shipment_value",
+   "base_amount_krw": null,
+   "cap_pct": 5.0,
+   "cap_amount_krw": null,
+   "cap_scope": "shipment",
+   "partial_unit_rounds_up": true,
+   "force_majeure": {
+    "covered_events": [
+     "천재지변",
+     "그 밖에 을이 통제할 수 없는 사유"
+    ],
+    "notice_hours": 48.0,
+    "conditions": [
+     "을은 그 사유를 안 날부터 2일 이내에 갑에게 통지한다(기산점: 사유를 안 날)"
+    ],
+    "citation": {
+     "clause": "제12조",
+     "quote": "천재지변 그 밖에 을이 통제할 수 없는 사유로 인한 지체에 대하여 을은 책임을 지지 아니한다. 을은 그 사유를 안 날부터 2일 이내에 갑에게 통지한다."
+    }
+   },
+   "citations": {
+    "rate": {
+     "clause": "제9조 제1항",
+     "quote": "을이 배송일을 지체한 경우 지체 영업일 1일당 해당 배송 건 상품가액의 0.2%를 지체상금으로 갑에게 지급한다."
+    },
+    "basis": {
+     "clause": "제9조 제2항",
+     "quote": "지체 영업일의 계산에서 토요일, 일요일 및 공휴일은 제외한다."
+    },
+    "grace": {
+     "clause": "제9조 제3항",
+     "quote": "배송일 다음 영업일 중의 지연은 지체로 보지 아니한다."
+    },
+    "cap": {
+     "clause": "제9조 제4항",
+     "quote": "지체상금 총액은 해당 배송 건 상품가액의 5%를 초과하지 아니한다."
+    }
+   },
+   "notes": "영업일 기준(토·일·공휴일 제외), 건별 상품가액의 0.2%/영업일, 건별 5% 상한. 유예는 '배송일 다음 영업일 중'으로 규칙에 따라 24시간으로 근사함. 미정 사항은 상관례에 따름(제19조)."
+  },
+  "G": {
+   "customer_id": "G",
+   "basis": "per_hour",
+   "rate_pct": 0.05,
+   "flat_amount_krw": null,
+   "flat_escalation": null,
+   "tiers": [],
+   "grace_hours": 6.0,
+   "base": "monthly_fee",
+   "base_amount_krw": 180000000,
+   "cap_pct": 20.0,
+   "cap_amount_krw": null,
+   "cap_scope": "customer_period",
+   "partial_unit_rounds_up": true,
+   "force_majeure": {
+    "covered_events": [
+     "천재지변 일체",
+     "전쟁",
+     "테러",
+     "정부 조치"
+    ],
+    "notice_hours": null,
+    "conditions": [
+     "서비스 제공자가 합리적으로 통제할 수 없는 사유일 것",
+     "그 사유를 지체 없이 발주처에 통지"
+    ],
+    "citation": {
+     "clause": "제13조 제1항",
+     "quote": "천재지변 일체, 전쟁, 테러, 정부 조치 등 서비스 제공자가 합리적으로 통제할 수 없는 사유로 인한 지체는 제8조의 감액 대상에서 제외한다."
+    }
+   },
+   "citations": {
+    "rate": {
+     "clause": "제8조 제1항",
+     "quote": "서비스 제공자가 납기를 지체한 경우, 지체된 매 1시간마다 월 서비스료의 0.05%를 당월 서비스료에서 감액한다."
+    },
+    "grace": {
+     "clause": "제8조 제2항",
+     "quote": "납기 경과 후 6시간 이내의 지연은 감액 대상에서 제외한다."
+    },
+    "rounding": {
+     "clause": "제8조 제3항",
+     "quote": "1시간 미만의 지체는 1시간으로 본다."
+    },
+    "cap": {
+     "clause": "제8조 제4항",
+     "quote": "당월 감액 총액은 월 서비스료의 20%를 초과하지 아니한다."
+    },
+    "base": {
+     "clause": "제3조",
+     "quote": "발주처는 서비스 제공자에게 월 서비스료 금 180,000,000원을 지급한다."
+    },
+    "force_majeure_notice": {
+     "clause": "제13조 제2항",
+     "quote": "서비스 제공자는 그 사유를 지체 없이 발주처에 통지한다."
+    }
+   },
+   "notes": "시간당 월 서비스료(180,000,000원)의 0.05% = 90,000원 감액. 당월 감액 총액 상한은 월 서비스료의 20% = 36,000,000원(월 합계 기준)."
+  },
+  "H": {
+   "customer_id": "H",
+   "basis": "per_calendar_day",
+   "rate_pct": 0.15,
+   "flat_amount_krw": null,
+   "flat_escalation": null,
+   "tiers": [],
+   "grace_hours": 0.0,
+   "base": "shipment_value",
+   "base_amount_krw": null,
+   "cap_pct": 10.0,
+   "cap_amount_krw": null,
+   "cap_scope": "shipment",
+   "partial_unit_rounds_up": true,
+   "force_majeure": {
+    "covered_events": [
+     "태풍",
+     "홍수",
+     "지진",
+     "천재지변"
+    ],
+    "notice_hours": 48.0,
+    "conditions": [
+     "대체 운송수단을 확보하기 위하여 노력하였음을 입증"
+    ],
+    "citation": {
+     "clause": "제12조 제1항",
+     "quote": "태풍, 홍수, 지진 등 천재지변으로 인하여 납품이 지체된 경우 을은 지체상금의 책임을 면한다."
+    }
+   },
+   "citations": {
+    "rate": {
+     "clause": "제11조 제1항",
+     "quote": "을이 납품 기한을 지체한 경우 지체일수 1일당 해당 운송 건 의약품가액의 0.15%를 지체상금으로 지급한다."
+    },
+    "basis": {
+     "clause": "제11조 제2항",
+     "quote": "1일 미만의 지체는 1일로 본다."
+    },
+    "cap": {
+     "clause": "제11조 제3항",
+     "quote": "지체상금은 해당 운송 건 의약품가액의 10%를 상한으로 한다."
+    },
+    "force_majeure_condition": {
+     "clause": "제12조 제2항",
+     "quote": "다만 을이 전항의 면책을 주장하기 위해서는 대체 운송수단을 확보하기 위하여 노력하였음을 입증하여야 한다."
+    },
+    "force_majeure_notice": {
+     "clause": "제12조 제3항",
+     "quote": "을은 사유 발생 후 48시간 이내에 갑에게 통지한다."
+    }
+   },
+   "notes": "유예 조항이 없다(grace_hours=0). 온도 이탈 시 전량 폐기와 가액 배상(제16조)은 지체상금과 별개의 책임이라 이 계산에는 넣지 않았다."
+  }
+ },
+ "extraction": {
+  "A": {
+   "terms": {
+    "customer_id": "A",
+    "basis": "per_calendar_day",
+    "rate_pct": 0.1,
+    "flat_amount_krw": null,
+    "flat_escalation": null,
+    "tiers": [],
+    "grace_hours": 24.0,
+    "base": "shipment_value",
+    "base_amount_krw": null,
+    "cap_pct": 10.0,
+    "cap_amount_krw": null,
+    "cap_scope": "shipment",
+    "partial_unit_rounds_up": true,
+    "force_majeure": {
+     "covered_events": [
+      "태풍",
+      "지진",
+      "홍수",
+      "폭설",
+      "천재지변",
+      "전쟁",
+      "내란",
+      "정부의 명령"
+     ],
+     "notice_hours": 24.0,
+     "conditions": [],
+     "citation": {
+      "clause": "제15조 제1항, 제2항",
+      "quote": "① 태풍, 지진, 홍수, 폭설 등 천재지변 또는 전쟁, 내란, 정부의 명령으로 인하여 납기를 지체한 경우 을은 그 책임을 면한다. ② 을은 전항의 사유가 발생한 때로부터 24시간 이내에 갑에게 그 사실을 통지하여야 하며, 통지하지 아니한 경우 면책을 주장할 수 없다."
+     }
+    },
+    "citations": {
+     "rate": {
+      "clause": "제12조 제1항",
+      "quote": "을이 납기를 지체한 경우, 갑은 지체된 매 1일에 대하여 해당 운송 건 화물가액의 1,000분의 1에 해당하는 지체상금을 을에게 청구할 수 있다."
+     },
+     "grace": {
+      "clause": "제12조 제2항",
+      "quote": "전항의 지체일수 산정에 있어 납기로부터 24시간 이내의 지연은 지체로 보지 아니한다."
+     },
+     "cap": {
+      "clause": "제12조 제3항",
+      "quote": "지체상금의 총액은 해당 운송 건 화물가액의 100분의 10을 초과하지 아니한다."
+     },
+     "basis": {
+      "clause": "제12조 제4항",
+      "quote": "1일 미만의 지체는 1일로 본다."
+     }
+    },
+    "notes": "요율 1,000분의 1 = 0.1%/일, 상한 100분의 10 = 10%(건별 화물가액 기준). 계약기간 2년(제20조)."
+   },
+   "confidence": 0.9,
+   "ambiguities": [
+    "유예 24시간을 넘긴 뒤 지체일수를 납기 시점부터 셀지(예: 30시간 지연 → 2일), 유예가 끝난 시점부터 셀지(→ 1일)가 명시되어 있지 않다.",
+    "'매 1일'이 역일인지 영업일인지 적혀 있지 않아 역일(per_calendar_day)로 보았다.",
+    "제15조 제1항의 '태풍, 지진, 홍수, 폭설 등 천재지변'은 예시 열거라서, 적히지 않은 다른 천재지변도 면책 대상에 들어갈 수 있다.",
+    "불가항력 통지 시한 24시간을 '사유가 발생한 때'부터 세는데, 사유가 계속 이어지는 경우(예: 며칠 계속되는 폭설) 기산점이 불명확하다."
+   ]
+  },
+  "B": {
+   "terms": {
+    "customer_id": "B",
+    "basis": "per_hour",
+    "rate_pct": 0.05,
+    "flat_amount_krw": null,
+    "flat_escalation": null,
+    "tiers": [],
+    "grace_hours": 0.0,
+    "base": "shipment_value",
+    "base_amount_krw": null,
+    "cap_pct": null,
+    "cap_amount_krw": null,
+    "cap_scope": "shipment",
+    "partial_unit_rounds_up": true,
+    "force_majeure": null,
+    "citations": {
+     "rate": {
+      "clause": "제9조 제1항",
+      "quote": "수행사가 배송 시한을 넘긴 경우, 지연된 매 1시간마다 해당 주문 상품가액의 0.05%를 배상한다."
+     },
+     "basis": {
+      "clause": "제9조 제2항",
+      "quote": "지연 시간은 배송 시한 경과 시점부터 실제 인도 시점까지로 하며, 1시간 미만은 1시간으로 계산한다."
+     },
+     "grace": {
+      "clause": "제9조 제3항",
+      "quote": "본 조의 배상금에는 별도의 유예기간을 두지 아니한다."
+     },
+     "cap": {
+      "clause": "제9조 제4항",
+      "quote": "본 조의 배상금에는 상한을 두지 아니한다. 다만 발주자가 서면으로 감면에 동의한 경우에는 그러하지 아니하다."
+     },
+     "liability": {
+      "clause": "제11조",
+      "quote": "수행사는 배송 지연의 원인이 수행사의 귀책사유인지 여부와 관계없이 제9조의 배상 책임을 진다. 다만 발주자의 귀책사유로 인한 경우에는 그러하지 아니하다."
+     }
+    },
+    "notes": "시간당 0.05%, 1시간 미만은 올림, 유예 없음, 상한 없음. 불가항력 조항은 없음. 제11조에 따라 수행사의 귀책 여부와 관계없이 책임을 지며, 발주자 귀책인 경우에만 면책된다."
+   },
+   "confidence": 0.93,
+   "ambiguities": [
+    "요율의 기준이 '해당 주문 상품가액'이다. 이를 건별 화물가액(shipment_value)으로 보았지만, 주문 1건이 여러 배송 건으로 나뉠 경우 기준이 달라질 수 있다.",
+    "제9조 제4항 단서에 따라 발주자가 서면으로 감면에 동의하면 배상금이 줄 수 있다. 감면 폭이나 상한은 정해져 있지 않아 반영하지 않았다.",
+    "제11조는 불가항력 조항이 아니다. 귀책 여부와 관계없이 책임을 지는 사실상 '사유 불문' 구조여서 force_majeure=null로 두었다. 다만 발주자 귀책인 지연은 면책된다.",
+    "배송 시한은 분 단위로 관리된다(제5조). 지연 시간을 분 단위로 잰 뒤 시간 단위로 올림하는 것으로 해석했다."
+   ]
+  },
+  "C": {
+   "terms": {
+    "customer_id": "C",
+    "basis": "per_calendar_day",
+    "rate_pct": 0.3,
+    "flat_amount_krw": null,
+    "flat_escalation": null,
+    "tiers": [],
+    "grace_hours": 0.0,
+    "base": "shipment_value",
+    "base_amount_krw": null,
+    "cap_pct": null,
+    "cap_amount_krw": null,
+    "cap_scope": "shipment",
+    "partial_unit_rounds_up": true,
+    "force_majeure": {
+     "covered_events": [
+      "천재지변",
+      "전쟁",
+      "폭동",
+      "그 밖에 수급인의 책임 없는 사유"
+     ],
+     "notice_hours": 12.0,
+     "conditions": [
+      "사유 발생 시부터 12시간 이내에 도급인에게 서면(전자문서 포함)으로 통지",
+      "기한 내 통지가 없으면 면제를 주장하지 못함",
+      "면제는 해당 사유로 지체한 기간을 지체일수에 산입하지 않는 방식(전액 면책 아님)"
+     ],
+     "citation": {
+      "clause": "제14조 제1항, 제2항",
+      "quote": "① 천재지변, 전쟁, 폭동 그 밖에 수급인의 책임 없는 사유로 지체한 경우에는 그 기간을 지체일수에 산입하지 아니한다. ② 수급인이 전항의 면제를 받고자 하는 때에는 그 사유가 발생한 때부터 12시간 이내에 도급인에게 서면(전자문서 포함)으로 통지하여야 한다. 기한 내 통지가 없는 경우 면제를 주장하지 못한다."
+     }
+    },
+    "citations": {
+     "rate": {
+      "clause": "제13조 제1항",
+      "quote": "수급인이 인도 기한을 지체한 때에는 지체일수 1일당 해당 자재 운송 건 자재가액의 1,000분의 3을 지체상금으로 도급인에게 지급한다."
+     },
+     "basis": {
+      "clause": "제13조 제1항",
+      "quote": "수급인이 인도 기한을 지체한 때에는 지체일수 1일당 해당 자재 운송 건 자재가액의 1,000분의 3을 지체상금으로 도급인에게 지급한다."
+     },
+     "rounding": {
+      "clause": "제13조 제2항",
+      "quote": "지체일수에 1일 미만의 단수가 있는 때에는 이를 1일로 계산한다."
+     },
+     "cap": {
+      "clause": "제13조 제3항",
+      "quote": "본 조의 지체상금에는 상한을 두지 아니한다. 공정 지연으로 인한 도급인의 손해가 지체상금을 초과하는 경우 도급인은 그 초과분을 별도로 청구할 수 있다."
+     }
+    },
+    "notes": "상한 없음. 지체상금을 넘는 손해는 도급인이 따로 청구할 수 있음(제13조 제3항). 누적 지체가 5일을 넘으면 도급인이 계약을 해지할 수 있음(제22조). 유예 조항 없음."
+   },
+   "confidence": 0.88,
+   "ambiguities": [
+    "'지체일수 1일당'이 역일인지 영업일인지 계약서에 적혀 있지 않아 per_calendar_day로 보았다.",
+    "기준금액이 '해당 자재 운송 건 자재가액'이다. 운송료가 아니라 자재 자체의 가액이므로 shipment_value를 화물(자재)가액으로 넣어야 한다.",
+    "제13조 제3항에 따라 지체상금을 넘는 실손해를 따로 청구할 수 있어, 실제 노출액이 계산값보다 커질 수 있다.",
+    "제14조 제1항의 '그 밖에 수급인의 책임 없는 사유'는 범위가 열려 있다. 어디까지 면제되는지는 해석에 따라 달라질 수 있다.",
+    "면제는 전액 면책이 아니라 해당 기간을 지체일수에서 빼는 방식이다. 기간이 일부만 겹치면 어떻게 계산할지 정해져 있지 않다.",
+    "제22조의 '누적 5일'이 건별 누적인지 계약 전체 누적인지 분명하지 않다."
+   ]
+  },
+  "D": {
+   "terms": {
+    "customer_id": "D",
+    "basis": "tiered_per_day",
+    "rate_pct": null,
+    "flat_amount_krw": null,
+    "flat_escalation": null,
+    "tiers": [
+     {
+      "from_day": 1,
+      "to_day": 2,
+      "rate_pct": 0.1
+     },
+     {
+      "from_day": 3,
+      "to_day": 5,
+      "rate_pct": 0.2
+     },
+     {
+      "from_day": 6,
+      "to_day": null,
+      "rate_pct": 0.5
+     }
+    ],
+    "grace_hours": 0.0,
+    "base": "shipment_value",
+    "base_amount_krw": null,
+    "cap_pct": 15.0,
+    "cap_amount_krw": null,
+    "cap_scope": "shipment",
+    "partial_unit_rounds_up": true,
+    "force_majeure": {
+     "covered_events": [
+      "지진",
+      "전쟁",
+      "파업"
+     ],
+     "notice_hours": null,
+     "conditions": [],
+     "citation": {
+      "clause": "제11조 제1항",
+      "quote": "수탁자는 지진, 전쟁, 파업으로 인하여 납품이 지체된 경우 지연 배상금의 책임을 지지 아니한다."
+     }
+    },
+    "citations": {
+     "rate": {
+      "clause": "제10조 제1항",
+      "quote": "수탁자가 납품 기한을 지체한 경우 지연 배상금은 지체일수에 따라 다음 각 호와 같이 누진 산정한다."
+     },
+     "tier_1": {
+      "clause": "제10조 제1항 제1호",
+      "quote": "지체 1일차부터 2일차까지: 1일당 해당 운송 건 납품가액의 0.1%"
+     },
+     "tier_2": {
+      "clause": "제10조 제1항 제2호",
+      "quote": "지체 3일차부터 5일차까지: 1일당 해당 운송 건 납품가액의 0.2%"
+     },
+     "tier_3": {
+      "clause": "제10조 제1항 제3호",
+      "quote": "지체 6일차 이후: 1일당 해당 운송 건 납품가액의 0.5%"
+     },
+     "rounding": {
+      "clause": "제10조 제2항",
+      "quote": "1일 미만의 지체는 1일로 계산한다."
+     },
+     "cap": {
+      "clause": "제10조 제3항",
+      "quote": "지연 배상금의 총액은 해당 운송 건 납품가액의 15%를 한도로 한다."
+     },
+     "force_majeure_scope": {
+      "clause": "제11조 제2항",
+      "quote": "전항의 면책 사유는 열거된 것에 한한다."
+     }
+    },
+    "notes": "요율 기준은 '해당 운송 건 납품가액'으로 건별 가액이므로 shipment_value로 매핑했다. 유예 조항은 없다. 면책 사유는 지진, 전쟁, 파업 세 가지로 한정 열거되어 있고(제11조 제2항), 통지 의무는 없다."
+   },
+   "confidence": 0.88,
+   "ambiguities": [
+    "'지체일수'가 역일인지 영업일인지 명시가 없다. 누진 구간은 일 단위로 보고 tiered_per_day로 처리했다.",
+    "누진 방식을 '각 지체일에 그날이 속한 구간 요율을 적용해 합산'으로 해석했다. 지체일수에 해당하는 구간 요율을 전체 일수에 일괄 적용한다고 읽을 수도 있다.",
+    "'납품가액'이 화물가액과 같은 의미인지, 운송료인지 분명하지 않다. 건별 금액이므로 shipment_value로 분류했다.",
+    "상한의 '총액'은 '해당 운송 건' 기준이라 건별 상한(shipment)으로 보았다."
+   ]
+  },
+  "E": {
+   "terms": {
+    "customer_id": "E",
+    "basis": "flat_per_shipment",
+    "rate_pct": null,
+    "flat_amount_krw": 500000,
+    "flat_escalation": {
+     "after_hours": 24.0,
+     "amount_krw": 2000000
+    },
+    "tiers": [],
+    "grace_hours": 0.0,
+    "base": "shipment_value",
+    "base_amount_krw": null,
+    "cap_pct": null,
+    "cap_amount_krw": 20000000,
+    "cap_scope": "customer_period",
+    "partial_unit_rounds_up": true,
+    "force_majeure": null,
+    "citations": {
+     "rate": {
+      "clause": "제9조 제1항",
+      "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+     },
+     "basis": {
+      "clause": "제9조 제1항",
+      "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+     },
+     "escalation": {
+      "clause": "제9조 제2항",
+      "quote": "지체가 배송 기한으로부터 24시간을 초과한 경우 제1항의 위약금은 1건당 금 2,000,000원으로 한다."
+     },
+     "cap": {
+      "clause": "제9조 제3항",
+      "quote": "1개월 동안 배송사가 지급하는 위약금의 합계는 금 20,000,000원을 초과하지 아니한다."
+     },
+     "force_majeure": {
+      "clause": "제9조 제1항",
+      "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+     },
+     "liquidated_damages": {
+      "clause": "제10조",
+      "quote": "제9조의 위약금은 손해배상액의 예정으로 보며, 회사는 위약금을 초과하는 손해를 별도로 청구하지 아니한다."
+     }
+    },
+    "notes": "건당 정액 위약금이다. 24시간 이내 지연은 500,000원, 24시간을 넘긴 지연은 2,000,000원이며, 2,000,000원은 500,000원에 더해지는 금액이 아니라 이를 대체하는 금액이다. 유예 시간이 없다. 상한은 1개월 합계 20,000,000원이다. '지체 사유를 불문'하므로 불가항력 면책이 없다(force_majeure=null). 위약금은 손해배상액의 예정이다(제10조). 건당 정액이므로 base 필드는 계산에 쓰이지 않는다."
+   },
+   "confidence": 0.9,
+   "ambiguities": [
+    "제9조 제2항은 '제1항의 위약금은 1건당 금 2,000,000원으로 한다'고 적고 있어, 24시간을 넘긴 지연에는 2,000,000원이 500,000원을 대체하는 것으로 해석했다(합산하면 2,500,000원). 다른 해석도 가능하다.",
+    "정확히 24시간 지연한 건은 '초과'에 해당하지 않아 500,000원이 적용되는 것으로 보았다.",
+    "제3항의 '1개월'이 달력상 월인지, 기산일부터 1개월인지 명시되어 있지 않다.",
+    "유예 조항이 없어 배송 기한을 조금이라도 넘기면 위약금이 생기는 것으로 보았다(grace_hours=0).",
+    "건당 정액 구조라서 base와 partial_unit_rounds_up 값은 계산에 영향이 없다. base는 스키마 기본값(shipment_value)을 그대로 두었다.",
+    "제17조의 보고 의무('지체 없이')는 면책 요건이 아니다. 제9조 제1항이 '지체 사유를 불문'하므로 불가항력 면책은 없는 것으로 처리했다."
+   ]
+  },
+  "F": {
+   "terms": {
+    "customer_id": "F",
+    "basis": "per_business_day",
+    "rate_pct": 0.2,
+    "flat_amount_krw": null,
+    "flat_escalation": null,
+    "tiers": [],
+    "grace_hours": 24.0,
+    "base": "shipment_value",
+    "base_amount_krw": null,
+    "cap_pct": 5.0,
+    "cap_amount_krw": null,
+    "cap_scope": "shipment",
+    "partial_unit_rounds_up": true,
+    "force_majeure": {
+     "covered_events": [
+      "천재지변",
+      "그 밖에 을이 통제할 수 없는 사유"
+     ],
+     "notice_hours": 48.0,
+     "conditions": [
+      "을은 그 사유를 안 날부터 2일 이내에 갑에게 통지한다(기산점: 사유를 안 날)"
+     ],
+     "citation": {
+      "clause": "제12조",
+      "quote": "천재지변 그 밖에 을이 통제할 수 없는 사유로 인한 지체에 대하여 을은 책임을 지지 아니한다. 을은 그 사유를 안 날부터 2일 이내에 갑에게 통지한다."
+     }
+    },
+    "citations": {
+     "rate": {
+      "clause": "제9조 제1항",
+      "quote": "을이 배송일을 지체한 경우 지체 영업일 1일당 해당 배송 건 상품가액의 0.2%를 지체상금으로 갑에게 지급한다."
+     },
+     "basis": {
+      "clause": "제9조 제2항",
+      "quote": "지체 영업일의 계산에서 토요일, 일요일 및 공휴일은 제외한다."
+     },
+     "grace": {
+      "clause": "제9조 제3항",
+      "quote": "배송일 다음 영업일 중의 지연은 지체로 보지 아니한다."
+     },
+     "cap": {
+      "clause": "제9조 제4항",
+      "quote": "지체상금 총액은 해당 배송 건 상품가액의 5%를 초과하지 아니한다."
+     }
+    },
+    "notes": "영업일 기준(토·일·공휴일 제외), 건별 상품가액의 0.2%/영업일, 건별 5% 상한. 유예는 '배송일 다음 영업일 중'으로 규칙에 따라 24시간으로 근사함. 미정 사항은 상관례에 따름(제19조)."
+   },
+   "confidence": 0.8,
+   "ambiguities": [
+    "유예 '배송일 다음 영업일 중의 지연'을 grace_hours=24로 근사함. 배송일이 금요일이거나 공휴일 전날이면 다음 영업일까지 실제로는 24시간보다 훨씬 길어서(예: 금→월 72시간 이상) 근사치와 어긋남.",
+    "유예 기간(다음 영업일)이 지나면 지체 영업일을 배송일 다음 날부터 세는지, 유예 기간이 끝난 뒤부터 세는지 정해져 있지 않음.",
+    "1영업일 미만 지연을 1일로 올림하는지 계약서에 적혀 있지 않음. partial_unit_rounds_up=true는 스키마 기본값이며 계약서 근거는 없음.",
+    "불가항력 통지 시한 '2일'이 역일인지 영업일인지 분명하지 않음. 48시간으로 환산했고, 기산점은 사유가 발생한 날이 아니라 '안 날'임.",
+    "통지 시한을 넘긴 경우 면책 자체가 사라지는지(면책의 요건인지) 아니면 통지 의무 위반에 그치는지 계약서에 적혀 있지 않음.",
+    "'그 밖에 을이 통제할 수 없는 사유'는 포괄 문구라 면책 범위가 넓고, 무엇이 해당하는지 해석이 갈릴 수 있음.",
+    "제19조(상관례에 따름)에 따라 계약서에 없는 사항은 상관례로 보충될 수 있음."
+   ]
+  },
+  "G": {
+   "terms": {
+    "customer_id": "G",
+    "basis": "per_hour",
+    "rate_pct": 0.05,
+    "flat_amount_krw": null,
+    "flat_escalation": null,
+    "tiers": [],
+    "grace_hours": 6.0,
+    "base": "monthly_fee",
+    "base_amount_krw": 180000000,
+    "cap_pct": 20.0,
+    "cap_amount_krw": null,
+    "cap_scope": "customer_period",
+    "partial_unit_rounds_up": true,
+    "force_majeure": {
+     "covered_events": [
+      "천재지변 일체",
+      "전쟁",
+      "테러",
+      "정부 조치"
+     ],
+     "notice_hours": null,
+     "conditions": [
+      "서비스 제공자가 합리적으로 통제할 수 없는 사유일 것",
+      "그 사유를 지체 없이 발주처에 통지"
+     ],
+     "citation": {
+      "clause": "제13조 제1항",
+      "quote": "천재지변 일체, 전쟁, 테러, 정부 조치 등 서비스 제공자가 합리적으로 통제할 수 없는 사유로 인한 지체는 제8조의 감액 대상에서 제외한다."
+     }
+    },
+    "citations": {
+     "rate": {
+      "clause": "제8조 제1항",
+      "quote": "서비스 제공자가 납기를 지체한 경우, 지체된 매 1시간마다 월 서비스료의 0.05%를 당월 서비스료에서 감액한다."
+     },
+     "grace": {
+      "clause": "제8조 제2항",
+      "quote": "납기 경과 후 6시간 이내의 지연은 감액 대상에서 제외한다."
+     },
+     "rounding": {
+      "clause": "제8조 제3항",
+      "quote": "1시간 미만의 지체는 1시간으로 본다."
+     },
+     "cap": {
+      "clause": "제8조 제4항",
+      "quote": "당월 감액 총액은 월 서비스료의 20%를 초과하지 아니한다."
+     },
+     "base": {
+      "clause": "제3조",
+      "quote": "발주처는 서비스 제공자에게 월 서비스료 금 180,000,000원을 지급한다."
+     },
+     "force_majeure_notice": {
+      "clause": "제13조 제2항",
+      "quote": "서비스 제공자는 그 사유를 지체 없이 발주처에 통지한다."
+     }
+    },
+    "notes": "시간당 월 서비스료(180,000,000원)의 0.05% = 90,000원 감액. 당월 감액 총액 상한은 월 서비스료의 20% = 36,000,000원(월 합계 기준)."
+   },
+   "confidence": 0.88,
+   "ambiguities": [
+    "제8조 제2항: 6시간을 넘긴 지연이 생기면 처음 6시간도 감액에 넣는지, 6시간을 넘긴 시간만 감액하는지가 명시되지 않음",
+    "제8조 제3항의 1시간 단위 올림을 유예 6시간을 빼기 전에 적용하는지, 뺀 뒤에 적용하는지 불분명",
+    "제13조 제1항은 '등'으로 끝나므로 나열된 사유는 예시이고, '합리적으로 통제할 수 없는 사유'라는 기준이 넓게 적용될 수 있음",
+    "제13조 제2항의 통지 의무에는 '지체 없이'만 있고 정해진 시한이 없음. 통지하지 않으면 면책을 잃는지도 명시되지 않음",
+    "상한(20%)은 당월 합계 기준임. 월을 넘겨 이어진 지연을 어느 달에 귀속할지는 명시되지 않음"
+   ]
+  },
+  "H": {
+   "terms": {
+    "customer_id": "H",
+    "basis": "per_calendar_day",
+    "rate_pct": 0.15,
+    "flat_amount_krw": null,
+    "flat_escalation": null,
+    "tiers": [],
+    "grace_hours": 0.0,
+    "base": "shipment_value",
+    "base_amount_krw": null,
+    "cap_pct": 10.0,
+    "cap_amount_krw": null,
+    "cap_scope": "shipment",
+    "partial_unit_rounds_up": true,
+    "force_majeure": {
+     "covered_events": [
+      "태풍",
+      "홍수",
+      "지진",
+      "천재지변"
+     ],
+     "notice_hours": 48.0,
+     "conditions": [
+      "대체 운송수단을 확보하기 위하여 노력하였음을 입증"
+     ],
+     "citation": {
+      "clause": "제12조 제1항",
+      "quote": "태풍, 홍수, 지진 등 천재지변으로 인하여 납품이 지체된 경우 을은 지체상금의 책임을 면한다."
+     }
+    },
+    "citations": {
+     "rate": {
+      "clause": "제11조 제1항",
+      "quote": "을이 납품 기한을 지체한 경우 지체일수 1일당 해당 운송 건 의약품가액의 0.15%를 지체상금으로 지급한다."
+     },
+     "basis": {
+      "clause": "제11조 제2항",
+      "quote": "1일 미만의 지체는 1일로 본다."
+     },
+     "cap": {
+      "clause": "제11조 제3항",
+      "quote": "지체상금은 해당 운송 건 의약품가액의 10%를 상한으로 한다."
+     },
+     "force_majeure_condition": {
+      "clause": "제12조 제2항",
+      "quote": "다만 을이 전항의 면책을 주장하기 위해서는 대체 운송수단을 확보하기 위하여 노력하였음을 입증하여야 한다."
+     },
+     "force_majeure_notice": {
+      "clause": "제12조 제3항",
+      "quote": "을은 사유 발생 후 48시간 이내에 갑에게 통지한다."
+     }
+    },
+    "notes": "유예 조항이 없다(grace_hours=0). 온도 이탈 시 전량 폐기와 가액 배상(제16조)은 지체상금과 별개의 책임이라 이 계산에는 넣지 않았다."
+   },
+   "confidence": 0.88,
+   "ambiguities": [
+    "'지체일수 1일'이 역일인지 영업일인지 명시가 없다. per_calendar_day로 보았다.",
+    "면책 사유가 '태풍, 홍수, 지진 등 천재지변'으로 적혀 있어 예시를 든 것이다. 다른 천재지변도 면책되는지는 해석에 달렸다.",
+    "제12조 제3항의 48시간 통지가 면책 요건인지, 단순한 통지 의무인지 분명하지 않다.",
+    "제12조 제2항의 '노력하였음을 입증'은 정성 조건이다. 입증에 어느 정도가 필요한지 기준이 없다.",
+    "'의약품가액'이 운송 건 화물가액(shipment_value)과 같은 뜻이라고 보았다. 원가인지 판매가인지는 정의되어 있지 않다."
+   ]
+  }
+ },
+ "judgments": {
+  "A": {
+   "customer_id": "A",
+   "has_clause": true,
+   "event_covered": false,
+   "notice_ok": true,
+   "conditions_met": {},
+   "applies": false,
+   "reasoning": "제15조 제1항은 면책 사유를 \"태풍, 지진, 홍수, 폭설 등 천재지변 또는 전쟁, 내란, 정부의 명령\"으로 정하고 있습니다. 이번 사건은 선사의 선적 지연 때문에 항만 적체가 생긴 것으로, 천재지변도 정부 조치도 아닌 제3자(선사)의 사정이어서 면책 사유에 해당하지 않습니다. 사건 6시간 뒤에 통지해 24시간 통지 시한은 지켰지만, 사유 자체가 해당하지 않으므로 면책은 적용되지 않습니다. 다만 지연이 14시간이라 제12조 제2항(\"납기로부터 24시간 이내의 지연은 지체로 보지 아니한다\")에 따라 지체상금은 생기지 않을 것으로 보입니다. 이 판단을 뒷받침하려면 실제 인도 시각 기록을 확보해 지연이 24시간 이내였음을 입증해 두는 것이 좋습니다.",
+   "citation": {
+    "clause": "제15조 제1항",
+    "quote": "태풍, 지진, 홍수, 폭설 등 천재지변 또는 전쟁, 내란, 정부의 명령으로 인하여 납기를 지체한 경우 을은 그 책임을 면한다."
+   }
+  },
+  "B": {
+   "customer_id": "B",
+   "has_clause": false,
+   "event_covered": false,
+   "notice_ok": true,
+   "conditions_met": {},
+   "applies": false,
+   "reasoning": "제11조에 따라 수행사는 지연 원인이 자기 귀책인지와 상관없이 제9조의 배상 책임을 집니다. 예외는 발주자 귀책뿐이므로 불가항력 조항이 없는 계약으로 봅니다. 이번 14시간 지연은 제3자인 선사가 선적을 늦춰 생긴 항만 적체이고 발주자 귀책이 아닙니다. 그래서 면책되지 않고, 14시간분(상품가액의 0.70%)을 유예기간이나 상한 없이 배상해야 합니다. 통지 시한 규정은 없어서 6시간 뒤 통지는 문제가 되지 않습니다. 배상액을 줄이려면 제9조 제4항에 따라 발주자의 서면 감면 동의를 받아야 합니다. 이와 별도로 선사의 지연을 입증할 자료를 확보해 선사에 구상을 청구하는 방안을 검토하세요.",
+   "citation": {
+    "clause": "제11조",
+    "quote": "수행사는 배송 지연의 원인이 수행사의 귀책사유인지 여부와 관계없이 제9조의 배상 책임을 진다. 다만 발주자의 귀책사유로 인한 경우에는 그러하지 아니하다."
+   }
+  },
+  "C": {
+   "customer_id": "C",
+   "has_clause": true,
+   "event_covered": true,
+   "notice_ok": true,
+   "conditions_met": {
+    "사유 발생 시부터 12시간 이내 서면(전자문서 포함) 통지": true,
+    "기한 내 통지 (미통지 시 면제 주장 불가)": true,
+    "면제 효과는 지체기간의 지체일수 불산입(전액 면책 아님)": true
+   },
+   "applies": true,
+   "reasoning": "제14조 제1항은 면제 사유를 열거로 한정하지 않습니다. \"그 밖에 수급인의 책임 없는 사유\"라는 포괄 표현이 있으므로, 선사의 선적 지연으로 생긴 항만 적체도 운송사 자신의 귀책이 아닌 제3자 사정으로 보아 면제 사유에 해당합니다. 운영팀은 사건 발생 6시간 뒤에 통지했으므로 제2항의 12시간 시한 안에 있습니다. 다만 면제는 지체상금 전액을 면하는 것이 아닙니다. 적체로 늦어진 14시간을 지체일수에 넣지 않는 방식입니다. 따라서 통지가 서면 또는 전자문서였음을 보여 주는 발송 기록(메일이나 전자문서 송신 내역)과 선사의 지연 확인서를 확보해 두어야 합니다. 또 선사가 운송사가 직접 계약한 이행보조자라면 그 귀책이 운송사에 돌아올 수 있으니, 선사와의 계약관계도 확인해야 합니다.",
+   "citation": {
+    "clause": "제14조 제1항, 제2항",
+    "quote": "① 천재지변, 전쟁, 폭동 그 밖에 수급인의 책임 없는 사유로 지체한 경우에는 그 기간을 지체일수에 산입하지 아니한다. ② 수급인이 전항의 면제를 받고자 하는 때에는 그 사유가 발생한 때부터 12시간 이내에 도급인에게 서면(전자문서 포함)으로 통지하여야 한다. 기한 내 통지가 없는 경우 면제를 주장하지 못한다."
+   }
+  },
+  "D": {
+   "customer_id": "D",
+   "has_clause": true,
+   "event_covered": false,
+   "notice_ok": true,
+   "conditions_met": {},
+   "applies": false,
+   "reasoning": "제11조 ①항은 면책 사유를 지진, 전쟁, 파업으로 정하고, ②항은 \"열거된 것에 한한다\"고 못박고 있습니다. 이번 사건은 선사 사정으로 선적이 늦어져 생긴 항만 적체로, 열거된 세 가지 사유 중 어디에도 해당하지 않습니다. 통지 시한이 없으므로 6시간 뒤 통지는 문제가 되지 않지만 면책은 적용되지 않습니다. 따라서 제10조에 따른 지연 배상금(1일 미만 지체도 1일로 계산, 0.1%)에 대비해야 하며, 선사에 구상 청구를 하려면 선사의 선적 지연을 보여주는 입증 자료를 확보해 두어야 합니다.",
+   "citation": {
+    "clause": "제11조 제1항·제2항",
+    "quote": "① 수탁자는 지진, 전쟁, 파업으로 인하여 납품이 지체된 경우 지연 배상금의 책임을 지지 아니한다. ② 전항의 면책 사유는 열거된 것에 한한다."
+   }
+  },
+  "E": {
+   "customer_id": "E",
+   "has_clause": false,
+   "event_covered": false,
+   "notice_ok": true,
+   "conditions_met": {},
+   "applies": false,
+   "reasoning": "제9조 제1항은 배송사가 \"지체 사유를 불문하고\" 위약금을 지급하도록 정하고 있으므로 이 계약에는 면책 조항이 없는 것으로 보고, 선사 사정으로 생긴 14시간 항만 적체도 면책되지 않습니다. 지연이 24시간 이내이므로 제9조 제1항에 따라 1건당 500,000원이 적용됩니다. 제17조는 시한 없이 \"지체 없이\" 보고하라고만 하므로 6시간 뒤 통지는 통지 요건 위반으로 보지 않습니다. 위약금 부담을 줄이려면 선사의 선적 지연을 보여주는 자료(선적 일정 변경 통지, 반출 기록)를 확보해 선사에 구상을 청구하거나 고객과 협의하면 됩니다.",
+   "citation": {
+    "clause": "제9조 제1항",
+    "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+   }
+  },
+  "F": {
+   "customer_id": "F",
+   "has_clause": true,
+   "event_covered": true,
+   "notice_ok": true,
+   "conditions_met": {
+    "을은 그 사유를 안 날부터 2일 이내에 갑에게 통지한다(기산점: 사유를 안 날)": true
+   },
+   "applies": true,
+   "reasoning": "제12조는 '천재지변'에 더해 '그 밖에 을이 통제할 수 없는 사유'라는 포괄 표현을 쓰고 있습니다. 이번 지연은 천재지변은 아니지만 제3자인 선사의 선적 지연으로 생긴 항만 반출 14시간 지연이고 을 자신의 귀책(자사 시스템 장애 등)이 아니므로, 사건의 성격상 을이 통제할 수 없는 사유에 해당합니다. 통지는 사건 발생 6시간 뒤에 이루어져 '안 날부터 2일(48시간) 이내' 시한 안에 들어오므로 면책이 적용됩니다. 다만 이번 사건에서 선사가 을의 하도급인이 아니었다는 점을 보여 줄 선사의 지연 통보 자료를 확보해 두는 것이 좋습니다. 또한 지연이 14시간이라 배송일 다음 영업일 안에 인도되었다면 제9조 제3항에 따라 애초에 지체로 보지 않을 수도 있습니다.",
+   "citation": {
+    "clause": "제12조",
+    "quote": "천재지변 그 밖에 을이 통제할 수 없는 사유로 인한 지체에 대하여 을은 책임을 지지 아니한다. 을은 그 사유를 안 날부터 2일 이내에 갑에게 통지한다."
+   }
+  },
+  "G": {
+   "customer_id": "G",
+   "has_clause": true,
+   "event_covered": true,
+   "notice_ok": true,
+   "conditions_met": {
+    "서비스 제공자가 합리적으로 통제할 수 없는 사유일 것": false,
+    "그 사유를 지체 없이 발주처에 통지": true
+   },
+   "applies": false,
+   "reasoning": "제13조 ①항은 \"천재지변 일체, 전쟁, 테러, 정부 조치 등 서비스 제공자가 합리적으로 통제할 수 없는 사유\"로 적혀 있어 사유를 닫아 둔 열거가 아니라 포괄 표현입니다. 선사의 선적 지연은 자사 귀책이 아닌 제3자 사정이므로 사건의 성격상 면책 사유에 들어갈 수 있습니다. 통지는 제13조 ②항이 시한 없이 \"지체 없이\"로만 정하고 있어 6시간 뒤 통지도 충족한 것으로 봅니다. 다만 이 지연을 \"합리적으로 통제할 수 없었다\"는 점을 보여 주는 사실이 하나도 없어 그 조건은 충족하지 않은 것으로 판단했고, 따라서 14시간 지연에 대한 면책은 적용되지 않습니다. 면책을 받으려면 선사의 선적 지연 확인서를 받고, 대체 선사나 대체 운송수단을 찾으려 했지만 불가능했다는 기록을 확보해야 합니다.",
+   "citation": {
+    "clause": "제13조 제1항",
+    "quote": "천재지변 일체, 전쟁, 테러, 정부 조치 등 서비스 제공자가 합리적으로 통제할 수 없는 사유로 인한 지체는 제8조의 감액 대상에서 제외한다."
+   }
+  },
+  "H": {
+   "customer_id": "H",
+   "has_clause": true,
+   "event_covered": false,
+   "notice_ok": true,
+   "conditions_met": {
+    "대체 운송수단을 확보하기 위하여 노력하였음을 입증": false
+   },
+   "applies": false,
+   "reasoning": "제12조 제1항은 면책 사유를 \"태풍, 홍수, 지진 등 천재지변\"으로 정한다. '등'은 같은 성격인 천재지변 안에서만 범위를 넓히는 표현이므로, 선사의 선적 지연이라는 제3자 사정으로 생긴 항만 적체(14시간)는 여기에 들어가지 않는다. 통지는 6시간 뒤에 해서 48시간 시한(제3항)을 지켰지만, 제2항이 요구하는 대체 운송수단 확보 노력을 입증할 사실이 없어 그 조건도 충족하지 못했다. 따라서 면책되지 않으며, 지체상금은 지체 1일 미만도 1일로 보므로 의약품가액의 0.15%가 된다. 이 손해는 선사를 상대로 선적 지연 경위와 손해 자료를 확보해 구상을 검토하는 것이 맞다.",
+   "citation": {
+    "clause": "제12조 제1항",
+    "quote": "태풍, 홍수, 지진 등 천재지변으로 인하여 납품이 지체된 경우 을은 지체상금의 책임을 면한다."
+   }
+  }
+ },
+ "ranking": [
+  {
+   "shipment_id": "H01",
+   "customer_id": "H",
+   "customer_name": "청람제약",
+   "due_in_h": 4.3,
+   "deadline_rank": 13,
+   "exposure_rank": 1,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 159000,
+   "marginal_krw": 159000,
+   "blocked_by": null,
+   "why": "일당 0.15% × 1일(역일) × 기준금액 106,000,000원 = 159,000원 상한 10,600,000원 이내.",
+   "citations": [
+    {
+     "clause": "제12조 제1항",
+     "quote": "태풍, 홍수, 지진 등 천재지변으로 인하여 납품이 지체된 경우 을은 지체상금의 책임을 면한다."
+    },
+    {
+     "clause": "제11조 제1항",
+     "quote": "을이 납품 기한을 지체한 경우 지체일수 1일당 해당 운송 건 의약품가액의 0.15%를 지체상금으로 지급한다."
+    }
+   ]
+  },
+  {
+   "shipment_id": "D06",
+   "customer_id": "D",
+   "customer_name": "미래식품",
+   "due_in_h": 2.2,
+   "deadline_rank": 4,
+   "exposure_rank": 2,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 48000,
+   "marginal_krw": 48000,
+   "blocked_by": null,
+   "why": "계단식 1일: 1~2일차 0.1%×1일=48,000원 → 합계 48,000원 상한 7,200,000원 이내.",
+   "citations": [
+    {
+     "clause": "제11조 제1항·제2항",
+     "quote": "① 수탁자는 지진, 전쟁, 파업으로 인하여 납품이 지체된 경우 지연 배상금의 책임을 지지 아니한다. ② 전항의 면책 사유는 열거된 것에 한한다."
+    },
+    {
+     "clause": "제10조 제1항",
+     "quote": "수탁자가 납품 기한을 지체한 경우 지연 배상금은 지체일수에 따라 다음 각 호와 같이 누진 산정한다."
+    }
+   ]
+  },
+  {
+   "shipment_id": "B07",
+   "customer_id": "B",
+   "customer_name": "두루물산",
+   "due_in_h": 2.1,
+   "deadline_rank": 3,
+   "exposure_rank": 3,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 11000,
+   "marginal_krw": 11000,
+   "blocked_by": null,
+   "why": "시간당 0.05% × 1시간 × 기준금액 22,000,000원 = 11,000원 상한 없음.",
+   "citations": [
+    {
+     "clause": "제9조 제1항",
+     "quote": "수행사가 배송 시한을 넘긴 경우, 지연된 매 1시간마다 해당 주문 상품가액의 0.05%를 배상한다."
+    }
+   ]
+  },
+  {
+   "shipment_id": "E02",
+   "customer_id": "E",
+   "customer_name": "가온헬스케어",
+   "due_in_h": 0.9,
+   "deadline_rank": 2,
+   "exposure_rank": 4,
+   "penalty_if_now_krw": 500000,
+   "penalty_if_deferred_krw": 500000,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "지연 건당 정액 500,000원",
+   "citations": [
+    {
+     "clause": "제9조 제1항",
+     "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+    }
+   ]
+  },
+  {
+   "shipment_id": "E05",
+   "customer_id": "E",
+   "customer_name": "가온헬스케어",
+   "due_in_h": 4.2,
+   "deadline_rank": 11,
+   "exposure_rank": 5,
+   "penalty_if_now_krw": 500000,
+   "penalty_if_deferred_krw": 500000,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "지연 건당 정액 500,000원",
+   "citations": [
+    {
+     "clause": "제9조 제1항",
+     "quote": "배송사가 배송 기한을 지체한 경우, 배송사는 지체 사유를 불문하고 지연 1건당 금 500,000원의 위약금을 회사에 지급한다."
+    }
+   ]
+  },
+  {
+   "shipment_id": "H02",
+   "customer_id": "H",
+   "customer_name": "청람제약",
+   "due_in_h": 2.4,
+   "deadline_rank": 6,
+   "exposure_rank": 6,
+   "penalty_if_now_krw": 151500,
+   "penalty_if_deferred_krw": 151500,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "일당 0.15% × 1일(역일) × 기준금액 101,000,000원 = 151,500원 상한 10,100,000원 이내.",
+   "citations": [
+    {
+     "clause": "제12조 제1항",
+     "quote": "태풍, 홍수, 지진 등 천재지변으로 인하여 납품이 지체된 경우 을은 지체상금의 책임을 면한다."
+    },
+    {
+     "clause": "제11조 제1항",
+     "quote": "을이 납품 기한을 지체한 경우 지체일수 1일당 해당 운송 건 의약품가액의 0.15%를 지체상금으로 지급한다."
+    }
+   ]
+  },
+  {
+   "shipment_id": "C03",
+   "customer_id": "C",
+   "customer_name": "세움건설",
+   "due_in_h": -5.3,
+   "deadline_rank": 1,
+   "exposure_rank": 7,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": "불가항력 면책",
+   "why": "불가항력 면책. 미뤄도 페널티가 늘지 않는다.",
+   "citations": [
+    {
+     "clause": "제14조 제1항, 제2항",
+     "quote": "① 천재지변, 전쟁, 폭동 그 밖에 수급인의 책임 없는 사유로 지체한 경우에는 그 기간을 지체일수에 산입하지 아니한다. ② 수급인이 전항의 면제를 받고자 하는 때에는 그 사유가 발생한 때부터 12시간 이내에 도급인에게 서면(전자문서 포함)으로 통지하여야 한다. 기한 내 통지가 없는 경우 면제를 주장하지 못한다."
+    }
+   ]
+  },
+  {
+   "shipment_id": "A05",
+   "customer_id": "A",
+   "customer_name": "한빛전자",
+   "due_in_h": 2.4,
+   "deadline_rank": 5,
+   "exposure_rank": 8,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": "유예기간 내",
+   "why": "유예기간 내. 미뤄도 페널티가 늘지 않는다.",
+   "citations": [
+    {
+     "clause": "제15조 제1항",
+     "quote": "태풍, 지진, 홍수, 폭설 등 천재지변 또는 전쟁, 내란, 정부의 명령으로 인하여 납기를 지체한 경우 을은 그 책임을 면한다."
+    },
+    {
+     "clause": "제12조 제2항",
+     "quote": "전항의 지체일수 산정에 있어 납기로부터 24시간 이내의 지연은 지체로 보지 아니한다."
+    }
+   ]
+  },
+  {
+   "shipment_id": "A02",
+   "customer_id": "A",
+   "customer_name": "한빛전자",
+   "due_in_h": 3.6,
+   "deadline_rank": 7,
+   "exposure_rank": 9,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "D07",
+   "customer_id": "D",
+   "customer_name": "미래식품",
+   "due_in_h": 3.8,
+   "deadline_rank": 8,
+   "exposure_rank": 10,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "B03",
+   "customer_id": "B",
+   "customer_name": "두루물산",
+   "due_in_h": 4.0,
+   "deadline_rank": 9,
+   "exposure_rank": 11,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "F01",
+   "customer_id": "F",
+   "customer_name": "바로유통",
+   "due_in_h": 4.1,
+   "deadline_rank": 10,
+   "exposure_rank": 12,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "B04",
+   "customer_id": "B",
+   "customer_name": "두루물산",
+   "due_in_h": 4.3,
+   "deadline_rank": 12,
+   "exposure_rank": 13,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "H04",
+   "customer_id": "H",
+   "customer_name": "청람제약",
+   "due_in_h": 4.3,
+   "deadline_rank": 14,
+   "exposure_rank": 14,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "D04",
+   "customer_id": "D",
+   "customer_name": "미래식품",
+   "due_in_h": 4.5,
+   "deadline_rank": 15,
+   "exposure_rank": 15,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "G01",
+   "customer_id": "G",
+   "customer_name": "누리에너지",
+   "due_in_h": 5.2,
+   "deadline_rank": 16,
+   "exposure_rank": 16,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "C02",
+   "customer_id": "C",
+   "customer_name": "세움건설",
+   "due_in_h": 7.0,
+   "deadline_rank": 17,
+   "exposure_rank": 17,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "B02",
+   "customer_id": "B",
+   "customer_name": "두루물산",
+   "due_in_h": 7.2,
+   "deadline_rank": 18,
+   "exposure_rank": 18,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "B06",
+   "customer_id": "B",
+   "customer_name": "두루물산",
+   "due_in_h": 7.3,
+   "deadline_rank": 19,
+   "exposure_rank": 19,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "A03",
+   "customer_id": "A",
+   "customer_name": "한빛전자",
+   "due_in_h": 7.8,
+   "deadline_rank": 20,
+   "exposure_rank": 20,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "F05",
+   "customer_id": "F",
+   "customer_name": "바로유통",
+   "due_in_h": 8.1,
+   "deadline_rank": 21,
+   "exposure_rank": 21,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "H06",
+   "customer_id": "H",
+   "customer_name": "청람제약",
+   "due_in_h": 8.1,
+   "deadline_rank": 22,
+   "exposure_rank": 22,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "G05",
+   "customer_id": "G",
+   "customer_name": "누리에너지",
+   "due_in_h": 8.6,
+   "deadline_rank": 23,
+   "exposure_rank": 23,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "A06",
+   "customer_id": "A",
+   "customer_name": "한빛전자",
+   "due_in_h": 9.6,
+   "deadline_rank": 24,
+   "exposure_rank": 24,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "F06",
+   "customer_id": "F",
+   "customer_name": "바로유통",
+   "due_in_h": 10.1,
+   "deadline_rank": 25,
+   "exposure_rank": 25,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "G07",
+   "customer_id": "G",
+   "customer_name": "누리에너지",
+   "due_in_h": 10.6,
+   "deadline_rank": 26,
+   "exposure_rank": 26,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "H05",
+   "customer_id": "H",
+   "customer_name": "청람제약",
+   "due_in_h": 10.8,
+   "deadline_rank": 27,
+   "exposure_rank": 27,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "E06",
+   "customer_id": "E",
+   "customer_name": "가온헬스케어",
+   "due_in_h": 11.0,
+   "deadline_rank": 28,
+   "exposure_rank": 28,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "A01",
+   "customer_id": "A",
+   "customer_name": "한빛전자",
+   "due_in_h": 12.3,
+   "deadline_rank": 29,
+   "exposure_rank": 29,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "G04",
+   "customer_id": "G",
+   "customer_name": "누리에너지",
+   "due_in_h": 13.0,
+   "deadline_rank": 30,
+   "exposure_rank": 30,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "G03",
+   "customer_id": "G",
+   "customer_name": "누리에너지",
+   "due_in_h": 13.3,
+   "deadline_rank": 31,
+   "exposure_rank": 31,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  },
+  {
+   "shipment_id": "D01",
+   "customer_id": "D",
+   "customer_name": "미래식품",
+   "due_in_h": 17.0,
+   "deadline_rank": 32,
+   "exposure_rank": 32,
+   "penalty_if_now_krw": 0,
+   "penalty_if_deferred_krw": 0,
+   "marginal_krw": 0,
+   "blocked_by": null,
+   "why": "한 사이클 미뤄도 마감 안이거나 유예 안이다.",
+   "citations": []
+  }
+ ],
+ "ranking_at_h": 14.5,
+ "policies": {
+  "deadline_first": {
+   "policy": "deadline_first",
+   "label": "마감 급한 순(기존)",
+   "total_penalty_krw": 8100000,
+   "late_count": 41,
+   "on_time_count": 15,
+   "records": [
+    {
+     "shipment_id": "B05",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 0.5,
+     "delivered_h": 6.5,
+     "due_h": 13.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D03",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 0.7,
+     "delivered_h": 3.7,
+     "due_h": 6.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F02",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 1.1,
+     "delivered_h": 3.1,
+     "due_h": 8.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D05",
+     "customer_id": "D",
+     "truck": 7,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 7.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G02",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 11.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F04",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 1.5,
+     "delivered_h": 5.5,
+     "due_h": 8.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E04",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 1.7,
+     "delivered_h": 4.7,
+     "due_h": 11.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C07",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 1.9,
+     "delivered_h": 6.4,
+     "due_h": 12.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A07",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 5.1,
+     "delivered_h": 7.1,
+     "due_h": 8.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H03",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 6.7,
+     "delivered_h": 8.7,
+     "due_h": 9.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F03",
+     "customer_id": "F",
+     "truck": 0,
+     "dispatched_h": 7.2,
+     "delivered_h": 9.2,
+     "due_h": 9.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C04",
+     "customer_id": "C",
+     "truck": 7,
+     "dispatched_h": 7.2,
+     "delivered_h": 11.2,
+     "due_h": 10.0,
+     "delay_h": 1.2,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D02",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 7.7,
+     "delivered_h": 9.7,
+     "due_h": 10.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G06",
+     "customer_id": "G",
+     "truck": 5,
+     "dispatched_h": 9.1,
+     "delivered_h": 13.6,
+     "due_h": 11.7,
+     "delay_h": 1.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C05",
+     "customer_id": "C",
+     "truck": 4,
+     "dispatched_h": 9.5,
+     "delivered_h": 12.0,
+     "due_h": 12.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E01",
+     "customer_id": "E",
+     "truck": 3,
+     "dispatched_h": 10.7,
+     "delivered_h": 14.7,
+     "due_h": 12.5,
+     "delay_h": 2.2,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H07",
+     "customer_id": "H",
+     "truck": 6,
+     "dispatched_h": 10.9,
+     "delivered_h": 13.4,
+     "due_h": 14.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E07",
+     "customer_id": "E",
+     "truck": 0,
+     "dispatched_h": 11.2,
+     "delivered_h": 15.2,
+     "due_h": 14.9,
+     "delay_h": 0.3,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A04",
+     "customer_id": "A",
+     "truck": 2,
+     "dispatched_h": 11.7,
+     "delivered_h": 17.7,
+     "due_h": 15.2,
+     "delay_h": 2.5,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B01",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 12.5,
+     "delivered_h": 15.0,
+     "due_h": 15.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C03",
+     "customer_id": "C",
+     "truck": 4,
+     "dispatched_h": 14.5,
+     "delivered_h": 18.0,
+     "due_h": 9.2,
+     "delay_h": 8.8,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E02",
+     "customer_id": "E",
+     "truck": 7,
+     "dispatched_h": 15.2,
+     "delivered_h": 20.2,
+     "due_h": 15.4,
+     "delay_h": 4.8,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B07",
+     "customer_id": "B",
+     "truck": 6,
+     "dispatched_h": 15.9,
+     "delivered_h": 17.9,
+     "due_h": 16.6,
+     "delay_h": 1.3,
+     "penalty_krw": 22000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D06",
+     "customer_id": "D",
+     "truck": 1,
+     "dispatched_h": 17.5,
+     "delivered_h": 19.5,
+     "due_h": 16.7,
+     "delay_h": 2.8,
+     "penalty_krw": 48000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A05",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 18.1,
+     "delivered_h": 20.1,
+     "due_h": 16.9,
+     "delay_h": 3.2,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H02",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 18.7,
+     "delivered_h": 21.2,
+     "due_h": 16.9,
+     "delay_h": 4.3,
+     "penalty_krw": 151500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A02",
+     "customer_id": "A",
+     "truck": 0,
+     "dispatched_h": 19.2,
+     "delivered_h": 21.7,
+     "due_h": 18.1,
+     "delay_h": 3.6,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D07",
+     "customer_id": "D",
+     "truck": 6,
+     "dispatched_h": 19.9,
+     "delivered_h": 22.4,
+     "due_h": 18.3,
+     "delay_h": 4.1,
+     "penalty_krw": 45000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B03",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 21.5,
+     "delivered_h": 24.0,
+     "due_h": 18.5,
+     "delay_h": 5.5,
+     "penalty_krw": 126000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F01",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 21.5,
+     "delivered_h": 24.5,
+     "due_h": 18.6,
+     "delay_h": 5.9,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E05",
+     "customer_id": "E",
+     "truck": 5,
+     "dispatched_h": 22.1,
+     "delivered_h": 26.6,
+     "due_h": 18.7,
+     "delay_h": 7.9,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B04",
+     "customer_id": "B",
+     "truck": 2,
+     "dispatched_h": 23.7,
+     "delivered_h": 26.7,
+     "due_h": 18.8,
+     "delay_h": 7.9,
+     "penalty_krw": 116000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H01",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 23.7,
+     "delivered_h": 27.2,
+     "due_h": 18.8,
+     "delay_h": 8.4,
+     "penalty_krw": 159000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H04",
+     "customer_id": "H",
+     "truck": 0,
+     "dispatched_h": 24.2,
+     "delivered_h": 27.2,
+     "due_h": 18.8,
+     "delay_h": 8.4,
+     "penalty_krw": 199500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D04",
+     "customer_id": "D",
+     "truck": 6,
+     "dispatched_h": 24.9,
+     "delivered_h": 26.9,
+     "due_h": 19.0,
+     "delay_h": 7.9,
+     "penalty_krw": 41000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G01",
+     "customer_id": "G",
+     "truck": 7,
+     "dispatched_h": 25.2,
+     "delivered_h": 28.2,
+     "due_h": 19.7,
+     "delay_h": 8.5,
+     "penalty_krw": 270000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C02",
+     "customer_id": "C",
+     "truck": 1,
+     "dispatched_h": 26.5,
+     "delivered_h": 31.5,
+     "due_h": 21.5,
+     "delay_h": 10.0,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B02",
+     "customer_id": "B",
+     "truck": 4,
+     "dispatched_h": 27.5,
+     "delivered_h": 32.5,
+     "due_h": 21.7,
+     "delay_h": 10.8,
+     "penalty_krw": 253000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B06",
+     "customer_id": "B",
+     "truck": 6,
+     "dispatched_h": 28.9,
+     "delivered_h": 31.9,
+     "due_h": 21.8,
+     "delay_h": 10.1,
+     "penalty_krw": 319000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A03",
+     "customer_id": "A",
+     "truck": 2,
+     "dispatched_h": 29.7,
+     "delivered_h": 32.2,
+     "due_h": 22.3,
+     "delay_h": 9.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F05",
+     "customer_id": "F",
+     "truck": 0,
+     "dispatched_h": 30.2,
+     "delivered_h": 33.7,
+     "due_h": 22.6,
+     "delay_h": 11.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H06",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 30.7,
+     "delivered_h": 35.7,
+     "due_h": 22.6,
+     "delay_h": 13.1,
+     "penalty_krw": 130500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G05",
+     "customer_id": "G",
+     "truck": 5,
+     "dispatched_h": 31.1,
+     "delivered_h": 33.1,
+     "due_h": 23.1,
+     "delay_h": 10.0,
+     "penalty_krw": 360000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A06",
+     "customer_id": "A",
+     "truck": 7,
+     "dispatched_h": 31.2,
+     "delivered_h": 35.2,
+     "due_h": 24.1,
+     "delay_h": 11.1,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F06",
+     "customer_id": "F",
+     "truck": 2,
+     "dispatched_h": 34.7,
+     "delivered_h": 38.7,
+     "due_h": 24.6,
+     "delay_h": 14.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G07",
+     "customer_id": "G",
+     "truck": 6,
+     "dispatched_h": 34.9,
+     "delivered_h": 37.9,
+     "due_h": 25.1,
+     "delay_h": 12.8,
+     "penalty_krw": 630000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H05",
+     "customer_id": "H",
+     "truck": 5,
+     "dispatched_h": 35.1,
+     "delivered_h": 41.1,
+     "due_h": 25.3,
+     "delay_h": 15.8,
+     "penalty_krw": 106500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E06",
+     "customer_id": "E",
+     "truck": 1,
+     "dispatched_h": 36.5,
+     "delivered_h": 42.5,
+     "due_h": 25.5,
+     "delay_h": 17.0,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C01",
+     "customer_id": "C",
+     "truck": 0,
+     "dispatched_h": 37.2,
+     "delivered_h": 41.7,
+     "due_h": 25.6,
+     "delay_h": 16.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E03",
+     "customer_id": "E",
+     "truck": 4,
+     "dispatched_h": 37.5,
+     "delivered_h": 42.0,
+     "due_h": 26.2,
+     "delay_h": 15.8,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F07",
+     "customer_id": "F",
+     "truck": 7,
+     "dispatched_h": 39.2,
+     "delivered_h": 42.7,
+     "due_h": 26.3,
+     "delay_h": 16.4,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A01",
+     "customer_id": "A",
+     "truck": 3,
+     "dispatched_h": 40.7,
+     "delivered_h": 43.2,
+     "due_h": 26.8,
+     "delay_h": 16.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G04",
+     "customer_id": "G",
+     "truck": 6,
+     "dispatched_h": 40.9,
+     "delivered_h": 43.4,
+     "due_h": 27.5,
+     "delay_h": 15.9,
+     "penalty_krw": 900000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G03",
+     "customer_id": "G",
+     "truck": 2,
+     "dispatched_h": 42.7,
+     "delivered_h": 46.7,
+     "due_h": 27.8,
+     "delay_h": 18.9,
+     "penalty_krw": 1170000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C06",
+     "customer_id": "C",
+     "truck": 3,
+     "dispatched_h": 45.7,
+     "delivered_h": 50.7,
+     "due_h": 30.3,
+     "delay_h": 20.4,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D01",
+     "customer_id": "D",
+     "truck": 6,
+     "dispatched_h": 45.9,
+     "delivered_h": 51.9,
+     "due_h": 31.5,
+     "delay_h": 20.4,
+     "penalty_krw": 53000,
+     "blocked_by": null,
+     "rank_reason": null
+    }
+   ],
+   "per_customer_krw": {
+    "B": 836000,
+    "D": 187000,
+    "F": 0,
+    "G": 3330000,
+    "E": 3000000,
+    "C": 0,
+    "A": 0,
+    "H": 747000
+   },
+   "penalty_curve": [
+    [
+     3.1,
+     0
+    ],
+    [
+     3.7,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.7,
+     0
+    ],
+    [
+     5.5,
+     0
+    ],
+    [
+     6.4,
+     0
+    ],
+    [
+     6.5,
+     0
+    ],
+    [
+     7.1,
+     0
+    ],
+    [
+     8.7,
+     0
+    ],
+    [
+     9.2,
+     0
+    ],
+    [
+     9.7,
+     0
+    ],
+    [
+     11.2,
+     0
+    ],
+    [
+     12.0,
+     0
+    ],
+    [
+     13.4,
+     0
+    ],
+    [
+     13.6,
+     0
+    ],
+    [
+     14.7,
+     500000
+    ],
+    [
+     15.0,
+     500000
+    ],
+    [
+     15.2,
+     1000000
+    ],
+    [
+     17.7,
+     1000000
+    ],
+    [
+     17.9,
+     1022000
+    ],
+    [
+     18.0,
+     1022000
+    ],
+    [
+     19.5,
+     1070000
+    ],
+    [
+     20.1,
+     1070000
+    ],
+    [
+     20.2,
+     1570000
+    ],
+    [
+     21.2,
+     1721500
+    ],
+    [
+     21.7,
+     1721500
+    ],
+    [
+     22.4,
+     1766500
+    ],
+    [
+     24.0,
+     1892500
+    ],
+    [
+     24.5,
+     1892500
+    ],
+    [
+     26.6,
+     2392500
+    ],
+    [
+     26.7,
+     2508500
+    ],
+    [
+     26.9,
+     2549500
+    ],
+    [
+     27.2,
+     2708500
+    ],
+    [
+     27.2,
+     2908000
+    ],
+    [
+     28.2,
+     3178000
+    ],
+    [
+     31.5,
+     3178000
+    ],
+    [
+     31.9,
+     3497000
+    ],
+    [
+     32.2,
+     3497000
+    ],
+    [
+     32.5,
+     3750000
+    ],
+    [
+     33.1,
+     4110000
+    ],
+    [
+     33.7,
+     4110000
+    ],
+    [
+     35.2,
+     4110000
+    ],
+    [
+     35.7,
+     4240500
+    ],
+    [
+     37.9,
+     4870500
+    ],
+    [
+     38.7,
+     4870500
+    ],
+    [
+     41.1,
+     4977000
+    ],
+    [
+     41.7,
+     4977000
+    ],
+    [
+     42.0,
+     5477000
+    ],
+    [
+     42.5,
+     5977000
+    ],
+    [
+     42.7,
+     5977000
+    ],
+    [
+     43.2,
+     5977000
+    ],
+    [
+     43.4,
+     6877000
+    ],
+    [
+     46.7,
+     8047000
+    ],
+    [
+     50.7,
+     8047000
+    ],
+    [
+     51.9,
+     8100000
+    ]
+   ],
+   "peak_queue_h": 14.5,
+   "peak_queue_ids": [
+    "E02",
+    "B07",
+    "E05",
+    "F01",
+    "H01",
+    "H02",
+    "G01",
+    "H04",
+    "A02",
+    "E06",
+    "H06",
+    "F06",
+    "A05",
+    "D06",
+    "A06",
+    "A03",
+    "B02",
+    "G07",
+    "B03",
+    "F05",
+    "B04",
+    "D04",
+    "C02",
+    "G03",
+    "D07",
+    "B06",
+    "D01",
+    "G05",
+    "A01",
+    "C03",
+    "H05",
+    "G04"
+   ]
+  },
+  "fifo": {
+   "policy": "fifo",
+   "label": "도착 순",
+   "total_penalty_krw": 7529500,
+   "late_count": 41,
+   "on_time_count": 15,
+   "records": [
+    {
+     "shipment_id": "B05",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 0.5,
+     "delivered_h": 6.5,
+     "due_h": 13.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D03",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 0.7,
+     "delivered_h": 3.7,
+     "due_h": 6.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F02",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 1.1,
+     "delivered_h": 3.1,
+     "due_h": 8.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D05",
+     "customer_id": "D",
+     "truck": 7,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 7.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G02",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 11.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F04",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 1.5,
+     "delivered_h": 5.5,
+     "due_h": 8.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E04",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 1.7,
+     "delivered_h": 4.7,
+     "due_h": 11.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C07",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 1.9,
+     "delivered_h": 6.4,
+     "due_h": 12.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A04",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 5.1,
+     "delivered_h": 11.1,
+     "due_h": 15.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E02",
+     "customer_id": "E",
+     "truck": 3,
+     "dispatched_h": 6.7,
+     "delivered_h": 11.7,
+     "due_h": 15.4,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C05",
+     "customer_id": "C",
+     "truck": 0,
+     "dispatched_h": 7.2,
+     "delivered_h": 9.7,
+     "due_h": 12.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F03",
+     "customer_id": "F",
+     "truck": 7,
+     "dispatched_h": 7.2,
+     "delivered_h": 9.2,
+     "due_h": 9.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A07",
+     "customer_id": "A",
+     "truck": 2,
+     "dispatched_h": 7.7,
+     "delivered_h": 9.7,
+     "due_h": 8.7,
+     "delay_h": 1.0,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B07",
+     "customer_id": "B",
+     "truck": 4,
+     "dispatched_h": 9.5,
+     "delivered_h": 11.5,
+     "due_h": 16.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D02",
+     "customer_id": "D",
+     "truck": 6,
+     "dispatched_h": 10.9,
+     "delivered_h": 12.9,
+     "due_h": 10.7,
+     "delay_h": 2.2,
+     "penalty_krw": 64000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E07",
+     "customer_id": "E",
+     "truck": 7,
+     "dispatched_h": 11.2,
+     "delivered_h": 15.2,
+     "due_h": 14.9,
+     "delay_h": 0.3,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C04",
+     "customer_id": "C",
+     "truck": 2,
+     "dispatched_h": 11.7,
+     "delivered_h": 15.7,
+     "due_h": 10.0,
+     "delay_h": 5.7,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E05",
+     "customer_id": "E",
+     "truck": 0,
+     "dispatched_h": 12.2,
+     "delivered_h": 16.7,
+     "due_h": 18.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F01",
+     "customer_id": "F",
+     "truck": 1,
+     "dispatched_h": 12.5,
+     "delivered_h": 15.5,
+     "due_h": 18.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E01",
+     "customer_id": "E",
+     "truck": 4,
+     "dispatched_h": 13.5,
+     "delivered_h": 17.5,
+     "due_h": 12.5,
+     "delay_h": 5.0,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H03",
+     "customer_id": "H",
+     "truck": 6,
+     "dispatched_h": 14.9,
+     "delivered_h": 16.9,
+     "due_h": 9.0,
+     "delay_h": 7.9,
+     "penalty_krw": 91500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B01",
+     "customer_id": "B",
+     "truck": 3,
+     "dispatched_h": 16.7,
+     "delivered_h": 19.2,
+     "due_h": 15.2,
+     "delay_h": 4.0,
+     "penalty_krw": 54000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G06",
+     "customer_id": "G",
+     "truck": 5,
+     "dispatched_h": 17.1,
+     "delivered_h": 21.6,
+     "due_h": 11.7,
+     "delay_h": 9.9,
+     "penalty_krw": 360000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H01",
+     "customer_id": "H",
+     "truck": 1,
+     "dispatched_h": 18.5,
+     "delivered_h": 22.0,
+     "due_h": 18.8,
+     "delay_h": 3.2,
+     "penalty_krw": 159000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H02",
+     "customer_id": "H",
+     "truck": 6,
+     "dispatched_h": 18.9,
+     "delivered_h": 21.4,
+     "due_h": 16.9,
+     "delay_h": 4.5,
+     "penalty_krw": 151500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G01",
+     "customer_id": "G",
+     "truck": 7,
+     "dispatched_h": 19.2,
+     "delivered_h": 22.2,
+     "due_h": 19.7,
+     "delay_h": 2.5,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H04",
+     "customer_id": "H",
+     "truck": 2,
+     "dispatched_h": 19.7,
+     "delivered_h": 22.7,
+     "due_h": 18.8,
+     "delay_h": 3.9,
+     "penalty_krw": 199500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H07",
+     "customer_id": "H",
+     "truck": 0,
+     "dispatched_h": 21.2,
+     "delivered_h": 23.7,
+     "due_h": 14.2,
+     "delay_h": 9.5,
+     "penalty_krw": 138000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A02",
+     "customer_id": "A",
+     "truck": 4,
+     "dispatched_h": 21.5,
+     "delivered_h": 24.0,
+     "due_h": 18.1,
+     "delay_h": 5.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E06",
+     "customer_id": "E",
+     "truck": 3,
+     "dispatched_h": 21.7,
+     "delivered_h": 27.7,
+     "due_h": 25.5,
+     "delay_h": 2.2,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H06",
+     "customer_id": "H",
+     "truck": 6,
+     "dispatched_h": 23.9,
+     "delivered_h": 28.9,
+     "due_h": 22.6,
+     "delay_h": 6.3,
+     "penalty_krw": 130500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F06",
+     "customer_id": "F",
+     "truck": 7,
+     "dispatched_h": 25.2,
+     "delivered_h": 29.2,
+     "due_h": 24.6,
+     "delay_h": 4.6,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A05",
+     "customer_id": "A",
+     "truck": 1,
+     "dispatched_h": 25.5,
+     "delivered_h": 27.5,
+     "due_h": 16.9,
+     "delay_h": 10.6,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D06",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 25.7,
+     "delivered_h": 27.7,
+     "due_h": 16.7,
+     "delay_h": 11.0,
+     "penalty_krw": 48000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A06",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 26.1,
+     "delivered_h": 30.1,
+     "due_h": 24.1,
+     "delay_h": 6.0,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A03",
+     "customer_id": "A",
+     "truck": 0,
+     "dispatched_h": 26.2,
+     "delivered_h": 28.7,
+     "due_h": 22.3,
+     "delay_h": 6.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B02",
+     "customer_id": "B",
+     "truck": 4,
+     "dispatched_h": 26.5,
+     "delivered_h": 31.5,
+     "due_h": 21.7,
+     "delay_h": 9.8,
+     "penalty_krw": 230000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G07",
+     "customer_id": "G",
+     "truck": 1,
+     "dispatched_h": 29.5,
+     "delivered_h": 32.5,
+     "due_h": 25.1,
+     "delay_h": 7.4,
+     "penalty_krw": 180000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B03",
+     "customer_id": "B",
+     "truck": 2,
+     "dispatched_h": 29.7,
+     "delivered_h": 32.2,
+     "due_h": 18.5,
+     "delay_h": 13.7,
+     "penalty_krw": 294000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F05",
+     "customer_id": "F",
+     "truck": 0,
+     "dispatched_h": 31.2,
+     "delivered_h": 34.7,
+     "due_h": 22.6,
+     "delay_h": 12.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B04",
+     "customer_id": "B",
+     "truck": 7,
+     "dispatched_h": 33.2,
+     "delivered_h": 36.2,
+     "due_h": 18.8,
+     "delay_h": 17.4,
+     "penalty_krw": 261000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D04",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 33.7,
+     "delivered_h": 35.7,
+     "due_h": 19.0,
+     "delay_h": 16.7,
+     "penalty_krw": 41000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C02",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 33.9,
+     "delivered_h": 38.9,
+     "due_h": 21.5,
+     "delay_h": 17.4,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G03",
+     "customer_id": "G",
+     "truck": 5,
+     "dispatched_h": 34.1,
+     "delivered_h": 38.1,
+     "due_h": 27.8,
+     "delay_h": 10.3,
+     "penalty_krw": 450000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D07",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 34.7,
+     "delivered_h": 37.2,
+     "due_h": 18.3,
+     "delay_h": 18.9,
+     "penalty_krw": 45000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B06",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 35.5,
+     "delivered_h": 38.5,
+     "due_h": 21.8,
+     "delay_h": 16.7,
+     "penalty_krw": 493000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D01",
+     "customer_id": "D",
+     "truck": 4,
+     "dispatched_h": 36.5,
+     "delivered_h": 42.5,
+     "due_h": 31.5,
+     "delay_h": 11.0,
+     "penalty_krw": 53000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G05",
+     "customer_id": "G",
+     "truck": 3,
+     "dispatched_h": 37.7,
+     "delivered_h": 39.7,
+     "due_h": 23.1,
+     "delay_h": 16.6,
+     "penalty_krw": 990000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A01",
+     "customer_id": "A",
+     "truck": 0,
+     "dispatched_h": 38.2,
+     "delivered_h": 40.7,
+     "due_h": 26.8,
+     "delay_h": 13.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C03",
+     "customer_id": "C",
+     "truck": 7,
+     "dispatched_h": 39.2,
+     "delivered_h": 42.7,
+     "due_h": 9.2,
+     "delay_h": 33.5,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H05",
+     "customer_id": "H",
+     "truck": 2,
+     "dispatched_h": 39.7,
+     "delivered_h": 45.7,
+     "due_h": 25.3,
+     "delay_h": 20.4,
+     "penalty_krw": 106500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G04",
+     "customer_id": "G",
+     "truck": 1,
+     "dispatched_h": 41.5,
+     "delivered_h": 44.0,
+     "due_h": 27.5,
+     "delay_h": 16.5,
+     "penalty_krw": 990000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C06",
+     "customer_id": "C",
+     "truck": 3,
+     "dispatched_h": 41.7,
+     "delivered_h": 46.7,
+     "due_h": 30.3,
+     "delay_h": 16.4,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F07",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 42.1,
+     "delivered_h": 45.6,
+     "due_h": 26.3,
+     "delay_h": 19.3,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E03",
+     "customer_id": "E",
+     "truck": 0,
+     "dispatched_h": 43.2,
+     "delivered_h": 47.7,
+     "due_h": 26.2,
+     "delay_h": 21.5,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C01",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 43.9,
+     "delivered_h": 48.4,
+     "due_h": 25.6,
+     "delay_h": 22.8,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    }
+   ],
+   "per_customer_krw": {
+    "B": 1332000,
+    "D": 251000,
+    "F": 0,
+    "G": 2970000,
+    "E": 2000000,
+    "C": 0,
+    "A": 0,
+    "H": 976500
+   },
+   "penalty_curve": [
+    [
+     3.1,
+     0
+    ],
+    [
+     3.7,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.7,
+     0
+    ],
+    [
+     5.5,
+     0
+    ],
+    [
+     6.4,
+     0
+    ],
+    [
+     6.5,
+     0
+    ],
+    [
+     9.2,
+     0
+    ],
+    [
+     9.7,
+     0
+    ],
+    [
+     9.7,
+     0
+    ],
+    [
+     11.1,
+     0
+    ],
+    [
+     11.5,
+     0
+    ],
+    [
+     11.7,
+     0
+    ],
+    [
+     12.9,
+     64000
+    ],
+    [
+     15.2,
+     564000
+    ],
+    [
+     15.5,
+     564000
+    ],
+    [
+     15.7,
+     564000
+    ],
+    [
+     16.7,
+     564000
+    ],
+    [
+     16.9,
+     655500
+    ],
+    [
+     17.5,
+     1155500
+    ],
+    [
+     19.2,
+     1209500
+    ],
+    [
+     21.4,
+     1361000
+    ],
+    [
+     21.6,
+     1721000
+    ],
+    [
+     22.0,
+     1880000
+    ],
+    [
+     22.2,
+     1880000
+    ],
+    [
+     22.7,
+     2079500
+    ],
+    [
+     23.7,
+     2217500
+    ],
+    [
+     24.0,
+     2217500
+    ],
+    [
+     27.5,
+     2217500
+    ],
+    [
+     27.7,
+     2717500
+    ],
+    [
+     27.7,
+     2765500
+    ],
+    [
+     28.7,
+     2765500
+    ],
+    [
+     28.9,
+     2896000
+    ],
+    [
+     29.2,
+     2896000
+    ],
+    [
+     30.1,
+     2896000
+    ],
+    [
+     31.5,
+     3126000
+    ],
+    [
+     32.2,
+     3420000
+    ],
+    [
+     32.5,
+     3600000
+    ],
+    [
+     34.7,
+     3600000
+    ],
+    [
+     35.7,
+     3641000
+    ],
+    [
+     36.2,
+     3902000
+    ],
+    [
+     37.2,
+     3947000
+    ],
+    [
+     38.1,
+     4397000
+    ],
+    [
+     38.5,
+     4890000
+    ],
+    [
+     38.9,
+     4890000
+    ],
+    [
+     39.7,
+     5880000
+    ],
+    [
+     40.7,
+     5880000
+    ],
+    [
+     42.5,
+     5933000
+    ],
+    [
+     42.7,
+     5933000
+    ],
+    [
+     44.0,
+     6923000
+    ],
+    [
+     45.6,
+     6923000
+    ],
+    [
+     45.7,
+     7029500
+    ],
+    [
+     46.7,
+     7029500
+    ],
+    [
+     47.7,
+     7529500
+    ],
+    [
+     48.4,
+     7529500
+    ]
+   ],
+   "peak_queue_h": 14.9,
+   "peak_queue_ids": [
+    "H03",
+    "B01",
+    "G06",
+    "H01",
+    "H02",
+    "G01",
+    "H04",
+    "H07",
+    "A02",
+    "E06",
+    "H06",
+    "F06",
+    "A05",
+    "D06",
+    "A06",
+    "A03",
+    "B02",
+    "G07",
+    "B03",
+    "F05",
+    "B04",
+    "D04",
+    "C02",
+    "G03",
+    "D07",
+    "B06",
+    "D01",
+    "G05",
+    "A01",
+    "C03",
+    "H05",
+    "G04"
+   ]
+  },
+  "value_first": {
+   "policy": "value_first",
+   "label": "고액 화물 순",
+   "total_penalty_krw": 10650500,
+   "late_count": 31,
+   "on_time_count": 25,
+   "records": [
+    {
+     "shipment_id": "B05",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 0.5,
+     "delivered_h": 6.5,
+     "due_h": 13.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D03",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 0.7,
+     "delivered_h": 3.7,
+     "due_h": 6.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F02",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 1.1,
+     "delivered_h": 3.1,
+     "due_h": 8.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G02",
+     "customer_id": "G",
+     "truck": 7,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 11.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D05",
+     "customer_id": "D",
+     "truck": 0,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 7.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F04",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 1.5,
+     "delivered_h": 5.5,
+     "due_h": 8.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E04",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 1.7,
+     "delivered_h": 4.7,
+     "due_h": 11.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C07",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 1.9,
+     "delivered_h": 6.4,
+     "due_h": 12.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A04",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 5.1,
+     "delivered_h": 11.1,
+     "due_h": 15.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H01",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 6.7,
+     "delivered_h": 10.2,
+     "due_h": 18.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A07",
+     "customer_id": "A",
+     "truck": 0,
+     "dispatched_h": 7.2,
+     "delivered_h": 9.2,
+     "due_h": 8.7,
+     "delay_h": 0.5,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D02",
+     "customer_id": "D",
+     "truck": 7,
+     "dispatched_h": 7.2,
+     "delivered_h": 9.2,
+     "due_h": 10.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H02",
+     "customer_id": "H",
+     "truck": 2,
+     "dispatched_h": 7.7,
+     "delivered_h": 10.2,
+     "due_h": 16.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H04",
+     "customer_id": "H",
+     "truck": 4,
+     "dispatched_h": 9.5,
+     "delivered_h": 12.5,
+     "due_h": 18.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A05",
+     "customer_id": "A",
+     "truck": 6,
+     "dispatched_h": 10.9,
+     "delivered_h": 12.9,
+     "due_h": 16.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G07",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 11.2,
+     "delivered_h": 14.2,
+     "due_h": 25.1,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A02",
+     "customer_id": "A",
+     "truck": 7,
+     "dispatched_h": 11.2,
+     "delivered_h": 13.7,
+     "due_h": 18.1,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H07",
+     "customer_id": "H",
+     "truck": 1,
+     "dispatched_h": 12.5,
+     "delivered_h": 15.0,
+     "due_h": 14.2,
+     "delay_h": 0.8,
+     "penalty_krw": 138000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A03",
+     "customer_id": "A",
+     "truck": 2,
+     "dispatched_h": 12.7,
+     "delivered_h": 15.2,
+     "due_h": 22.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H06",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 13.7,
+     "delivered_h": 18.7,
+     "due_h": 22.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A01",
+     "customer_id": "A",
+     "truck": 6,
+     "dispatched_h": 14.9,
+     "delivered_h": 17.4,
+     "due_h": 26.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G05",
+     "customer_id": "G",
+     "truck": 4,
+     "dispatched_h": 15.5,
+     "delivered_h": 17.5,
+     "due_h": 23.1,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C03",
+     "customer_id": "C",
+     "truck": 7,
+     "dispatched_h": 16.2,
+     "delivered_h": 19.7,
+     "due_h": 9.2,
+     "delay_h": 10.5,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A06",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 17.1,
+     "delivered_h": 21.1,
+     "due_h": 24.1,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G04",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 17.2,
+     "delivered_h": 19.7,
+     "due_h": 27.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G03",
+     "customer_id": "G",
+     "truck": 1,
+     "dispatched_h": 17.5,
+     "delivered_h": 21.5,
+     "due_h": 27.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G01",
+     "customer_id": "G",
+     "truck": 2,
+     "dispatched_h": 17.7,
+     "delivered_h": 20.7,
+     "due_h": 19.7,
+     "delay_h": 1.0,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H05",
+     "customer_id": "H",
+     "truck": 4,
+     "dispatched_h": 19.5,
+     "delivered_h": 25.5,
+     "due_h": 25.3,
+     "delay_h": 0.2,
+     "penalty_krw": 106500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C05",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 19.9,
+     "delivered_h": 22.4,
+     "due_h": 12.5,
+     "delay_h": 9.9,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H03",
+     "customer_id": "H",
+     "truck": 0,
+     "dispatched_h": 22.2,
+     "delivered_h": 24.2,
+     "due_h": 9.0,
+     "delay_h": 15.2,
+     "penalty_krw": 91500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C06",
+     "customer_id": "C",
+     "truck": 7,
+     "dispatched_h": 23.2,
+     "delivered_h": 28.2,
+     "due_h": 30.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B06",
+     "customer_id": "B",
+     "truck": 2,
+     "dispatched_h": 23.7,
+     "delivered_h": 26.7,
+     "due_h": 21.8,
+     "delay_h": 4.9,
+     "penalty_krw": 145000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G06",
+     "customer_id": "G",
+     "truck": 3,
+     "dispatched_h": 23.7,
+     "delivered_h": 28.2,
+     "due_h": 11.7,
+     "delay_h": 16.5,
+     "penalty_krw": 990000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D01",
+     "customer_id": "D",
+     "truck": 6,
+     "dispatched_h": 24.9,
+     "delivered_h": 30.9,
+     "due_h": 31.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D06",
+     "customer_id": "D",
+     "truck": 5,
+     "dispatched_h": 25.1,
+     "delivered_h": 27.1,
+     "due_h": 16.7,
+     "delay_h": 10.4,
+     "penalty_krw": 48000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B02",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 25.5,
+     "delivered_h": 30.5,
+     "due_h": 21.7,
+     "delay_h": 8.8,
+     "penalty_krw": 207000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D07",
+     "customer_id": "D",
+     "truck": 0,
+     "dispatched_h": 26.2,
+     "delivered_h": 28.7,
+     "due_h": 18.3,
+     "delay_h": 10.4,
+     "penalty_krw": 45000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C02",
+     "customer_id": "C",
+     "truck": 5,
+     "dispatched_h": 29.1,
+     "delivered_h": 34.1,
+     "due_h": 21.5,
+     "delay_h": 12.6,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C01",
+     "customer_id": "C",
+     "truck": 2,
+     "dispatched_h": 29.7,
+     "delivered_h": 34.2,
+     "due_h": 25.6,
+     "delay_h": 8.6,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C04",
+     "customer_id": "C",
+     "truck": 0,
+     "dispatched_h": 31.2,
+     "delivered_h": 35.2,
+     "due_h": 10.0,
+     "delay_h": 25.2,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B03",
+     "customer_id": "B",
+     "truck": 4,
+     "dispatched_h": 31.5,
+     "delivered_h": 34.0,
+     "due_h": 18.5,
+     "delay_h": 15.5,
+     "penalty_krw": 336000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D04",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 32.7,
+     "delivered_h": 34.7,
+     "due_h": 19.0,
+     "delay_h": 15.7,
+     "penalty_krw": 41000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E06",
+     "customer_id": "E",
+     "truck": 7,
+     "dispatched_h": 33.2,
+     "delivered_h": 39.2,
+     "due_h": 25.5,
+     "delay_h": 13.7,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E07",
+     "customer_id": "E",
+     "truck": 1,
+     "dispatched_h": 35.5,
+     "delivered_h": 39.5,
+     "due_h": 14.9,
+     "delay_h": 24.6,
+     "penalty_krw": 2000000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E01",
+     "customer_id": "E",
+     "truck": 4,
+     "dispatched_h": 36.5,
+     "delivered_h": 40.5,
+     "due_h": 12.5,
+     "delay_h": 28.0,
+     "penalty_krw": 2000000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E05",
+     "customer_id": "E",
+     "truck": 3,
+     "dispatched_h": 36.7,
+     "delivered_h": 41.2,
+     "due_h": 18.7,
+     "delay_h": 22.5,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B04",
+     "customer_id": "B",
+     "truck": 6,
+     "dispatched_h": 36.9,
+     "delivered_h": 39.9,
+     "due_h": 18.8,
+     "delay_h": 21.1,
+     "penalty_krw": 319000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E02",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 38.7,
+     "delivered_h": 43.7,
+     "due_h": 15.4,
+     "delay_h": 28.3,
+     "penalty_krw": 2000000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B01",
+     "customer_id": "B",
+     "truck": 5,
+     "dispatched_h": 39.1,
+     "delivered_h": 41.6,
+     "due_h": 15.2,
+     "delay_h": 26.4,
+     "penalty_krw": 364500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E03",
+     "customer_id": "E",
+     "truck": 0,
+     "dispatched_h": 39.2,
+     "delivered_h": 43.7,
+     "due_h": 26.2,
+     "delay_h": 17.5,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B07",
+     "customer_id": "B",
+     "truck": 6,
+     "dispatched_h": 42.9,
+     "delivered_h": 44.9,
+     "due_h": 16.6,
+     "delay_h": 28.3,
+     "penalty_krw": 319000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F03",
+     "customer_id": "F",
+     "truck": 1,
+     "dispatched_h": 43.5,
+     "delivered_h": 45.5,
+     "due_h": 9.9,
+     "delay_h": 35.6,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F05",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 44.1,
+     "delivered_h": 47.6,
+     "due_h": 22.6,
+     "delay_h": 25.0,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F06",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 44.5,
+     "delivered_h": 48.5,
+     "due_h": 24.6,
+     "delay_h": 23.9,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F01",
+     "customer_id": "F",
+     "truck": 7,
+     "dispatched_h": 45.2,
+     "delivered_h": 48.2,
+     "due_h": 18.6,
+     "delay_h": 29.6,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F07",
+     "customer_id": "F",
+     "truck": 3,
+     "dispatched_h": 45.7,
+     "delivered_h": 49.2,
+     "due_h": 26.3,
+     "delay_h": 22.9,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    }
+   ],
+   "per_customer_krw": {
+    "B": 1690500,
+    "D": 134000,
+    "F": 0,
+    "G": 990000,
+    "E": 7500000,
+    "C": 0,
+    "A": 0,
+    "H": 336000
+   },
+   "penalty_curve": [
+    [
+     3.1,
+     0
+    ],
+    [
+     3.7,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.7,
+     0
+    ],
+    [
+     5.5,
+     0
+    ],
+    [
+     6.4,
+     0
+    ],
+    [
+     6.5,
+     0
+    ],
+    [
+     9.2,
+     0
+    ],
+    [
+     9.2,
+     0
+    ],
+    [
+     10.2,
+     0
+    ],
+    [
+     10.2,
+     0
+    ],
+    [
+     11.1,
+     0
+    ],
+    [
+     12.5,
+     0
+    ],
+    [
+     12.9,
+     0
+    ],
+    [
+     13.7,
+     0
+    ],
+    [
+     14.2,
+     0
+    ],
+    [
+     15.0,
+     138000
+    ],
+    [
+     15.2,
+     138000
+    ],
+    [
+     17.4,
+     138000
+    ],
+    [
+     17.5,
+     138000
+    ],
+    [
+     18.7,
+     138000
+    ],
+    [
+     19.7,
+     138000
+    ],
+    [
+     19.7,
+     138000
+    ],
+    [
+     20.7,
+     138000
+    ],
+    [
+     21.1,
+     138000
+    ],
+    [
+     21.5,
+     138000
+    ],
+    [
+     22.4,
+     138000
+    ],
+    [
+     24.2,
+     229500
+    ],
+    [
+     25.5,
+     336000
+    ],
+    [
+     26.7,
+     481000
+    ],
+    [
+     27.1,
+     529000
+    ],
+    [
+     28.2,
+     529000
+    ],
+    [
+     28.2,
+     1519000
+    ],
+    [
+     28.7,
+     1564000
+    ],
+    [
+     30.5,
+     1771000
+    ],
+    [
+     30.9,
+     1771000
+    ],
+    [
+     34.0,
+     2107000
+    ],
+    [
+     34.1,
+     2107000
+    ],
+    [
+     34.2,
+     2107000
+    ],
+    [
+     34.7,
+     2148000
+    ],
+    [
+     35.2,
+     2148000
+    ],
+    [
+     39.2,
+     2648000
+    ],
+    [
+     39.5,
+     4648000
+    ],
+    [
+     39.9,
+     4967000
+    ],
+    [
+     40.5,
+     6967000
+    ],
+    [
+     41.2,
+     7467000
+    ],
+    [
+     41.6,
+     7831500
+    ],
+    [
+     43.7,
+     9831500
+    ],
+    [
+     43.7,
+     10331500
+    ],
+    [
+     44.9,
+     10650500
+    ],
+    [
+     45.5,
+     10650500
+    ],
+    [
+     47.6,
+     10650500
+    ],
+    [
+     48.2,
+     10650500
+    ],
+    [
+     48.5,
+     10650500
+    ],
+    [
+     49.2,
+     10650500
+    ]
+   ],
+   "peak_queue_h": 14.9,
+   "peak_queue_ids": [
+    "E02",
+    "C05",
+    "F03",
+    "B07",
+    "E07",
+    "C04",
+    "E05",
+    "F01",
+    "E01",
+    "H03",
+    "B01",
+    "G06",
+    "G01",
+    "E06",
+    "F06",
+    "D06",
+    "A06",
+    "B02",
+    "B03",
+    "F05",
+    "B04",
+    "D04",
+    "C02",
+    "G03",
+    "D07",
+    "B06",
+    "D01",
+    "G05",
+    "A01",
+    "C03",
+    "H05",
+    "G04"
+   ]
+  },
+  "exposure_first": {
+   "policy": "exposure_first",
+   "label": "물리는 순서(ClauseTower)",
+   "total_penalty_krw": 2083500,
+   "late_count": 34,
+   "on_time_count": 22,
+   "records": [
+    {
+     "shipment_id": "B05",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 0.5,
+     "delivered_h": 6.5,
+     "due_h": 13.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "D03",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 0.7,
+     "delivered_h": 3.7,
+     "due_h": 6.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "F02",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 1.1,
+     "delivered_h": 3.1,
+     "due_h": 8.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "D05",
+     "customer_id": "D",
+     "truck": 7,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 7.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "G02",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 11.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "F04",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 1.5,
+     "delivered_h": 5.5,
+     "due_h": 8.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "E04",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 1.7,
+     "delivered_h": 4.7,
+     "due_h": 11.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "C07",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 1.9,
+     "delivered_h": 6.4,
+     "due_h": 12.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "A07",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 5.1,
+     "delivered_h": 7.1,
+     "due_h": 8.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "H03",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 6.7,
+     "delivered_h": 8.7,
+     "due_h": 9.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +91,500원"
+    },
+    {
+     "shipment_id": "F03",
+     "customer_id": "F",
+     "truck": 0,
+     "dispatched_h": 7.2,
+     "delivered_h": 9.2,
+     "due_h": 9.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "C04",
+     "customer_id": "C",
+     "truck": 7,
+     "dispatched_h": 7.2,
+     "delivered_h": 11.2,
+     "due_h": 10.0,
+     "delay_h": 1.2,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "E01",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 7.7,
+     "delivered_h": 11.7,
+     "due_h": 12.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +500,000원"
+    },
+    {
+     "shipment_id": "D02",
+     "customer_id": "D",
+     "truck": 5,
+     "dispatched_h": 9.1,
+     "delivered_h": 11.1,
+     "due_h": 10.7,
+     "delay_h": 0.4,
+     "penalty_krw": 64000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "E02",
+     "customer_id": "E",
+     "truck": 4,
+     "dispatched_h": 9.5,
+     "delivered_h": 14.5,
+     "due_h": 15.4,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +500,000원"
+    },
+    {
+     "shipment_id": "E07",
+     "customer_id": "E",
+     "truck": 3,
+     "dispatched_h": 10.7,
+     "delivered_h": 14.7,
+     "due_h": 14.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +500,000원"
+    },
+    {
+     "shipment_id": "H07",
+     "customer_id": "H",
+     "truck": 6,
+     "dispatched_h": 10.9,
+     "delivered_h": 13.4,
+     "due_h": 14.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +138,000원"
+    },
+    {
+     "shipment_id": "G06",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 11.2,
+     "delivered_h": 15.7,
+     "due_h": 11.7,
+     "delay_h": 4.0,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +0원 (유예기간 내)"
+    },
+    {
+     "shipment_id": "B01",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 12.5,
+     "delivered_h": 15.0,
+     "due_h": 15.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +13,500원"
+    },
+    {
+     "shipment_id": "C05",
+     "customer_id": "C",
+     "truck": 5,
+     "dispatched_h": 13.1,
+     "delivered_h": 15.6,
+     "due_h": 12.5,
+     "delay_h": 3.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "H04",
+     "customer_id": "H",
+     "truck": 7,
+     "dispatched_h": 15.2,
+     "delivered_h": 18.2,
+     "due_h": 18.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +199,500원"
+    },
+    {
+     "shipment_id": "D07",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 15.7,
+     "delivered_h": 18.2,
+     "due_h": 18.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +45,000원"
+    },
+    {
+     "shipment_id": "B03",
+     "customer_id": "B",
+     "truck": 6,
+     "dispatched_h": 15.9,
+     "delivered_h": 18.4,
+     "due_h": 18.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +21,000원"
+    },
+    {
+     "shipment_id": "H06",
+     "customer_id": "H",
+     "truck": 1,
+     "dispatched_h": 17.5,
+     "delivered_h": 22.5,
+     "due_h": 22.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +130,500원"
+    },
+    {
+     "shipment_id": "B06",
+     "customer_id": "B",
+     "truck": 5,
+     "dispatched_h": 18.1,
+     "delivered_h": 21.1,
+     "due_h": 21.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +29,000원"
+    },
+    {
+     "shipment_id": "E06",
+     "customer_id": "E",
+     "truck": 3,
+     "dispatched_h": 18.7,
+     "delivered_h": 24.7,
+     "due_h": 25.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": "미루면 +500,000원"
+    },
+    {
+     "shipment_id": "B07",
+     "customer_id": "B",
+     "truck": 4,
+     "dispatched_h": 19.5,
+     "delivered_h": 21.5,
+     "due_h": 16.6,
+     "delay_h": 4.9,
+     "penalty_krw": 55000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +11,000원"
+    },
+    {
+     "shipment_id": "B04",
+     "customer_id": "B",
+     "truck": 0,
+     "dispatched_h": 20.2,
+     "delivered_h": 23.2,
+     "due_h": 18.8,
+     "delay_h": 4.4,
+     "penalty_krw": 72500,
+     "blocked_by": null,
+     "rank_reason": "미루면 +14,500원"
+    },
+    {
+     "shipment_id": "B02",
+     "customer_id": "B",
+     "truck": 2,
+     "dispatched_h": 20.7,
+     "delivered_h": 25.7,
+     "due_h": 21.7,
+     "delay_h": 4.0,
+     "penalty_krw": 92000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +23,000원"
+    },
+    {
+     "shipment_id": "E05",
+     "customer_id": "E",
+     "truck": 6,
+     "dispatched_h": 20.9,
+     "delivered_h": 25.4,
+     "due_h": 18.7,
+     "delay_h": 6.7,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "H01",
+     "customer_id": "H",
+     "truck": 7,
+     "dispatched_h": 21.2,
+     "delivered_h": 24.7,
+     "due_h": 18.8,
+     "delay_h": 5.9,
+     "penalty_krw": 159000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "G01",
+     "customer_id": "G",
+     "truck": 4,
+     "dispatched_h": 23.5,
+     "delivered_h": 26.5,
+     "due_h": 19.7,
+     "delay_h": 6.8,
+     "penalty_krw": 90000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +90,000원"
+    },
+    {
+     "shipment_id": "H02",
+     "customer_id": "H",
+     "truck": 5,
+     "dispatched_h": 24.1,
+     "delivered_h": 26.6,
+     "due_h": 16.9,
+     "delay_h": 9.7,
+     "penalty_krw": 151500,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "G05",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 26.2,
+     "delivered_h": 28.2,
+     "due_h": 23.1,
+     "delay_h": 5.1,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +90,000원"
+    },
+    {
+     "shipment_id": "G07",
+     "customer_id": "G",
+     "truck": 1,
+     "dispatched_h": 27.5,
+     "delivered_h": 30.5,
+     "due_h": 25.1,
+     "delay_h": 5.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +90,000원"
+    },
+    {
+     "shipment_id": "E03",
+     "customer_id": "E",
+     "truck": 7,
+     "dispatched_h": 28.2,
+     "delivered_h": 32.7,
+     "due_h": 26.2,
+     "delay_h": 6.5,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "G03",
+     "customer_id": "G",
+     "truck": 5,
+     "dispatched_h": 29.1,
+     "delivered_h": 33.1,
+     "due_h": 27.8,
+     "delay_h": 5.3,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +90,000원"
+    },
+    {
+     "shipment_id": "H05",
+     "customer_id": "H",
+     "truck": 4,
+     "dispatched_h": 29.5,
+     "delivered_h": 35.5,
+     "due_h": 25.3,
+     "delay_h": 10.2,
+     "penalty_krw": 106500,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "D01",
+     "customer_id": "D",
+     "truck": 6,
+     "dispatched_h": 29.9,
+     "delivered_h": 35.9,
+     "due_h": 31.5,
+     "delay_h": 4.4,
+     "penalty_krw": 53000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "G04",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 30.2,
+     "delivered_h": 32.7,
+     "due_h": 27.5,
+     "delay_h": 5.2,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +90,000원"
+    },
+    {
+     "shipment_id": "D06",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 30.7,
+     "delivered_h": 32.7,
+     "due_h": 16.7,
+     "delay_h": 16.0,
+     "penalty_krw": 48000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "D04",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 30.7,
+     "delivered_h": 32.7,
+     "due_h": 19.0,
+     "delay_h": 13.7,
+     "penalty_krw": 41000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "A04",
+     "customer_id": "A",
+     "truck": 1,
+     "dispatched_h": 33.5,
+     "delivered_h": 39.5,
+     "due_h": 15.2,
+     "delay_h": 24.3,
+     "penalty_krw": 151000,
+     "blocked_by": null,
+     "rank_reason": "미루면 +0원"
+    },
+    {
+     "shipment_id": "C03",
+     "customer_id": "C",
+     "truck": 2,
+     "dispatched_h": 34.7,
+     "delivered_h": 38.2,
+     "due_h": 9.2,
+     "delay_h": 29.0,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "A05",
+     "customer_id": "A",
+     "truck": 3,
+     "dispatched_h": 34.7,
+     "delivered_h": 36.7,
+     "due_h": 16.9,
+     "delay_h": 19.8,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +0원 (유예기간 내)"
+    },
+    {
+     "shipment_id": "A02",
+     "customer_id": "A",
+     "truck": 0,
+     "dispatched_h": 35.2,
+     "delivered_h": 37.7,
+     "due_h": 18.1,
+     "delay_h": 19.6,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +0원 (유예기간 내)"
+    },
+    {
+     "shipment_id": "F01",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 37.1,
+     "delivered_h": 40.1,
+     "due_h": 18.6,
+     "delay_h": 21.5,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "C02",
+     "customer_id": "C",
+     "truck": 7,
+     "dispatched_h": 37.2,
+     "delivered_h": 42.2,
+     "due_h": 21.5,
+     "delay_h": 20.7,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "A03",
+     "customer_id": "A",
+     "truck": 3,
+     "dispatched_h": 38.7,
+     "delivered_h": 41.2,
+     "due_h": 22.3,
+     "delay_h": 18.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +0원 (유예기간 내)"
+    },
+    {
+     "shipment_id": "F05",
+     "customer_id": "F",
+     "truck": 0,
+     "dispatched_h": 40.2,
+     "delivered_h": 43.7,
+     "due_h": 22.6,
+     "delay_h": 21.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "A06",
+     "customer_id": "A",
+     "truck": 4,
+     "dispatched_h": 41.5,
+     "delivered_h": 45.5,
+     "due_h": 24.1,
+     "delay_h": 21.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +0원 (유예기간 내)"
+    },
+    {
+     "shipment_id": "F06",
+     "customer_id": "F",
+     "truck": 2,
+     "dispatched_h": 41.7,
+     "delivered_h": 45.7,
+     "due_h": 24.6,
+     "delay_h": 21.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "C01",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 41.9,
+     "delivered_h": 46.4,
+     "due_h": 25.6,
+     "delay_h": 20.8,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "F07",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 43.1,
+     "delivered_h": 46.6,
+     "due_h": 26.3,
+     "delay_h": 20.3,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    },
+    {
+     "shipment_id": "A01",
+     "customer_id": "A",
+     "truck": 3,
+     "dispatched_h": 43.7,
+     "delivered_h": 46.2,
+     "due_h": 26.8,
+     "delay_h": 19.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": "미루면 +0원 (유예기간 내)"
+    },
+    {
+     "shipment_id": "C06",
+     "customer_id": "C",
+     "truck": 1,
+     "dispatched_h": 45.5,
+     "delivered_h": 50.5,
+     "due_h": 30.3,
+     "delay_h": 20.2,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": "미루면 +0원 (불가항력 면책)"
+    }
+   ],
+   "per_customer_krw": {
+    "B": 219500,
+    "D": 206000,
+    "F": 0,
+    "G": 90000,
+    "E": 1000000,
+    "C": 0,
+    "A": 151000,
+    "H": 417000
+   },
+   "penalty_curve": [
+    [
+     3.1,
+     0
+    ],
+    [
+     3.7,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.7,
+     0
+    ],
+    [
+     5.5,
+     0
+    ],
+    [
+     6.4,
+     0
+    ],
+    [
+     6.5,
+     0
+    ],
+    [
+     7.1,
+     0
+    ],
+    [
+     8.7,
+     0
+    ],
+    [
+     9.2,
+     0
+    ],
+    [
+     11.1,
+     64000
+    ],
+    [
+     11.2,
+     64000
+    ],
+    [
+     11.7,
+     64000
+    ],
+    [
+     13.4,
+     64000
+    ],
+    [
+     14.5,
+     64000
+    ],
+    [
+     14.7,
+     64000
+    ],
+    [
+     15.0,
+     64000
+    ],
+    [
+     15.6,
+     64000
+    ],
+    [
+     15.7,
+     64000
+    ],
+    [
+     18.2,
+     64000
+    ],
+    [
+     18.2,
+     64000
+    ],
+    [
+     18.4,
+     64000
+    ],
+    [
+     21.1,
+     64000
+    ],
+    [
+     21.5,
+     119000
+    ],
+    [
+     22.5,
+     119000
+    ],
+    [
+     23.2,
+     191500
+    ],
+    [
+     24.7,
+     191500
+    ],
+    [
+     24.7,
+     350500
+    ],
+    [
+     25.4,
+     850500
+    ],
+    [
+     25.7,
+     942500
+    ],
+    [
+     26.5,
+     1032500
+    ],
+    [
+     26.6,
+     1184000
+    ],
+    [
+     28.2,
+     1184000
+    ],
+    [
+     30.5,
+     1184000
+    ],
+    [
+     32.7,
+     1684000
+    ],
+    [
+     32.7,
+     1684000
+    ],
+    [
+     32.7,
+     1732000
+    ],
+    [
+     32.7,
+     1773000
+    ],
+    [
+     33.1,
+     1773000
+    ],
+    [
+     35.5,
+     1879500
+    ],
+    [
+     35.9,
+     1932500
+    ],
+    [
+     36.7,
+     1932500
+    ],
+    [
+     37.7,
+     1932500
+    ],
+    [
+     38.2,
+     1932500
+    ],
+    [
+     39.5,
+     2083500
+    ],
+    [
+     40.1,
+     2083500
+    ],
+    [
+     41.2,
+     2083500
+    ],
+    [
+     42.2,
+     2083500
+    ],
+    [
+     43.7,
+     2083500
+    ],
+    [
+     45.5,
+     2083500
+    ],
+    [
+     45.7,
+     2083500
+    ],
+    [
+     46.2,
+     2083500
+    ],
+    [
+     46.4,
+     2083500
+    ],
+    [
+     46.6,
+     2083500
+    ],
+    [
+     50.5,
+     2083500
+    ]
+   ],
+   "peak_queue_h": 15.2,
+   "peak_queue_ids": [
+    "A04",
+    "B07",
+    "E05",
+    "F01",
+    "H01",
+    "H02",
+    "G01",
+    "H04",
+    "A02",
+    "E06",
+    "H06",
+    "F06",
+    "A05",
+    "D06",
+    "A06",
+    "A03",
+    "B02",
+    "G07",
+    "B03",
+    "F05",
+    "B04",
+    "D04",
+    "C02",
+    "G03",
+    "D07",
+    "B06",
+    "D01",
+    "G05",
+    "A01",
+    "C03",
+    "H05",
+    "G04"
+   ]
+  },
+  "exposure_abs": {
+   "policy": "exposure_abs",
+   "label": "물리는 순서(절대값 변형)",
+   "total_penalty_krw": 2224500,
+   "late_count": 33,
+   "on_time_count": 23,
+   "records": [
+    {
+     "shipment_id": "B05",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 0.5,
+     "delivered_h": 6.5,
+     "due_h": 13.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D03",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 0.7,
+     "delivered_h": 3.7,
+     "due_h": 6.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F02",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 1.1,
+     "delivered_h": 3.1,
+     "due_h": 8.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D05",
+     "customer_id": "D",
+     "truck": 7,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 7.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G02",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 11.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F04",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 1.5,
+     "delivered_h": 5.5,
+     "due_h": 8.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E04",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 1.7,
+     "delivered_h": 4.7,
+     "due_h": 11.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C07",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 1.9,
+     "delivered_h": 6.4,
+     "due_h": 12.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A07",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 5.1,
+     "delivered_h": 7.1,
+     "due_h": 8.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H03",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 6.7,
+     "delivered_h": 8.7,
+     "due_h": 9.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F03",
+     "customer_id": "F",
+     "truck": 0,
+     "dispatched_h": 7.2,
+     "delivered_h": 9.2,
+     "due_h": 9.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C04",
+     "customer_id": "C",
+     "truck": 7,
+     "dispatched_h": 7.2,
+     "delivered_h": 11.2,
+     "due_h": 10.0,
+     "delay_h": 1.2,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E01",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 7.7,
+     "delivered_h": 11.7,
+     "due_h": 12.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D02",
+     "customer_id": "D",
+     "truck": 5,
+     "dispatched_h": 9.1,
+     "delivered_h": 11.1,
+     "due_h": 10.7,
+     "delay_h": 0.4,
+     "penalty_krw": 64000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E02",
+     "customer_id": "E",
+     "truck": 4,
+     "dispatched_h": 9.5,
+     "delivered_h": 14.5,
+     "due_h": 15.4,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E07",
+     "customer_id": "E",
+     "truck": 3,
+     "dispatched_h": 10.7,
+     "delivered_h": 14.7,
+     "due_h": 14.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H07",
+     "customer_id": "H",
+     "truck": 6,
+     "dispatched_h": 10.9,
+     "delivered_h": 13.4,
+     "due_h": 14.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G06",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 11.2,
+     "delivered_h": 15.7,
+     "due_h": 11.7,
+     "delay_h": 4.0,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B01",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 12.5,
+     "delivered_h": 15.0,
+     "due_h": 15.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C05",
+     "customer_id": "C",
+     "truck": 5,
+     "dispatched_h": 13.1,
+     "delivered_h": 15.6,
+     "due_h": 12.5,
+     "delay_h": 3.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H04",
+     "customer_id": "H",
+     "truck": 7,
+     "dispatched_h": 15.2,
+     "delivered_h": 18.2,
+     "due_h": 18.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D07",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 15.7,
+     "delivered_h": 18.2,
+     "due_h": 18.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B02",
+     "customer_id": "B",
+     "truck": 6,
+     "dispatched_h": 15.9,
+     "delivered_h": 20.9,
+     "due_h": 21.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H06",
+     "customer_id": "H",
+     "truck": 1,
+     "dispatched_h": 17.5,
+     "delivered_h": 22.5,
+     "due_h": 22.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B06",
+     "customer_id": "B",
+     "truck": 5,
+     "dispatched_h": 18.1,
+     "delivered_h": 21.1,
+     "due_h": 21.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E06",
+     "customer_id": "E",
+     "truck": 3,
+     "dispatched_h": 18.7,
+     "delivered_h": 24.7,
+     "due_h": 25.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B03",
+     "customer_id": "B",
+     "truck": 4,
+     "dispatched_h": 19.5,
+     "delivered_h": 22.0,
+     "due_h": 18.5,
+     "delay_h": 3.5,
+     "penalty_krw": 84000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B04",
+     "customer_id": "B",
+     "truck": 0,
+     "dispatched_h": 20.2,
+     "delivered_h": 23.2,
+     "due_h": 18.8,
+     "delay_h": 4.4,
+     "penalty_krw": 72500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B07",
+     "customer_id": "B",
+     "truck": 2,
+     "dispatched_h": 20.7,
+     "delivered_h": 22.7,
+     "due_h": 16.6,
+     "delay_h": 6.1,
+     "penalty_krw": 77000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E05",
+     "customer_id": "E",
+     "truck": 7,
+     "dispatched_h": 21.2,
+     "delivered_h": 25.7,
+     "due_h": 18.7,
+     "delay_h": 7.0,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G01",
+     "customer_id": "G",
+     "truck": 5,
+     "dispatched_h": 24.1,
+     "delivered_h": 27.1,
+     "due_h": 19.7,
+     "delay_h": 7.4,
+     "penalty_krw": 180000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H01",
+     "customer_id": "H",
+     "truck": 4,
+     "dispatched_h": 24.5,
+     "delivered_h": 28.0,
+     "due_h": 18.8,
+     "delay_h": 9.2,
+     "penalty_krw": 159000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D01",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 24.7,
+     "delivered_h": 30.7,
+     "due_h": 31.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H02",
+     "customer_id": "H",
+     "truck": 6,
+     "dispatched_h": 25.9,
+     "delivered_h": 28.4,
+     "due_h": 16.9,
+     "delay_h": 11.5,
+     "penalty_krw": 151500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G05",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 26.2,
+     "delivered_h": 28.2,
+     "due_h": 23.1,
+     "delay_h": 5.1,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G07",
+     "customer_id": "G",
+     "truck": 1,
+     "dispatched_h": 27.5,
+     "delivered_h": 30.5,
+     "due_h": 25.1,
+     "delay_h": 5.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G03",
+     "customer_id": "G",
+     "truck": 5,
+     "dispatched_h": 30.1,
+     "delivered_h": 34.1,
+     "due_h": 27.8,
+     "delay_h": 6.3,
+     "penalty_krw": 90000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G04",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 30.2,
+     "delivered_h": 32.7,
+     "due_h": 27.5,
+     "delay_h": 5.2,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E03",
+     "customer_id": "E",
+     "truck": 7,
+     "dispatched_h": 30.2,
+     "delivered_h": 34.7,
+     "due_h": 26.2,
+     "delay_h": 8.5,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H05",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 30.7,
+     "delivered_h": 36.7,
+     "due_h": 25.3,
+     "delay_h": 11.4,
+     "penalty_krw": 106500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D06",
+     "customer_id": "D",
+     "truck": 6,
+     "dispatched_h": 30.9,
+     "delivered_h": 32.9,
+     "due_h": 16.7,
+     "delay_h": 16.2,
+     "penalty_krw": 48000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D04",
+     "customer_id": "D",
+     "truck": 4,
+     "dispatched_h": 31.5,
+     "delivered_h": 33.5,
+     "due_h": 19.0,
+     "delay_h": 14.5,
+     "penalty_krw": 41000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A04",
+     "customer_id": "A",
+     "truck": 1,
+     "dispatched_h": 33.5,
+     "delivered_h": 39.5,
+     "due_h": 15.2,
+     "delay_h": 24.3,
+     "penalty_krw": 151000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C03",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 34.9,
+     "delivered_h": 38.4,
+     "due_h": 9.2,
+     "delay_h": 29.2,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A05",
+     "customer_id": "A",
+     "truck": 0,
+     "dispatched_h": 35.2,
+     "delivered_h": 37.2,
+     "due_h": 16.9,
+     "delay_h": 20.3,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A02",
+     "customer_id": "A",
+     "truck": 4,
+     "dispatched_h": 35.5,
+     "delivered_h": 38.0,
+     "due_h": 18.1,
+     "delay_h": 19.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F01",
+     "customer_id": "F",
+     "truck": 2,
+     "dispatched_h": 36.7,
+     "delivered_h": 39.7,
+     "due_h": 18.6,
+     "delay_h": 21.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C02",
+     "customer_id": "C",
+     "truck": 5,
+     "dispatched_h": 38.1,
+     "delivered_h": 43.1,
+     "due_h": 21.5,
+     "delay_h": 21.6,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A03",
+     "customer_id": "A",
+     "truck": 0,
+     "dispatched_h": 39.2,
+     "delivered_h": 41.7,
+     "due_h": 22.3,
+     "delay_h": 19.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F05",
+     "customer_id": "F",
+     "truck": 7,
+     "dispatched_h": 39.2,
+     "delivered_h": 42.7,
+     "due_h": 22.6,
+     "delay_h": 20.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A06",
+     "customer_id": "A",
+     "truck": 4,
+     "dispatched_h": 40.5,
+     "delivered_h": 44.5,
+     "due_h": 24.1,
+     "delay_h": 20.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F06",
+     "customer_id": "F",
+     "truck": 6,
+     "dispatched_h": 41.9,
+     "delivered_h": 45.9,
+     "due_h": 24.6,
+     "delay_h": 21.3,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C01",
+     "customer_id": "C",
+     "truck": 2,
+     "dispatched_h": 42.7,
+     "delivered_h": 47.2,
+     "due_h": 25.6,
+     "delay_h": 21.6,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F07",
+     "customer_id": "F",
+     "truck": 3,
+     "dispatched_h": 42.7,
+     "delivered_h": 46.2,
+     "due_h": 26.3,
+     "delay_h": 19.9,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A01",
+     "customer_id": "A",
+     "truck": 0,
+     "dispatched_h": 44.2,
+     "delivered_h": 46.7,
+     "due_h": 26.8,
+     "delay_h": 19.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C06",
+     "customer_id": "C",
+     "truck": 1,
+     "dispatched_h": 45.5,
+     "delivered_h": 50.5,
+     "due_h": 30.3,
+     "delay_h": 20.2,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    }
+   ],
+   "per_customer_krw": {
+    "B": 233500,
+    "D": 153000,
+    "F": 0,
+    "G": 270000,
+    "E": 1000000,
+    "C": 0,
+    "A": 151000,
+    "H": 417000
+   },
+   "penalty_curve": [
+    [
+     3.1,
+     0
+    ],
+    [
+     3.7,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.7,
+     0
+    ],
+    [
+     5.5,
+     0
+    ],
+    [
+     6.4,
+     0
+    ],
+    [
+     6.5,
+     0
+    ],
+    [
+     7.1,
+     0
+    ],
+    [
+     8.7,
+     0
+    ],
+    [
+     9.2,
+     0
+    ],
+    [
+     11.1,
+     64000
+    ],
+    [
+     11.2,
+     64000
+    ],
+    [
+     11.7,
+     64000
+    ],
+    [
+     13.4,
+     64000
+    ],
+    [
+     14.5,
+     64000
+    ],
+    [
+     14.7,
+     64000
+    ],
+    [
+     15.0,
+     64000
+    ],
+    [
+     15.6,
+     64000
+    ],
+    [
+     15.7,
+     64000
+    ],
+    [
+     18.2,
+     64000
+    ],
+    [
+     18.2,
+     64000
+    ],
+    [
+     20.9,
+     64000
+    ],
+    [
+     21.1,
+     64000
+    ],
+    [
+     22.0,
+     148000
+    ],
+    [
+     22.5,
+     148000
+    ],
+    [
+     22.7,
+     225000
+    ],
+    [
+     23.2,
+     297500
+    ],
+    [
+     24.7,
+     297500
+    ],
+    [
+     25.7,
+     797500
+    ],
+    [
+     27.1,
+     977500
+    ],
+    [
+     28.0,
+     1136500
+    ],
+    [
+     28.2,
+     1136500
+    ],
+    [
+     28.4,
+     1288000
+    ],
+    [
+     30.5,
+     1288000
+    ],
+    [
+     30.7,
+     1288000
+    ],
+    [
+     32.7,
+     1288000
+    ],
+    [
+     32.9,
+     1336000
+    ],
+    [
+     33.5,
+     1377000
+    ],
+    [
+     34.1,
+     1467000
+    ],
+    [
+     34.7,
+     1967000
+    ],
+    [
+     36.7,
+     2073500
+    ],
+    [
+     37.2,
+     2073500
+    ],
+    [
+     38.0,
+     2073500
+    ],
+    [
+     38.4,
+     2073500
+    ],
+    [
+     39.5,
+     2224500
+    ],
+    [
+     39.7,
+     2224500
+    ],
+    [
+     41.7,
+     2224500
+    ],
+    [
+     42.7,
+     2224500
+    ],
+    [
+     43.1,
+     2224500
+    ],
+    [
+     44.5,
+     2224500
+    ],
+    [
+     45.9,
+     2224500
+    ],
+    [
+     46.2,
+     2224500
+    ],
+    [
+     46.7,
+     2224500
+    ],
+    [
+     47.2,
+     2224500
+    ],
+    [
+     50.5,
+     2224500
+    ]
+   ],
+   "peak_queue_h": 15.2,
+   "peak_queue_ids": [
+    "A04",
+    "B07",
+    "E05",
+    "F01",
+    "H01",
+    "H02",
+    "G01",
+    "H04",
+    "A02",
+    "E06",
+    "H06",
+    "F06",
+    "A05",
+    "D06",
+    "A06",
+    "A03",
+    "B02",
+    "G07",
+    "B03",
+    "F05",
+    "B04",
+    "D04",
+    "C02",
+    "G03",
+    "D07",
+    "B06",
+    "D01",
+    "G05",
+    "A01",
+    "C03",
+    "H05",
+    "G04"
+   ]
+  },
+  "search_best": {
+   "policy": "search_best",
+   "label": "탐색 근사 최적(참고)",
+   "total_penalty_krw": 1825500,
+   "late_count": 34,
+   "on_time_count": 22,
+   "records": [
+    {
+     "shipment_id": "B05",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 0.5,
+     "delivered_h": 6.5,
+     "due_h": 13.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D03",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 0.7,
+     "delivered_h": 3.7,
+     "due_h": 6.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F02",
+     "customer_id": "F",
+     "truck": 5,
+     "dispatched_h": 1.1,
+     "delivered_h": 3.1,
+     "due_h": 8.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D05",
+     "customer_id": "D",
+     "truck": 7,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 7.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G02",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 1.2,
+     "delivered_h": 4.2,
+     "due_h": 11.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F04",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 1.5,
+     "delivered_h": 5.5,
+     "due_h": 8.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E04",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 1.7,
+     "delivered_h": 4.7,
+     "due_h": 11.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C07",
+     "customer_id": "C",
+     "truck": 6,
+     "dispatched_h": 1.9,
+     "delivered_h": 6.4,
+     "due_h": 12.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A07",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 5.1,
+     "delivered_h": 7.1,
+     "due_h": 8.7,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H03",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 6.7,
+     "delivered_h": 8.7,
+     "due_h": 9.0,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F03",
+     "customer_id": "F",
+     "truck": 0,
+     "dispatched_h": 7.2,
+     "delivered_h": 9.2,
+     "due_h": 9.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C04",
+     "customer_id": "C",
+     "truck": 7,
+     "dispatched_h": 7.2,
+     "delivered_h": 11.2,
+     "due_h": 10.0,
+     "delay_h": 1.2,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E01",
+     "customer_id": "E",
+     "truck": 2,
+     "dispatched_h": 7.7,
+     "delivered_h": 11.7,
+     "due_h": 12.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E07",
+     "customer_id": "E",
+     "truck": 5,
+     "dispatched_h": 9.1,
+     "delivered_h": 13.1,
+     "due_h": 14.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E02",
+     "customer_id": "E",
+     "truck": 4,
+     "dispatched_h": 9.5,
+     "delivered_h": 14.5,
+     "due_h": 15.4,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D02",
+     "customer_id": "D",
+     "truck": 3,
+     "dispatched_h": 10.7,
+     "delivered_h": 12.7,
+     "due_h": 10.7,
+     "delay_h": 2.0,
+     "penalty_krw": 64000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H02",
+     "customer_id": "H",
+     "truck": 6,
+     "dispatched_h": 10.9,
+     "delivered_h": 13.4,
+     "due_h": 16.9,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G06",
+     "customer_id": "G",
+     "truck": 0,
+     "dispatched_h": 11.2,
+     "delivered_h": 15.7,
+     "due_h": 11.7,
+     "delay_h": 4.0,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B01",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 12.5,
+     "delivered_h": 15.0,
+     "due_h": 15.2,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C05",
+     "customer_id": "C",
+     "truck": 3,
+     "dispatched_h": 14.7,
+     "delivered_h": 17.2,
+     "due_h": 12.5,
+     "delay_h": 4.7,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H04",
+     "customer_id": "H",
+     "truck": 7,
+     "dispatched_h": 15.2,
+     "delivered_h": 18.2,
+     "due_h": 18.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D07",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 15.7,
+     "delivered_h": 18.2,
+     "due_h": 18.3,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B03",
+     "customer_id": "B",
+     "truck": 6,
+     "dispatched_h": 15.9,
+     "delivered_h": 18.4,
+     "due_h": 18.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H06",
+     "customer_id": "H",
+     "truck": 5,
+     "dispatched_h": 17.1,
+     "delivered_h": 22.1,
+     "due_h": 22.6,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B06",
+     "customer_id": "B",
+     "truck": 1,
+     "dispatched_h": 17.5,
+     "delivered_h": 20.5,
+     "due_h": 21.8,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E06",
+     "customer_id": "E",
+     "truck": 4,
+     "dispatched_h": 19.5,
+     "delivered_h": 25.5,
+     "due_h": 25.5,
+     "delay_h": 0.0,
+     "penalty_krw": 0,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B04",
+     "customer_id": "B",
+     "truck": 3,
+     "dispatched_h": 19.7,
+     "delivered_h": 22.7,
+     "due_h": 18.8,
+     "delay_h": 3.9,
+     "penalty_krw": 58000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B07",
+     "customer_id": "B",
+     "truck": 0,
+     "dispatched_h": 20.2,
+     "delivered_h": 22.2,
+     "due_h": 16.6,
+     "delay_h": 5.6,
+     "penalty_krw": 66000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "B02",
+     "customer_id": "B",
+     "truck": 2,
+     "dispatched_h": 20.7,
+     "delivered_h": 25.7,
+     "due_h": 21.7,
+     "delay_h": 4.0,
+     "penalty_krw": 92000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E05",
+     "customer_id": "E",
+     "truck": 6,
+     "dispatched_h": 20.9,
+     "delivered_h": 25.4,
+     "due_h": 18.7,
+     "delay_h": 6.7,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G01",
+     "customer_id": "G",
+     "truck": 7,
+     "dispatched_h": 21.2,
+     "delivered_h": 24.2,
+     "due_h": 19.7,
+     "delay_h": 4.5,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H01",
+     "customer_id": "H",
+     "truck": 1,
+     "dispatched_h": 23.5,
+     "delivered_h": 27.0,
+     "due_h": 18.8,
+     "delay_h": 8.2,
+     "penalty_krw": 159000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H07",
+     "customer_id": "H",
+     "truck": 0,
+     "dispatched_h": 24.2,
+     "delivered_h": 26.7,
+     "due_h": 14.2,
+     "delay_h": 12.5,
+     "penalty_krw": 138000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G05",
+     "customer_id": "G",
+     "truck": 3,
+     "dispatched_h": 25.7,
+     "delivered_h": 27.7,
+     "due_h": 23.1,
+     "delay_h": 4.6,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G07",
+     "customer_id": "G",
+     "truck": 5,
+     "dispatched_h": 27.1,
+     "delivered_h": 30.1,
+     "due_h": 25.1,
+     "delay_h": 5.0,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G03",
+     "customer_id": "G",
+     "truck": 7,
+     "dispatched_h": 27.2,
+     "delivered_h": 31.2,
+     "due_h": 27.8,
+     "delay_h": 3.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "E03",
+     "customer_id": "E",
+     "truck": 0,
+     "dispatched_h": 29.2,
+     "delivered_h": 33.7,
+     "due_h": 26.2,
+     "delay_h": 7.5,
+     "penalty_krw": 500000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "H05",
+     "customer_id": "H",
+     "truck": 3,
+     "dispatched_h": 29.7,
+     "delivered_h": 35.7,
+     "due_h": 25.3,
+     "delay_h": 10.4,
+     "penalty_krw": 106500,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D01",
+     "customer_id": "D",
+     "truck": 6,
+     "dispatched_h": 29.9,
+     "delivered_h": 35.9,
+     "due_h": 31.5,
+     "delay_h": 4.4,
+     "penalty_krw": 53000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "G04",
+     "customer_id": "G",
+     "truck": 1,
+     "dispatched_h": 30.5,
+     "delivered_h": 33.0,
+     "due_h": 27.5,
+     "delay_h": 5.5,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D06",
+     "customer_id": "D",
+     "truck": 2,
+     "dispatched_h": 30.7,
+     "delivered_h": 32.7,
+     "due_h": 16.7,
+     "delay_h": 16.0,
+     "penalty_krw": 48000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "D04",
+     "customer_id": "D",
+     "truck": 4,
+     "dispatched_h": 31.5,
+     "delivered_h": 33.5,
+     "due_h": 19.0,
+     "delay_h": 14.5,
+     "penalty_krw": 41000,
+     "blocked_by": null,
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A04",
+     "customer_id": "A",
+     "truck": 5,
+     "dispatched_h": 33.1,
+     "delivered_h": 39.1,
+     "due_h": 15.2,
+     "delay_h": 23.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C03",
+     "customer_id": "C",
+     "truck": 2,
+     "dispatched_h": 34.7,
+     "delivered_h": 38.2,
+     "due_h": 9.2,
+     "delay_h": 29.0,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A05",
+     "customer_id": "A",
+     "truck": 7,
+     "dispatched_h": 35.2,
+     "delivered_h": 37.2,
+     "due_h": 16.9,
+     "delay_h": 20.3,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A02",
+     "customer_id": "A",
+     "truck": 1,
+     "dispatched_h": 35.5,
+     "delivered_h": 38.0,
+     "due_h": 18.1,
+     "delay_h": 19.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F01",
+     "customer_id": "F",
+     "truck": 4,
+     "dispatched_h": 35.5,
+     "delivered_h": 38.5,
+     "due_h": 18.6,
+     "delay_h": 19.9,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C02",
+     "customer_id": "C",
+     "truck": 0,
+     "dispatched_h": 38.2,
+     "delivered_h": 43.2,
+     "due_h": 21.5,
+     "delay_h": 21.7,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A03",
+     "customer_id": "A",
+     "truck": 7,
+     "dispatched_h": 39.2,
+     "delivered_h": 41.7,
+     "due_h": 22.3,
+     "delay_h": 19.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F05",
+     "customer_id": "F",
+     "truck": 1,
+     "dispatched_h": 40.5,
+     "delivered_h": 44.0,
+     "due_h": 22.6,
+     "delay_h": 21.4,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A06",
+     "customer_id": "A",
+     "truck": 4,
+     "dispatched_h": 41.5,
+     "delivered_h": 45.5,
+     "due_h": 24.1,
+     "delay_h": 21.4,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F06",
+     "customer_id": "F",
+     "truck": 2,
+     "dispatched_h": 41.7,
+     "delivered_h": 45.7,
+     "due_h": 24.6,
+     "delay_h": 21.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C01",
+     "customer_id": "C",
+     "truck": 3,
+     "dispatched_h": 41.7,
+     "delivered_h": 46.2,
+     "due_h": 25.6,
+     "delay_h": 20.6,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "F07",
+     "customer_id": "F",
+     "truck": 6,
+     "dispatched_h": 41.9,
+     "delivered_h": 45.4,
+     "due_h": 26.3,
+     "delay_h": 19.1,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "A01",
+     "customer_id": "A",
+     "truck": 7,
+     "dispatched_h": 44.2,
+     "delivered_h": 46.7,
+     "due_h": 26.8,
+     "delay_h": 19.9,
+     "penalty_krw": 0,
+     "blocked_by": "유예기간 내",
+     "rank_reason": null
+    },
+    {
+     "shipment_id": "C06",
+     "customer_id": "C",
+     "truck": 5,
+     "dispatched_h": 45.1,
+     "delivered_h": 50.1,
+     "due_h": 30.3,
+     "delay_h": 19.8,
+     "penalty_krw": 0,
+     "blocked_by": "불가항력 면책",
+     "rank_reason": null
+    }
+   ],
+   "per_customer_krw": {
+    "B": 216000,
+    "D": 206000,
+    "F": 0,
+    "G": 0,
+    "E": 1000000,
+    "C": 0,
+    "A": 0,
+    "H": 403500
+   },
+   "penalty_curve": [
+    [
+     3.1,
+     0
+    ],
+    [
+     3.7,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.2,
+     0
+    ],
+    [
+     4.7,
+     0
+    ],
+    [
+     5.5,
+     0
+    ],
+    [
+     6.4,
+     0
+    ],
+    [
+     6.5,
+     0
+    ],
+    [
+     7.1,
+     0
+    ],
+    [
+     8.7,
+     0
+    ],
+    [
+     9.2,
+     0
+    ],
+    [
+     11.2,
+     0
+    ],
+    [
+     11.7,
+     0
+    ],
+    [
+     12.7,
+     64000
+    ],
+    [
+     13.1,
+     64000
+    ],
+    [
+     13.4,
+     64000
+    ],
+    [
+     14.5,
+     64000
+    ],
+    [
+     15.0,
+     64000
+    ],
+    [
+     15.7,
+     64000
+    ],
+    [
+     17.2,
+     64000
+    ],
+    [
+     18.2,
+     64000
+    ],
+    [
+     18.2,
+     64000
+    ],
+    [
+     18.4,
+     64000
+    ],
+    [
+     20.5,
+     64000
+    ],
+    [
+     22.1,
+     64000
+    ],
+    [
+     22.2,
+     130000
+    ],
+    [
+     22.7,
+     188000
+    ],
+    [
+     24.2,
+     188000
+    ],
+    [
+     25.4,
+     688000
+    ],
+    [
+     25.5,
+     688000
+    ],
+    [
+     25.7,
+     780000
+    ],
+    [
+     26.7,
+     918000
+    ],
+    [
+     27.0,
+     1077000
+    ],
+    [
+     27.7,
+     1077000
+    ],
+    [
+     30.1,
+     1077000
+    ],
+    [
+     31.2,
+     1077000
+    ],
+    [
+     32.7,
+     1125000
+    ],
+    [
+     33.0,
+     1125000
+    ],
+    [
+     33.5,
+     1166000
+    ],
+    [
+     33.7,
+     1666000
+    ],
+    [
+     35.7,
+     1772500
+    ],
+    [
+     35.9,
+     1825500
+    ],
+    [
+     37.2,
+     1825500
+    ],
+    [
+     38.0,
+     1825500
+    ],
+    [
+     38.2,
+     1825500
+    ],
+    [
+     38.5,
+     1825500
+    ],
+    [
+     39.1,
+     1825500
+    ],
+    [
+     41.7,
+     1825500
+    ],
+    [
+     43.2,
+     1825500
+    ],
+    [
+     44.0,
+     1825500
+    ],
+    [
+     45.4,
+     1825500
+    ],
+    [
+     45.5,
+     1825500
+    ],
+    [
+     45.7,
+     1825500
+    ],
+    [
+     46.2,
+     1825500
+    ],
+    [
+     46.7,
+     1825500
+    ],
+    [
+     50.1,
+     1825500
+    ]
+   ],
+   "peak_queue_h": 14.7,
+   "peak_queue_ids": [
+    "A04",
+    "C05",
+    "B07",
+    "E05",
+    "F01",
+    "H01",
+    "G01",
+    "H04",
+    "H07",
+    "A02",
+    "E06",
+    "H06",
+    "F06",
+    "A05",
+    "D06",
+    "A06",
+    "A03",
+    "B02",
+    "G07",
+    "B03",
+    "F05",
+    "B04",
+    "D04",
+    "C02",
+    "G03",
+    "D07",
+    "B06",
+    "D01",
+    "G05",
+    "A01",
+    "C03",
+    "H05",
+    "G04"
+   ]
+  }
+ },
+ "savings_vs_deadline_krw": 6016500,
+ "savings_vs_deadline_pct": 74.3,
+ "llm_mode": "claude-code",
+ "llm_calls": 24,
+ "generated_at": "2026-10-29T00:38:01.654555",
+ "agent_log": [
+  "시나리오 '항만 적체' 로드. 고객 8곳, LLM 모드 claude-code.",
+  "계약 추출 결과를 이전 실행에서 재사용(같은 계약서).",
+  "계약서 8건에서 지연 페널티 조건 추출 완료. A:per_calendar_day, B:per_hour/상한無/면책無, C:per_calendar_day/상한無, D:tiered_per_day, E:flat_per_shipment/면책無, F:per_business_day, G:per_hour, H:per_calendar_day",
+  "불가항력 판단: 면책 적용 ['C', 'F'], 조항은 있으나 미적용 ['A(사유 불해당)', 'D(사유 불해당)', 'G(조건 미충족)', 'H(사유 불해당)'].",
+  "시뮬레이션 비교(재실행): 마감 급한 순(기존) 8,100,000원, 도착 순 7,529,500원, 고액 화물 순 10,650,500원, 물리는 순서(ClauseTower) 2,083,500원, 물리는 순서(절대값 변형) 2,224,500원, 탐색 근사 최적(참고) 1,825,500원",
+  "기존 대비 절감 6,016,500원(74.3%). LLM 결과는 원 실행(claude-code, 24회)을 그대로 사용."
+ ]
+}
